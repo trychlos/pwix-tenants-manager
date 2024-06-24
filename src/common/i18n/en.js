@@ -7,31 +7,28 @@ TenantsManager.i18n = {
     ...{
         en: {
             buttons: {
-                delete_title: 'Delete the "%s" account',
-                edit_title: 'Edit the "%s" account',
-                info_title: 'Informations about the "%s" account record'
+                delete_title: 'Delete the "%s" tenant',
+                edit_title: 'Edit the "%s" tenant',
+                info_title: 'Informations about the "%s" tenant record'
             },
             check: {
-                email_exists: 'This email address already exists',
-                email_invalid: 'This email address is not valid',
-                email_unset: 'An email address is mandatory',
-                username_exists: 'This username already exists'
             },
             delete: {
-                success: 'The "%s" has been successfully deleted'
+                success: 'The "%s" tenant has been successfully deleted'
             },
             edit: {
-                modal_title: 'Editing an account'
+                modal_title: 'Editing a tenant'
             },
             list: {
-                admin_notes_th: 'Admin Notes',
-                email_address_th: 'Email address',
-                email_verified_th: 'Is verified',
-                last_connection_th: 'Last connection',
-                login_allowed_th: 'Is connection allowed',
-                more_title: 'Display more email addresses...',
-                user_notes_th: 'User Notes',
-                username_th: 'Username'
+                contact_email_th: 'Contact',
+                homepage_th: 'Home',
+                label_th: 'Label',
+                notes_th: 'Notes'
+            },
+            new: {
+                btn_plus_label: 'New organization',
+                btn_plus_title: 'Define a new organization',
+                modal_title: 'Create an organization'
             },
             panel: {
                 add_title: 'Add an email address',
@@ -46,8 +43,7 @@ TenantsManager.i18n = {
                 verified_label: 'Is email verified :'
             },
             tabs: {
-                ident_title: 'Identity',
-                roles_title: 'Roles'
+                //ident_title: 'Identity',
             }
         /*
             accounts: {

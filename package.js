@@ -28,21 +28,24 @@ function configure( api ){
     api.use( 'aldeed:simple-schema@1.13.1' );
     api.use( 'blaze-html-templates@2.0.0 || 3.0.0-alpha300.0', 'client' );
     api.use( 'ecmascript' );
+    api.use( 'check' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'mongo' );
     api.use( 'pwix:collection-timestampable@2.0.0' );
+    api.use( 'pwix:field@1.0.0-rc' );
     api.use( 'pwix:forms@1.0.0-rc' );
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:modal@2.0.0' );
     api.use( 'pwix:notes@1.0.0-rc' );
     api.use( 'pwix:roles@1.3.0' );
     api.use( 'pwix:tabbed@1.0.0-rc' );
-    api.use( 'pwix:tabular-ext@1.0.0-rc' );
+    api.use( 'pwix:tabular@1.0.0-rc' );
     api.use( 'pwix:typed-message@1.2.0' );
     api.use( 'pwix:ui-bootstrap5@2.0.0-rc' );
     api.use( 'pwix:ui-utils@1.1.0' );
     api.use( 'random' );
     api.use( 'reactive-var' );
-    api.addFiles( 'src/client/components/TenantPanel/TenantPanel.js', 'client' );
+    api.addFiles( 'src/client/components/TenantEditPanel/TenantEditPanel.js', 'client' );
+    api.addFiles( 'src/client/components/TenantNewButton/TenantNewButton.js', 'client' );
     api.addFiles( 'src/client/components/TenantsList/TenantsList.js', 'client' );
 }

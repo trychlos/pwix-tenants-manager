@@ -7,31 +7,28 @@ TenantsManager.i18n = {
     ...{
         fr: {
             buttons: {
-                delete_title: 'Supprime le compte "%s"',
-                edit_title: 'Edite le compte "%s"',
+                delete_title: 'Supprime le tenant "%s"',
+                edit_title: 'Edite le tenant "%s"',
                 info_title: 'Informations sur l\'enregistrement "%s"'
             },
             check: {
-                email_exists: 'Cette adresse de messagerie est déjà utilisée',
-                email_invalid: 'Cette adresse de messagerie n\'est pas valide',
-                email_unset: 'Une adresse de messagerie est obligatoire',
-                username_exists: 'Ce nom d\'utilisateur est déjà utilisé'
             },
             delete: {
-                success: 'Le compte "%s" a été supprimé avec succès'
+                success: 'Le tenant "%s" a été supprimé avec succès'
             },
             edit: {
-                modal_title: 'Editer un compte'
+                modal_title: 'Editer un tenant'
             },
             list: {
-                admin_notes_th: 'Notes de l\'administrateur',
-                email_address_th: 'Addresse email',
-                email_verified_th: 'Vérifiéee',
-                last_connection_th: 'Dernière connexion',
-                login_allowed_th: 'Connexion autorisée',
-                more_title: 'Afficher davantage d\'adresses email...',
-                user_notes_th: 'Notes de l\'utilisateur',
-                username_th: 'Nom d\'utilisateur'
+                contact_email_th: 'Contact',
+                homepage_th: 'Site principal',
+                label_th: 'Label',
+                notes_th: 'Notes'
+            },
+            new: {
+                btn_plus_label: 'Nouveau tenant',
+                btn_plus_title: 'Définit un nouveau tenant',
+                modal_title: 'Crée un nouveau tenant'
             },
             panel: {
                 add_title: 'Ajouter une adresse de messagerie',
@@ -46,8 +43,7 @@ TenantsManager.i18n = {
                 verified_label: 'Adresse email vérifiée :'
             },
             tabs: {
-                ident_title: 'Identité',
-                roles_title: 'Rôles'
+                //ident_title: 'Identité',
             }
         }
     }

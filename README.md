@@ -2,73 +2,17 @@
 
 ## What is it ?
 
-A try to mutualize and factorize the most common part of a simple accounts management system:
+A try to mutualize and factorize the most common part of a multi-tenants management system:
 
-- defines the account schema and provides client and server check functions
+- defines a basic schema and provides client and server check functions
 
-- provides components to list and edit accounts.
+- provides components to list and edit tenants.
 
-## Schema
+Our tenants are defined in the common acceptance of the term as distinct organizations which are managed in a same software space. They can have validity periods. A tenant administrator can be defined as a scoped role.
 
-`pwix:tenants-manager` is based on Meteor `accounts-base`, and extends its standard schema as:
+### Storage considerations
 
-```js
-    {
-        _id: {
-            type: String
-        },
-        emails: {
-            type: Array,
-            optional: true
-        },
-        'emails.$': {
-            type: Object
-        },
-        'emails.$.address': {
-            type: String,
-            regEx: SimpleSchema.RegEx.Email,
-        },
-        'emails.$.verified': {
-            type: Boolean
-        },
-        username: {
-            type: String,
-            optional: true
-        },
-        profile: {
-            type: Object,
-            optional: true,
-            blackbox: true
-        },
-        services: {
-            type: Object,
-            optional: true,
-            blackbox: true
-        },
-        lastConnection: {
-            type: Date
-        },
-        loginAllowed: {
-            type: Boolean,
-            defaultValue: true
-        },
-        userNotes: {
-            type: String
-        },
-        adminNotes: {
-            type: String
-        }
-    }
-```
-
-As it also makes the collection timestampable, following fields are also added and maintained:
-
-```js
-    createdAt
-    updatedAt
-    CreatedBy
-    updatedBy
-```
+When an application makes use of this package to manage several tenants, a `tenants` collection is created which gathers defined tenants. That's all, and, in particular, this doesn't create for the application any assumption about the way the application tenants data will be themselves stored (in distinct databases, in distinct collections, or so).
 
 ## Provides
 
@@ -98,7 +42,7 @@ Known configuration options are:
 
 - `fieldsSet`
 
-    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition.
+    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition, or as a function which returns such a `Forms.FieldSet` definition.
 
     Defauts to nothing.
 
@@ -125,40 +69,26 @@ Known configuration options are:
     });
 ```
 
-- `haveEmailAddress`
-- `haveUsername`
+- `hideDisabled`
 
-    Whether the user accounts are to be configured with or without a username (resp. an email address), and whether it is optional or mandatory.
+    Whether to hide disabled actions instead of displaying the disabled state.
 
-    For each of these terms, accepted values are:
-
-    - `TenantsManager.C.Input.NONE`: the field is not displayed nor considered
-    - `TenantsManager.C.Input.OPTIONAL`: the input field is proposed to the user, but may be left empty
-    - `TenantsManager.C.Input.MANDATORY`: the input field must be filled by the user
-
-    At least one of these fields MUST be set as `TenantsManager.C.Input.MANDATORY`. Else, the default value will be applied.
-
-    Defauts to:
-
-    - `haveEmailAddress`: `TenantsManager.C.Input.MANDATORY`
-    - `haveUsername`: `TenantsManager.C.Input.NONE`
-
-    Please be conscious that some features of your application may want display an identifier for each user. It would be a security hole to let the application display a verified email address anywhere, as this would be some sort of spam magnet!
+    Defaults to `true`: disabled actions are hidden.
 
 - `roles`
 
-    Let the application provides the permissions required to perform CRUD operations on the Users collection. This is an object with following keys:
+    Let the application provides the permissions required to perform CRUD operations on the Tenants collection. This is an object with following keys:
 
     - `list`: defaulting to `null` (allowed to all)
     - `create`: defaulting to `null` (allowed to all)
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
 
-- `scopesFn`
+- `tenantsCollection`
 
-    An application-provided function which is expected to return all existing (roles) scopes.
+    The name of the tenants Mongo collection.
 
-    Defaults to only manage scopes that are already used in the `Roles` package.
+    Defaults to `tenants`.
 
 - `verbosity`
 
@@ -189,8 +119,6 @@ Instead we check npm versions of installed packages at runtime, on server startu
 Dependencies as of v 0.3.0:
 
 ```js
-    '@popperjs/core': '^2.11.6',
-    'bootstrap': '^5.2.1',
     'lodash': '^4.17.0'
 ```
 

@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/client/components/TenantPanel/TenantPanel.js
+ * pwix:tenants-manager/src/client/components/TenantEditPanel/TenantEditPanel.js
  *
  * Account editor.
  *
@@ -19,15 +19,15 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
-import '../account_email_row/account_email_row.js';
-import '../account_emails_list/account_emails_list.js';
-import '../account_ident_panel/account_ident_panel.js';
-import '../account_roles_panel/account_roles_panel.js';
+//import '../account_email_row/account_email_row.js';
+//import '../account_emails_list/account_emails_list.js';
+//import '../account_ident_panel/account_ident_panel.js';
+//import '../account_roles_panel/account_roles_panel.js';
 //import '/imports/client/components/account_settings_panel/account_settings_panel.js';
 
-import './TenantPanel.html';
+import './TenantEditPanel.html';
 
-Template.TenantPanel.onCreated( function(){
+Template.TenantEditPanel.onCreated( function(){
     const self = this;
 
     self.AM = {
@@ -54,16 +54,16 @@ Template.TenantPanel.onCreated( function(){
     });
 });
 
-Template.TenantPanel.onRendered( function(){
+Template.TenantEditPanel.onRendered( function(){
     const self = this;
 
     // whether we are running inside of a Modal
-    self.AM.isModal = self.$( '.TenantPanel' ).closest( '.modal-dialog' ).length > 0;
+    self.AM.isModal = self.$( '.TenantEditPanel' ).closest( '.modal-dialog' ).length > 0;
 
     // set the modal target+title
     if( self.AM.isModal ){
         Modal.set({
-            target: self.$( '.TenantPanel' )
+            target: self.$( '.TenantEditPanel' )
         });
     }
 
@@ -80,7 +80,7 @@ Template.TenantPanel.onRendered( function(){
     });
 });
 
-Template.TenantPanel.helpers({
+Template.TenantEditPanel.helpers({
     // parms to coreErrorMsg
     parmsMessager(){
         return {
@@ -138,11 +138,11 @@ Template.TenantPanel.helpers({
     }
 });
 
-Template.TenantPanel.events({
+Template.TenantEditPanel.events({
     // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
     //  those who are using FormChecker directly update the edited item
     //  we have to manage others
-    'panel-data .TenantPanel'( event, instance, data ){
+    'panel-data .TenantEditPanel'( event, instance, data ){
         //console.debug( 'id', data.id, 'myTabId', instance.AM.tabId.get(), data );
         switch( data.emitter ){
             case 'notes':
@@ -154,7 +154,7 @@ Template.TenantPanel.events({
 
     // submit
     //  event triggered in case of a modal
-    'md-click .TenantPanel'( event, instance, data ){
+    'md-click .TenantEditPanel'( event, instance, data ){
         //console.debug( event, data );
         if( data.button.id === Modal.C.Button.OK ){
             instance.$( event.currentTarget ).trigger( 'iz-submit' );
@@ -162,7 +162,7 @@ Template.TenantPanel.events({
     },
 
     // submit
-    'iz-submit .TenantPanel'( event, instance ){
+    'iz-submit .TenantEditPanel'( event, instance ){
         //console.debug( event, instance );
         let item = instance.AM.item.get();
         let email = item.emails[0].address;

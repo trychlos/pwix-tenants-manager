@@ -7,6 +7,5 @@ import './constants.js';
 import './i18n.js';
 import './configure.js';
 //
-import './fields-set.js';
-import './tabbed.js';
-import './tabular-ext.js';
+import './fieldset.js';
+import './tabular.js';

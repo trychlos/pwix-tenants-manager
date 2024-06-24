@@ -2,8 +2,10 @@
  * pwix:tenants-manager/src/client/js/index.js
  */
 
-// import templates before defining the TabularExt class (which need them)
+// import here templates required to display fields in Tabular
 //
 import '../../common/js/index.js';
+//
+import './permissions.js';
 //
 import '../stylesheets/tenants_manager.less';

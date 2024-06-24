@@ -9,15 +9,14 @@ TenantsManager._conf = {};
 TenantsManager._defaults = {
     classes: '',
     fieldsSet: null,
-    haveEmailAddress: TenantsManager.C.Input.MANDATORY,
-    haveUsername: TenantsManager.C.Input.NONE,
+    hideDisabled: true,
     roles: {
         list: null,
         create: null,
         edit: null,
         delete: null
     },
-    scopesFn: null,
+    tenantsCollection: 'tenants',
     verbosity: TenantsManager.C.Verbose.CONFIGURE
 };
 
@@ -35,6 +34,7 @@ TenantsManager.configure = function( o ){
             //console.log( 'pwix:tenants-manager configure() with', o, 'building', TenantsList._conf );
             console.log( 'pwix:tenants-manager configure() with', o );
         }
+        Meteor.isClient && TenantsManager.perms.resetRoles();
     }
     // also acts as a getter
     return TenantsManager._conf;
