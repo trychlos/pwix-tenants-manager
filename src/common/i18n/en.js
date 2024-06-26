@@ -11,13 +11,16 @@ TenantsManager.i18n = {
                 edit_title: 'Edit the "%s" tenant',
                 info_title: 'Informations about the "%s" tenant record'
             },
-            check: {
-            },
             delete: {
                 success: 'The "%s" tenant has been successfully deleted'
             },
             edit: {
                 modal_title: 'Editing a tenant'
+            },
+            entity: {
+                check: {
+                    label_unset: 'Label is not set (but maybe should ?)'
+                }
             },
             list: {
                 contact_email_th: 'Contact',
@@ -26,9 +29,9 @@ TenantsManager.i18n = {
                 notes_th: 'Notes'
             },
             new: {
-                btn_plus_label: 'New organization',
-                btn_plus_title: 'Define a new organization',
-                modal_title: 'Create an organization'
+                btn_plus_label: 'New tenant',
+                btn_plus_title: 'Define a new tenant',
+                modal_title: 'Define a new tenant'
             },
             panel: {
                 create_btn: 'Create',

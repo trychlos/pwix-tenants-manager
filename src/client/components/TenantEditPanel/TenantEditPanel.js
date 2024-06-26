@@ -9,31 +9,31 @@
  *     |
  *     +- entity_edit                               edit the common parts of the tenant's entity
  *     |
- *     +- ValidityTabbed                            manage the validities (if any)
+ *     +- ValidityTabbed                            manage the validities
  *     |   |
- *     |   +- organization_tabbed                   the organization edition, manage the organization tabs
+ *     |   +- record_tabbed                         the record edition panel, as a tabbed component
  *     |       |
- *     |       +- coreTabbedTemplate
+ *     |       +- Tabbed
  *     |       |   |
  *     |       |   +- organization_properties_pane
  *     |       |   +- organization_urls_pane
  *     |       |   +- organization_logo_panel
  *     |       |   +- ext_notes_panel
  *     |       |
- *     |       +- validities_fieldset
+ *     |       +- ValidityFieldset
  *     |
- *     +- FormsMEssager                             the messages area
+ *     +- FormsMessager                             the messages area
  *
  *  This template hierarchy can run inside of a plain page or of a modal; this is up to the caller, and dynamically identified here.
  *
  * Parms:
  * - item: the to-be-edited item, null when new
+ *      including DYN.managers and DYN.records arrays
  *      this item will be left unchanged until panel submission
  */
 
 import _ from 'lodash';
 
-import { AccountsUI } from 'meteor/pwix:accounts-ui';
 import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -41,6 +41,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
 import '../entity_edit/entity_edit.js';
+//import '../record_tabbed/record_tabbed.js';
 
 import './TenantEditPanel.html';
 
@@ -67,7 +68,7 @@ Template.TenantEditPanel.onCreated( function(){
 
     // setup the item to be edited
     self.autorun(() => {
-        self.TM.item.set( _.cloneDeep( Template.currentData().item || {} ));
+        self.TM.item.set( _.cloneDeep( Template.currentData().item || { DYN: { managers: [], records: [] }}));
     });
 });
 
@@ -120,6 +121,7 @@ Template.TenantEditPanel.helpers({
     // parms to entity_edit component
     parmsEntityEdit(){
         return {
+            ...this,
             item: Template.instance().TM.item,
             checker: Template.instance().TM.checker
         };
@@ -128,56 +130,25 @@ Template.TenantEditPanel.helpers({
     // parms to FormsMessager
     parmsMessager(){
         return {
+            ...this,
             messager: Template.instance().TM.messager
         };
     },
 
-    // parms for ValidityTemplate
-    parmsTabbed(){
-        const dataContext = this;
-        const paneData = {
-            item: Template.instance().TM.item,
-            checker: Template.instance().TM.checker
-        };
+    // parms for ValidityTabbed
+    // the calling data context is completed with:
+    //  - to-be-edited item reactive var, may be empty
+    //  - the target template
+    //  - withValidities
+    //  - the template to be rendered for each validity period
+    //  - our (topmost) Checker instance
+    parmsValidities(){
         return {
-            tabs: [
-                {
-                    tabid: 'ident_tab',
-                    paneid: 'ident_pane',
-                    navLabel: pwixI18n.label( I18N, 'tabs.ident_title' ),
-                    paneTemplate: 'account_ident_panel',
-                    paneData: paneData
-                },
-                {
-                    tabid: 'roles_tab',
-                    paneid: 'roles_pane',
-                    navLabel: pwixI18n.label( I18N, 'tabs.roles_title' ),
-                    paneTemplate: 'account_roles_panel',
-                    paneData: paneData
-                },
-                /*
-                {
-                    tabid: 'settings_tab',
-                    paneid: 'settings_pane',
-                    navLabel: pwixI18n.label( I18N, 'accounts.manager.settings_title' ),
-                    paneTemplate: 'account_settings_panel',
-                    paneData: paneData
-                },
-                {
-                    navLabel: pwixI18n.label( I18N, 'ext_notes.panel.tab_title' ),
-                    paneTemplate: 'ext_notes_panel',
-                    paneData(){
-                        return {
-                            notes: dataContext.item ? dataContext.item.notes : '',
-                            event: 'panel-data',
-                            data: {
-                                emitter: 'notes'
-                            }
-                        };
-                    }
-                }
-                    */
-            ]
+            ...this,
+            entity: Template.instance().TM.item,
+            checker: Template.instance().TM.checker,
+            //template: record_tabbed,
+            withValidities: true
         };
     }
 });
@@ -252,6 +223,7 @@ Template.TenantEditPanel.events({
         }
         // when creating a new account, we let the user create several by reusing the same modal
         if( instance.TM.isNew.get()){
+            /*
             AccountsUI.Account.createUser({
                 username: item.username,
                 password: item.password,
@@ -269,6 +241,7 @@ Template.TenantEditPanel.events({
                     });
                 }
             });
+            */
             instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
             instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
             instance.$( '.c-account-settings-panel' ).trigger( 'clear-panel' );

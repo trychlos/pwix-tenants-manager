@@ -9,6 +9,7 @@
  */
 
 import { Field } from 'meteor/pwix:field';
+import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
@@ -28,7 +29,9 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'label',
             type: String,
-            optional: true
+            optional: true,
+            form_check: Entities.checks.check_label,
+            form_type: Forms.FieldType.C.MANDATORY
         },
         Notes.fieldDef(),
         {

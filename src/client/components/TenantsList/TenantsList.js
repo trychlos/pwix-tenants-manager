@@ -6,12 +6,11 @@
  */
 
 import { Modal } from 'meteor/pwix:modal';
+import { Mongo } from 'meteor/mongo';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tolert } from 'meteor/pwix:tolert';
-
-import { Entities } from '../../../common/collections/entities/index.js';
 
 import '../TenantEditPanel/TenantEditPanel.js';
 
@@ -22,6 +21,7 @@ Template.TenantsList.onCreated( function(){
 
     self.TM = {
         tenants: {
+            collection: new Mongo.Collection( 'tenants_all' ),
             handle: self.subscribe( 'pwix_tenants_manager_entities_list_all' ),
             list: new ReactiveVar( [] )
         }
@@ -31,11 +31,11 @@ Template.TenantsList.onCreated( function(){
     self.autorun(() => {
         if( self.TM.tenants.handle.ready()){
             let tenants = [];
-            Entities.collection.find().forEachAsync(( o ) => {
+            self.TM.tenants.collection.find().forEachAsync(( o ) => {
                 tenants.push( o );
             }).then(() => {
                 self.TM.tenants.list.set( tenants );
-                //console.debug( tenants );
+                console.debug( tenants );
             });
         }
     });
