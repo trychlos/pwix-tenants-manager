@@ -1,7 +1,10 @@
 <template name="TenantEditPanel">
     <div class="TenantEditPanel">
 
+        {{> entity_edit (parmsEntityEdit) }}
+
         {{> ValidityTabbed (parmsTabbed) }}
+
         {{> FormsMessager (parmsMessager) }}
 
         {{#unless isModal }}

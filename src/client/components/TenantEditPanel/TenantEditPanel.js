@@ -7,6 +7,8 @@
  *
  *    TenantEditPanel                               this one: manage the events
  *     |
+ *     +- entity_edit                               edit the common parts of the tenant's entity
+ *     |
  *     +- ValidityTabbed                            manage the validities (if any)
  *     |   |
  *     |   +- organization_tabbed                   the organization edition, manage the organization tabs
@@ -25,10 +27,8 @@
  *  This template hierarchy can run inside of a plain page or of a modal; this is up to the caller, and dynamically identified here.
  *
  * Parms:
- * - group: the organization items group
- *      > as an object { entity, items } if application does manage the validities
- *      > as just the edited object item itself if the application is not willing to manage validities
- *      null when new
+ * - item: the to-be-edited item, null when new
+ *      this item will be left unchanged until panel submission
  */
 
 import _ from 'lodash';
@@ -40,11 +40,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
-//import '../account_email_row/account_email_row.js';
-//import '../account_emails_list/account_emails_list.js';
-//import '../account_ident_panel/account_ident_panel.js';
-//import '../account_roles_panel/account_roles_panel.js';
-//import '/imports/client/components/account_settings_panel/account_settings_panel.js';
+import '../entity_edit/entity_edit.js';
 
 import './TenantEditPanel.html';
 
@@ -119,6 +115,14 @@ Template.TenantEditPanel.helpers({
     // whether we want create a new entity ?
     isNew(){
         return Template.instance().TM.isNew.get();
+    },
+
+    // parms to entity_edit component
+    parmsEntityEdit(){
+        return {
+            item: Template.instance().TM.item,
+            checker: Template.instance().TM.checker
+        };
     },
 
     // parms to FormsMessager
