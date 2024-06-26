@@ -46,7 +46,8 @@ import { Roles } from 'meteor/pwix:roles';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-import '../entity_properties_pane/entity_properties_pane.js';
+// not used as we do not want manage any data at the entity level (notes is more than enough)
+//import '../entity_properties_pane/entity_properties_pane.js';
 import '../entity_validities_pane/entity_validities_pane.js';
 import '../record_properties_pane/record_properties_pane.js';
 import '../record_tabbed/record_tabbed.js';
@@ -153,23 +154,6 @@ Template.TenantEditPanel.helpers({
         const notesField = Entities.fieldSet.get().byName( 'notes' );
         const tabs = [
             {
-                tabid: 'entity_properties_tab',
-                paneid: 'entity_properties_pane',
-                navLabel: pwixI18n.label( I18N, 'tabs.entity_properties_title' ),
-                paneTemplate: 'entity_properties_pane',
-                paneData: paneData
-            },
-            {
-                tabid: 'entity_notes_tab',
-                paneid: 'entity_notes_pane',
-                navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
-                paneTemplate: 'NotesEdit',
-                paneData: {
-                    ...paneData,
-                    field: notesField
-                }
-            },
-            {
                 tabid: 'entity_validities_tab',
                 paneid: 'entity_validities_pane',
                 navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
@@ -180,6 +164,16 @@ Template.TenantEditPanel.helpers({
                     checker: TM.checker,
                     template: 'record_tabbed',
                     withValidities: true
+                }
+            },
+            {
+                tabid: 'entity_notes_tab',
+                paneid: 'entity_notes_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
+                paneTemplate: 'NotesEdit',
+                paneData: {
+                    ...paneData,
+                    field: notesField
                 }
             }
         ];

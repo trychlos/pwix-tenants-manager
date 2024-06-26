@@ -49,9 +49,33 @@ TenantsManager.i18n = {
                     properties_tab: 'Properties'
                 },
                 properties: {
+                    contact_email_label: 'Contact email address :',
+                    contact_email_ph: 'contact@example.com',
+                    contact_email_title: 'Contact email address',
+                    contact_url_label: 'Contact URL :',
+                    contact_url_ph: 'https://www.example.com/contact',
+                    contact_url_title: 'Contact URL',
+                    gtu_label: 'General Terms of Use URL :',
+                    gtu_ph: 'https://www.example.com/gtu',
+                    gtu_title: 'General Terms of Use URL',
+                    home_label: 'Home page URL :',
+                    home_ph: 'https://www.example.com',
+                    home_title: 'Home page URL',
                     label_label: 'Label :',
                     label_ph: 'A label specific to the validity period',
-                    label_title: 'A label specific to the validity period'
+                    label_title: 'A label specific to the validity period',
+                    legals_label: 'Legal Terms URL :',
+                    legals_ph: 'https://www.example.com/legals',
+                    legals_title: 'Legal Terms URL',
+                    pdmp_label: 'Personal Data Policy Management URL :',
+                    pdmp_ph: 'https://www.example.com/gdpr',
+                    pdmp_title: 'Personal Data Policy Management URL',
+                    support_email_label: 'Support email address :',
+                    support_email_ph: 'support@example.com',
+                    support_email_title: 'Support email address',
+                    support_url_label: 'Support URL :',
+                    support_url_ph: 'https://www.example.com/support',
+                    support_url_title: 'Support URL'
                 }
             },
             tabs: {

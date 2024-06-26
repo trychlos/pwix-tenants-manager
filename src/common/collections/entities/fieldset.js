@@ -27,14 +27,8 @@ const _defaultFieldSet = function( conf ){
             type: String,
             dt_tabular: false
         },
-        // a mandatory label, must be unique among all entities, common for all records of the entity
         {
-            name: 'label',
-            type: String,
-            optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.label_th' ),
-            form_check: Entities.checks.check_label,
-            form_type: Forms.FieldType.C.MANDATORY
+            dt_title: pwixI18n.label( I18N, 'list.label_th' )
         },
         {
             dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),

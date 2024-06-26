@@ -9,6 +9,7 @@
  */
 
 import { Field } from 'meteor/pwix:field';
+import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
@@ -22,11 +23,13 @@ const _defaultFieldSet = function( conf ){
             type: String,
             dt_tabular: false
         },
-        // a mandatory label, identifies this tenant entity, i.e. entity+validity
+        // a mandatory label, identifies the tenant entity
         {
             name: 'label',
             type: String,
             dt_title: pwixI18n.label( I18N, 'list.label_th' ),
+            //form_check: AccountsManager.checks.check_email_address,
+            form_type: Forms.FieldType.C.MANDATORY
         },
         // the entity identifier (from the entities collection)
         {
@@ -39,21 +42,24 @@ const _defaultFieldSet = function( conf ){
             name: 'pdmpUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // general terms of use
         {
             name: 'gtuUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // legals terms page
         {
             name: 'legalsUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page which describes the organization
         {
@@ -61,40 +67,46 @@ const _defaultFieldSet = function( conf ){
             type: String,
             optional: true,
             dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page to access the support
         {
             name: 'supportUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // a contact page
         {
             name: 'contactUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // the organization logo (either an Url or an embedded image, or both)
         {
             name: 'logoUrl',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         {
             name: 'logoImage',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // support email address
         {
             name: 'supportEmail',
             type: String,
             optional: true,
-            dt_visible: false
+            dt_visible: false,
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         // contact email address
         {
@@ -102,6 +114,7 @@ const _defaultFieldSet = function( conf ){
             type: String,
             optional: true,
             dt_title: pwixI18n.label( I18N, 'list.contact_email_th' ),
+            form_type: Forms.FieldType.C.OPTIONAL
         },
         Notes.fieldDef(),
         {

@@ -40,7 +40,7 @@ Template.TenantNewButton.events({
         Modal.run({
             mdBody: 'TenantEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
-            mdClasses: 'modal-lg',
+            mdClasses: 'modal-xl',
             mdClassesContent: TenantsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'new.modal_title' ),
             item: null
