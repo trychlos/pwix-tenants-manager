@@ -11,10 +11,6 @@ export const Entities = {
     fieldSet: new ReactiveVar( null )
 };
 
-console.debug( 'Entities', Entities );
-
-console.debug( 'TenantsManager', TenantsManager );
-
 Tracker.autorun(() => {
     const collectionName = TenantsManager.configure().tenantsCollection+'_e';
     const ready = Entities.collectionReady.get();

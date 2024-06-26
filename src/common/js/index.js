@@ -8,5 +8,4 @@ import './configure.js';
 import './i18n.js';
 //
 import './collections.js';
-import './entities-tabular.js';
 import './trace.js';

@@ -31,7 +31,7 @@ Template.TenantsList.onCreated( function(){
     self.autorun(() => {
         if( self.TM.tenants.handle.ready()){
             let tenants = [];
-            Tenants.collection.find().forEachAsync(( o ) => {
+            Entities.collection.find().forEachAsync(( o ) => {
                 tenants.push( o );
             }).then(() => {
                 self.TM.tenants.list.set( tenants );

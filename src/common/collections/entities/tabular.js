@@ -4,8 +4,9 @@
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
+import { Tracker } from 'meteor/tracker';
 
-import { Entities } from '../collections/entities/index.js';
+import { Entities } from './index.js';
 
 Tracker.autorun(() => {
     const conf = TenantsManager.configure();

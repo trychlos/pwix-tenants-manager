@@ -7,8 +7,7 @@ import '../../js/index.js';
 
 export { Entities } from './collection.js';
 
-//import './checks.js';
-//import './fieldset.js';
-//import './schema.js';
-
-//console.debug( 'Entities', Entities );
+import './checks.js';
+import './fieldset.js';
+import './schema.js';
+import './tabular.js';

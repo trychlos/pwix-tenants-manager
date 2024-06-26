@@ -18,3 +18,5 @@ export const Tenants = {
         }
     }
 };
+
+console.debug( 'defining Tenants' );
