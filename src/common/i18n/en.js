@@ -47,10 +47,17 @@ TenantsManager.i18n = {
             records: {
                 panel: {
                     properties_tab: 'Properties'
+                },
+                properties: {
+                    label_label: 'Label :',
+                    label_ph: 'A label specific to the validity period',
+                    label_title: 'A label specific to the validity period'
                 }
             },
             tabs: {
-                //ident_title: 'Identity',
+                entity_properties_title: 'Common properties',
+                entity_notes_title: 'Common notes',
+                entity_validities_title: 'By validity period(s)',
             },
             tenants: {
                 check: {

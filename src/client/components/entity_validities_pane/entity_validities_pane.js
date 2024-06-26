@@ -1,11 +1,11 @@
 /*
- * pwix:tenants-manager/src/client/components/entity_edit/entity_edit.js
+ * pwix:tenants-manager/src/client/components/entity_validities_pane/entity_validities_pane.js
  *
- * Edit the common part of the tenant's entity.
+ * Manages a ValidityTabbed tabbed pane, where each pane is a validity period.
  *
  * Parms:
  * - item: a ReactiveVar which holds the tenant entity to edit
- * - checker: the parent Checker which manages the dialog
+ * - checker: the parent Checker
  */
 
 import _ from 'lodash';
@@ -16,9 +16,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-import './entity_edit.html';
+import './entity_validities_pane.html';
 
-Template.entity_edit.onCreated( function(){
+Template.entity_validities_pane.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -27,22 +27,16 @@ Template.entity_edit.onCreated( function(){
     };
 });
 
-Template.entity_edit.onRendered( function(){
+Template.entity_validities_pane.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        const fields = {
-            label: {
-                js: '.js-label'
-            }
-        };
-        const parentChecker = Template.currentData().checker.get();
+        const parentChecker = Template.currentData().checker?.get();
         const checker = self.TM.checker.get();
         if( parentChecker && !checker ){
             self.TM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
-                panel: new Forms.Panel( fields, Entities.fieldSet.get()),
                 data: {
                     item: Template.currentData().item
                 }
@@ -51,18 +45,17 @@ Template.entity_edit.onRendered( function(){
     });
 });
 
-Template.entity_edit.helpers({
-    // string translation
-    i18n( arg ){
-        return pwixI18n.label( I18N, arg.hash.key );
-    },
-
-    label(){
-        return this.item.get().label || '';
+Template.entity_validities_pane.helpers({
+    // manage the ValidityTabbed panel
+    parmsValidities(){
+        return {
+            ...this,
+            checker: Template.instance().TM.checker
+        };
     }
 });
 
-Template.entity_edit.events({
+Template.entity_validities_pane.events({
     // edit the managers
     'click .js-edit-managers'( event, instance ){
         const self = this;

@@ -7,15 +7,16 @@
  *
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar
- * - record: the entity record currently being edited
+ * - record: the entity record currently being edited as a ReactiveVar
  * - checker: the Checker which manages the parent component
  *
  * Because record_tabbed, which hosts tenants properties as tabs, is itself hosted inside of ValidityTabbed component with one tab per validity period,
- *  we identify each validity period through the tab identifier allocated by the Tabbed parent of this record_tabbed.
+ *  we identify each validity period through the tab identifier allocated by the ValidityTabbed (which happens to be the Tabbed parent of this record_tabbed).
  */
 
 import _ from 'lodash';
 
+import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -25,16 +26,11 @@ import './record_tabbed.html';
 
 Template.record_tabbed.onCreated( function(){
     const self = this;
+    console.debug( this );
 
     self.TM = {
-        fields: {
-            effectStart: {
-                js: '.js-start input',
-            },
-            effectEnd: {
-                js: '.js-end input',
-            }
-        },
+        // the Checker instance
+        checker: new ReactiveVar( null ),
         // the pane identifier of this validity period - must be a ReactiveVar as Blaze helpers are run first before view is fully rendered
         tabId: new ReactiveVar( null ),
 
@@ -61,11 +57,6 @@ Template.record_tabbed.onCreated( function(){
         //console.debug( 'setting tabId to', self.TM.tabId.get());
     });
 
-    // have an item ReactiveVar to be passed to all child panes
-    self.autorun(() => {
-        self.TM.itemRv.set( Template.currentData().item );
-    });
-
     // tracking notes of the current item
     self.autorun(() => {
         //console.debug( 'edited', Template.currentData().edited.get());
@@ -76,24 +67,27 @@ Template.record_tabbed.onCreated( function(){
 Template.record_tabbed.onRendered( function(){
     const self = this;
 
-    // initialize the FormChecker for this panel
+    // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        self.TM.checker.set( new CoreApp.FormChecker( self, self.TM.fields, {
-            checks: Organizations,
-            entityChecker: Template.currentData().entityChecker
-        }));
-    });
-
-    // set data inside of an autorun so that it is reactive to datacontext changes
-    // initialize the display (check indicators) - let the error messages be displayed here: there should be none (though may be warnings)
-    self.autorun(() => {
-        const dataContext = Template.currentData();
-        self.TM.checker.get().setData({
-            edited: dataContext.edited,
-            item: self.TM.itemRv
-        });
-        self.TM.checker.get().setForm( dataContext.item );
-        self.TM.checker.get().check({ update: false }).then(( valid ) => { self.TM.sendPanelData( dataContext, valid ); });
+        const fields = {
+            effectStart: {
+                js: '.js-start input',
+            },
+            effectEnd: {
+                js: '.js-end input',
+            }
+        };
+        const parentChecker = Template.currentData().checker.get();
+        const checker = self.TM.checker.get();
+        if( parentChecker && !checker ){
+            self.TM.checker.set( new Forms.Checker( self, {
+                parent: parentChecker,
+                panel: new Forms.Panel( fields, Records.fieldSet.get()),
+                data: {
+                    item: Template.currentData().record
+                }
+            }));
+        }
     });
 });
 
@@ -109,25 +103,7 @@ Template.record_tabbed.helpers({
                     navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
                     paneTemplate: 'record_properties_pane',
                     paneData: {
-                        item: dataContext.entity,
-                        checker: dataContext.checker,
-                        vtpid: TM.tabId.get()
-                    }
-                },
-                {
-                    navLabel: pwixI18n.label( I18N, 'organizations.panel.urls_tab' ),
-                    paneTemplate: 'organization_urls_pane',
-                    paneData: {
-                        item: dataContext.entity,
-                        checker: dataContext.checker,
-                        vtpid: TM.tabId.get()
-                    }
-                },
-                {
-                    navLabel: pwixI18n.label( I18N, 'organizations.panel.logo_tab' ),
-                    paneTemplate: 'organization_logo_pane',
-                    paneData: {
-                        item: dataContext.entity,
+                        item: dataContext.record,
                         checker: dataContext.checker,
                         vtpid: TM.tabId.get()
                     }
@@ -141,16 +117,6 @@ Template.record_tabbed.helpers({
                             field: notes
                         };
                     }
-                },
-                {
-                    //navLabel: userNotes.toForm().title,
-                    paneTemplate: 'NotesEdit',
-                    paneData(){
-                        return {
-                            item: dataContext.item,
-                            field: userNotes
-                        };
-                    }
                 }
             ],
             name: 'record_tabbed'
@@ -160,8 +126,8 @@ Template.record_tabbed.helpers({
     // data context for ValidityFieldset
     parmsValidity(){
         return {
-            startDate: this.item.effectStart,
-            endDate: this.item.effectEnd
+            startDate: this.record.get().effectStart,
+            endDate: this.record.get().effectEnd
         };
     }
 });

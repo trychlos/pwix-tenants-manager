@@ -7,20 +7,24 @@
  *
  *    TenantEditPanel                               this one: manage the events
  *     |
- *     +- entity_edit                               edit the common parts of the tenant's entity
- *     |
- *     +- ValidityTabbed                            manage the validities
+ *     +- Tabbed                                    manage both the entity tabs and the validities
  *     |   |
- *     |   +- record_tabbed                         the record edition panel, as a tabbed component
+ *     |   +- entity_properties_pane
+ *     |   |
+ *     |   +- NotesEdit                             entity notes
+ *     |   |
+ *     |   +- entity_validities_pane
  *     |       |
- *     |       +- Tabbed
- *     |       |   |
- *     |       |   +- record_properties_pane
- *     |       |   +- organization_urls_pane
- *     |       |   +- organization_logo_panel
- *     |       |   +- ext_notes_panel
- *     |       |
- *     |       +- ValidityFieldset
+ *     |       +- ValidityTabbed                        manage the validities with one pane per validity period
+ *     |           |
+ *     |           +- record_tabbed                         the record edition panel, as a tabbed component
+ *     |           |   |
+ *     |           |   +- Tabbed
+ *     |           |       |
+ *     |           |       +- record_properties_pane
+ *     |           |       +- NotesEdit                 record notes
+ *     |           |
+ *     |           +- ValidityFieldset
  *     |
  *     +- FormsMessager                             the messages area
  *
@@ -40,7 +44,10 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
-import '../entity_edit/entity_edit.js';
+import { Entities } from '../../../common/collections/entities/index.js';
+
+import '../entity_properties_pane/entity_properties_pane.js';
+import '../entity_validities_pane/entity_validities_pane.js';
 import '../record_properties_pane/record_properties_pane.js';
 import '../record_tabbed/record_tabbed.js';
 
@@ -68,8 +75,16 @@ Template.TenantEditPanel.onCreated( function(){
     });
 
     // setup the item to be edited
+    //  we want a clone deep of the provided item, so that we are able to cancel the edition without keeping any sort of data
+    //  and we want ReactiveVar's both for every record and for the entity
     self.autorun(() => {
-        self.TM.item.set( _.cloneDeep( Template.currentData().item || { DYN: { managers: [], records: [] }}));
+        const dup = _.cloneDeep( Template.currentData().item || { DYN: { managers: [], records: [{}] }});
+        let records = [];
+        dup.DYN.records.forEach(( it ) => {
+            records.push( new ReactiveVar( it ));
+        });
+        dup.DYN.records = records;
+        self.TM.item.set( dup );
     });
 });
 
@@ -119,15 +134,6 @@ Template.TenantEditPanel.helpers({
         return Template.instance().TM.isNew.get();
     },
 
-    // parms to entity_edit component
-    parmsEntityEdit(){
-        return {
-            ...this,
-            item: Template.instance().TM.item,
-            checker: Template.instance().TM.checker
-        };
-    },
-
     // parms to FormsMessager
     parmsMessager(){
         return {
@@ -136,20 +142,49 @@ Template.TenantEditPanel.helpers({
         };
     },
 
-    // parms for ValidityTabbed
-    // the calling data context is completed with:
-    //  - to-be-edited item reactive var, may be empty
-    //  - the target template
-    //  - withValidities
-    //  - the template to be rendered for each validity period
-    //  - our (topmost) Checker instance
-    parmsValidities(){
-        return {
+    // parms to entity_properties_pane component
+    parmsTabbed(){
+        TM = Template.instance().TM;
+        const paneData = {
             ...this,
-            entity: Template.instance().TM.item,
-            checker: Template.instance().TM.checker,
-            //template: record_tabbed,
-            withValidities: true
+            item: TM.item,
+            checker: TM.checker
+        };
+        const notesField = Entities.fieldSet.get().byName( 'notes' );
+        const tabs = [
+            {
+                tabid: 'entity_properties_tab',
+                paneid: 'entity_properties_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_properties_title' ),
+                paneTemplate: 'entity_properties_pane',
+                paneData: paneData
+            },
+            {
+                tabid: 'entity_notes_tab',
+                paneid: 'entity_notes_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
+                paneTemplate: 'NotesEdit',
+                paneData: {
+                    ...paneData,
+                    field: notesField
+                }
+            },
+            {
+                tabid: 'entity_validities_tab',
+                paneid: 'entity_validities_pane',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
+                paneTemplate: 'entity_validities_pane',
+                paneData: {
+                    ...this,
+                    entity: TM.item,
+                    checker: TM.checker,
+                    template: 'record_tabbed',
+                    withValidities: true
+                }
+            }
+        ];
+        return {
+            tabs: tabs
         };
     }
 });

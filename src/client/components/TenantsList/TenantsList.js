@@ -27,7 +27,9 @@ Template.TenantsList.onCreated( function(){
         }
     };
 
-    // load the tenant's list
+    // maintain here the list of tenants as an array of ReactiveVar's, each being a tenant entity
+    //  each entity holds itself a DYN.records array of tenant records
+    //  and a DYN.managers array of scoped managers user docs
     self.autorun(() => {
         if( self.TM.tenants.handle.ready()){
             let tenants = [];
@@ -35,7 +37,7 @@ Template.TenantsList.onCreated( function(){
                 tenants.push( o );
             }).then(() => {
                 self.TM.tenants.list.set( tenants );
-                console.debug( tenants );
+                console.debug( 'tenants', tenants );
             });
         }
     });

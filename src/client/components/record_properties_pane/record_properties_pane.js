@@ -5,7 +5,7 @@
  *
  * Parms:
  * - item: a ReactiveVar which holds the organization validity record to edit
- * - entityChecker: the EntityChecker which manages the dialog
+ * - checker: the parent Forms.Checker as a ReactiveVar
  * - vtpid: the identifier of the validity tab period, to be used in 'panel-data' events
  */
 
@@ -73,15 +73,6 @@ Template.record_properties_pane.onCreated( function(){
             }
         }
     };
-
-    // make sure we have a DYN object
-    self.autorun(() => {
-        const item = Template.currentData().item.get();
-        if( !item.DYN ){
-            item.DYN = {};
-            Template.currentData().item.set( item );
-        }
-    });
 });
 
 Template.record_properties_pane.onRendered( function(){
@@ -89,6 +80,7 @@ Template.record_properties_pane.onRendered( function(){
     const dataContext = Template.currentData();
 
     // initialize the FormChecker for this panel
+    /*
     self.autorun(() => {
         self.APP.form.set( new Forms.Checker({
             instance: self,
@@ -108,29 +100,14 @@ Template.record_properties_pane.onRendered( function(){
         self.APP.form.get().setForm( dataContext.item.get());
         self.APP.form.get().check({ update: false }).then(( valid ) => { self.APP.sendPanelData( dataContext, valid ); });
     });
+    */
 });
 
 Template.record_properties_pane.helpers({
-    // display a check indicator
-    fieldCheck( f ){
-        const form = Template.instance().APP.form.get();
-        return form ? form.getFieldCheck( f ) : '';
-    },
-
-    // display a type indicator
-    fieldType( f ){
-        return Template.instance().APP.fields[f].type || '';
-    },
-
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
-    },
-
-    // the issuer url
-    issuer(){
-        return this.item.get().baseUrl ? pwixI18n.label( I18N, 'organizations.properties.issuer_label', Organizations.fn.baseUrl( this.item.get())) : '&nbsp;';
-    },
+    }
 });
 
 Template.record_properties_pane.events({

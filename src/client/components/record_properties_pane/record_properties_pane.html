@@ -3,47 +3,57 @@
 
         <table class="form-table">
             <tr>
-                <td class="ui-w20 label"><label class="form-label" for="organization-properties-label">{{ i18n key="organizations.properties.label_label" }}</label></td>
-                <td class="ui-w100 d-flex align-items-center">
-                    <input class="form-control flex-grow-1 js-label" type="text" id="organization-properties-label" placeholder="{{ i18n key="organizations.properties.label_ph" }}" title="{{ i18n key="organizations.properties.label_title" }}" />
+                <td class="ui-w20 label"><label class="form-label" for="record-properties-label">{{ i18n key="records.properties.label_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control flex-grow-1 js-label" type="text" id="record-properties-label" placeholder="{{ i18n key="records.properties.label_ph" }}" title="{{ i18n key="records.properties.label_title" }}" />
                 </td>
             </tr>
             <tr>
-                <td class="label ui-vatop ui-pt05"><label class="form-label" for="organization-properties-baseurl">{{ i18n key="organizations.properties.baseurl_label" }}</label></td>
-                <td class="d-flex align-items-start">
-                    <div class="ui-mt05 ui-pr025">
-                    </div>
-                    <div class="flex-grow-1">
-                        <input class="form-control js-baseurl" type="text" id="organization-properties-baseurl" placeholder="{{ i18n key="organizations.properties.baseurl_ph" }}" title="{{ i18n key="organizations.properties.baseurl_title" }}" />
-                        <div class="url">{{{ issuer }}}</div>
-                    </div>
+                <td class="label"><label class="form-label" for="record-properties-pdmp">{{ i18n key="records.properties.pdmp_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-pdmp" type="text" id="record-properties-pdmp" placeholder="{{ i18n key="records.properties.pdmp_ph" }}" title="{{ i18n key="records.properties.pdmp_title" }}" />
                 </td>
             </tr>
             <tr>
-                <td class="label"><label class="form-label" for="organization-properties-managers">{{ i18n key="organizations.properties.managers_label" }}</label></td>
-                <td class="d-flex align-items-center">
-                    <input class="form-control flex-grow-1 js-managers" type="text" id="organization-properties-managers" readonly placeholder="{{ i18n key="organizations.properties.managers_ph" }}" title="{{ i18n key="organizations.properties.managers_title" }}" />
-                    <button class="btn btn-sm btn-outline-primary ui-ml025 js-edit-managers" title="{{ editManagers }}">
-                        <span class="fa-solid fa-fw fa-pen-to-square"></span>
-                    </button>
+                <td class="label"><label class="form-label" for="record-properties-gtu">{{ i18n key="records.properties.gtu_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-gtu" placeholder="{{ i18n key="records.properties.gtu_ph" }}" title="{{ i18n key="records.properties.gtu_title" }}" />
                 </td>
             </tr>
             <tr>
-                <td class="label"><label class="form-label" for="organization-properties-support">{{ i18n key="organizations.properties.supporturl_label" }}</label></td>
-                <td class="d-flex align-items-center">
-                    <input class="form-control flex-grow-1 js-support-url" type="text" id="organization-properties-support" placeholder="{{ i18n key="organizations.properties.supporturl_ph" }}" title="{{ i18n key="organizations.properties.supporturl_title" }}" />
+                <td class="label"><label class="form-label" for="record-properties-legals">{{ i18n key="records.properties.legals_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-legals" placeholder="{{ i18n key="records.properties.legals_ph" }}" title="{{ i18n key="records.properties.legals_title" }}" />
                 </td>
             </tr>
             <tr>
-                <td class="label"><label class="form-label" for="organization-properties-support-email">{{ i18n key="organizations.properties.supportemail_label" }}</label></td>
-                <td class="d-flex align-items-center">
-                    <input class="form-control flex-grow-1 js-support-email" type="text" id="organization-properties-support-email" placeholder="{{ i18n key="organizations.properties.supportemail_ph" }}" title="{{ i18n key="organizations.properties.supportemail_title" }}" />
+                <td class="label"><label class="form-label" for="record-properties-home">{{ i18n key="records.properties.home_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-home" placeholder="{{ i18n key="records.properties.home_ph" }}" title="{{ i18n key="records.properties.home_title" }}" />
                 </td>
             </tr>
             <tr>
-                <td class="label"><label class="form-label" for="organization-properties-contact">{{ i18n key="organizations.properties.contactemail_label" }}</label></td>
-                <td class="d-flex align-items-center">
-                    <input class="form-control flex-grow-1 js-contact" type="text" id="organization-properties-contact" placeholder="{{ i18n key="organizations.properties.contactemail_ph" }}" title="{{ i18n key="organizations.properties.contactemail_title" }}" />
+                <td class="label"><label class="form-label" for="record-properties-support-url">{{ i18n key="records.properties.support_url_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-support-url" placeholder="{{ i18n key="records.properties.support_url_ph" }}" title="{{ i18n key="records.properties.support_url_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="record-properties-contact-url">{{ i18n key="records.properties.contact_url_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-contact-url" placeholder="{{ i18n key="records.properties.support_url_ph" }}" title="{{ i18n key="records.properties.contact_url_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="record-properties-support-email">{{ i18n key="records.properties.support_email_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-support-email" placeholder="{{ i18n key="records.properties.support_email_ph" }}" title="{{ i18n key="records.properties.support_email_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="record-properties-contact-email">{{ i18n key="records.properties.contact_email_label" }}</label></td>
+                <td class="ui-w100">
+                    <input class="form-control js-gtu" type="text" id="record-properties-contact-email" placeholder="{{ i18n key="records.properties.support_email_ph" }}" title="{{ i18n key="records.properties.contact_email_title" }}" />
                 </td>
             </tr>
         </table>
