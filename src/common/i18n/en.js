@@ -31,16 +31,7 @@ TenantsManager.i18n = {
                 modal_title: 'Create an organization'
             },
             panel: {
-                add_title: 'Add an email address',
-                email_label: 'Email :',
-                email_ph: 'you@example.com',
-                last_login_label: 'Last connection :',
-                line_valid: 'Whether this line is valid',
-                login_allowed_label: 'Is connection allowed :',
-                remove_title: 'Remove this email address',
-                username_label: 'Username :',
-                username_ph: 'John42',
-                verified_label: 'Is email verified :'
+                create_btn: 'Create',
             },
             tabs: {
                 //ident_title: 'Identity',

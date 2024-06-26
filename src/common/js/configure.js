@@ -4,19 +4,28 @@
 
 import _ from 'lodash';
 
-TenantsManager._conf = {};
+import { ReactiveVar } from 'meteor/reactive-var';
+
+let _conf = {};
+
+TenantsManager._conf = new ReactiveVar( _conf );
 
 TenantsManager._defaults = {
+    // user interface
     classes: '',
-    fieldsSet: null,
     hideDisabled: true,
+    // permissions
     roles: {
         list: null,
         create: null,
         edit: null,
         delete: null
     },
+    // storage
+    entityFields: null,
+    recordFields: null,
     tenantsCollection: 'tenants',
+    // runtime
     verbosity: TenantsManager.C.Verbose.CONFIGURE
 };
 
@@ -28,16 +37,17 @@ TenantsManager._defaults = {
  */
 TenantsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( TenantsManager._conf, TenantsManager._defaults, o );
+        _.merge( _conf, TenantsManager._defaults, o );
+        TenantsManager._conf.set( _conf );
         // be verbose if asked for
-        if( TenantsManager._conf.verbosity & TenantsManager.C.Verbose.CONFIGURE ){
+        if( _conf.verbosity & TenantsManager.C.Verbose.CONFIGURE ){
             //console.log( 'pwix:tenants-manager configure() with', o, 'building', TenantsList._conf );
             console.log( 'pwix:tenants-manager configure() with', o );
         }
-        Meteor.isClient && TenantsManager.perms.resetRoles();
     }
     // also acts as a getter
-    return TenantsManager._conf;
+    return TenantsManager._conf.get();
 }
 
-_.merge( TenantsManager._conf, TenantsManager._defaults );
+_.merge( _conf, TenantsManager._defaults );
+TenantsManager._conf.set( _conf );

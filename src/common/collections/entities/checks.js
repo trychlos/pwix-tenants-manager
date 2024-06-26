@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/common/collections/tenants/checks.js
+ * pwix:tenants-manager/src/common/collections/entities/checks.js
  */
 
 const assert = require( 'assert' ).strict;
@@ -7,11 +7,9 @@ const assert = require( 'assert' ).strict;
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TM } from 'meteor/pwix:typed-message';
 
-TenantsManager.checks = {};
+import { Entities } from './index.js';
 
-TenantsManager.checks.canDelete = async function( userId ){
-    return await Roles.userIsInRoles( userId, TenantsManager._conf.roles.delete );
-};
+Entities.checks = {};
 
 // fields check
 //  - value: mandatory, the value to be tested

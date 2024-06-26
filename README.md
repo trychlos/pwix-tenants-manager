@@ -12,7 +12,11 @@ Our tenants are defined in the common acceptance of the term as distinct organiz
 
 ### Storage considerations
 
-When an application makes use of this package to manage several tenants, a `tenants` collection is created which gathers defined tenants. That's all, and, in particular, this doesn't create for the application any assumption about the way the application tenants data will be themselves stored (in distinct databases, in distinct collections, or so).
+When an application makes use of this package to manage several tenants, two `tenants_e` and `tenants_r` collections are created which gathers defined tenants. That's all, and, in particular, this doesn't create for the application any assumption about the way the application tenants data will be themselves stored (in distinct databases, in distinct collections, or so).
+
+- the `tenants_e` collection contains datas which are common to all validity periods, which default to only be a label
+
+- the `tenants_r` collection contains datas which are tied to a particular validity period.
 
 ## Provides
 
@@ -26,7 +30,7 @@ The exported `TenantsManager` global object provides following items:
 
 ##### `TenantsList`
 
-The component list the defined accounts as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
+The component list the defined tenants as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
 ## Configuration
 
@@ -40,9 +44,9 @@ Known configuration options are:
 
     Defauts to nothing.
 
-- `fieldsSet`
+- `fields`
 
-    Let the application extends the default schema by providing additional fields as a `Forms.FieldSet` definition, or as a function which returns such a `Forms.FieldSet` definition.
+    Let the application extends the default schema by providing additional fields as a `Field.Set` extension, or as a function which returns such a `Field.Set` extension.
 
     Defauts to nothing.
 
@@ -60,10 +64,10 @@ Known configuration options are:
         //haveEmailAddress: AC_FIELD_MANDATORY,
         //haveUsername: AC_FIELD_NONE
         roles: {
-            list: 'ACCOUNTS_LIST',
-            create: 'ACCOUNT_CREATE',
-            edit: 'ACCOUNT_EDIT',
-            delete: 'ACCOUNT_DELETE'
+            list: 'TENANTS_LIST',
+            create: 'TENANT_CREATE',
+            edit: 'TENANT_EDIT',
+            delete: 'TENANT_DELETE'
         }
         // verbosity: TenantsManager.C.Verbose.CONFIGURE
     });
@@ -86,7 +90,7 @@ Known configuration options are:
 
 - `tenantsCollection`
 
-    The name of the tenants Mongo collection.
+    The radical of the names of the tenants Mongo collections.
 
     Defaults to `tenants`.
 

@@ -4,8 +4,9 @@
 
 import './global.js';
 import './constants.js';
-import './i18n.js';
 import './configure.js';
+import './i18n.js';
 //
-import './fieldset.js';
-import './tabular.js';
+import './collections.js';
+import './entities-tabular.js';
+import './trace.js';

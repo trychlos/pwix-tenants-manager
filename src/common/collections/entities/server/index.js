@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/common/collections/tenants/server/index.js
+ * pwix:tenants-manager/src/common/collections/entities/server/index.js
  */
 
 import './deny.js';

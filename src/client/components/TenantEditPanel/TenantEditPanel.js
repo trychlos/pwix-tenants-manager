@@ -1,13 +1,34 @@
 /*
  * pwix:tenants-manager/src/client/components/TenantEditPanel/TenantEditPanel.js
  *
- * Account editor.
+ * Tenant editor.
  *
- * Let the user edit the Meteor standard accounts attributes
- * + have a 'Roles' panel
+ *  This is the top template of the edition hierarchy for the tenant:
+ *
+ *    TenantEditPanel                               this one: manage the events
+ *     |
+ *     +- ValidityTabbed                            manage the validities (if any)
+ *     |   |
+ *     |   +- organization_tabbed                   the organization edition, manage the organization tabs
+ *     |       |
+ *     |       +- coreTabbedTemplate
+ *     |       |   |
+ *     |       |   +- organization_properties_pane
+ *     |       |   +- organization_urls_pane
+ *     |       |   +- organization_logo_panel
+ *     |       |   +- ext_notes_panel
+ *     |       |
+ *     |       +- validities_fieldset
+ *     |
+ *     +- FormsMEssager                             the messages area
+ *
+ *  This template hierarchy can run inside of a plain page or of a modal; this is up to the caller, and dynamically identified here.
  *
  * Parms:
- *  - item: the account's object to be edited, or null
+ * - group: the organization items group
+ *      > as an object { entity, items } if application does manage the validities
+ *      > as just the edited object item itself if the application is not willing to manage validities
+ *      null when new
  */
 
 import _ from 'lodash';
@@ -30,7 +51,7 @@ import './TenantEditPanel.html';
 Template.TenantEditPanel.onCreated( function(){
     const self = this;
 
-    self.AM = {
+    self.TM = {
         // the global Checker for this modal
         checker: new ReactiveVar( null ),
         // the global Message zone for this modal
@@ -40,17 +61,17 @@ Template.TenantEditPanel.onCreated( function(){
         // the item to be edited (a deep copy of the original)
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
-        isModal: false
+        isModal: new ReactiveVar( false )
     };
 
     // keep the initial 'new' state
     self.autorun(() => {
-        self.AM.isNew.set( _.isNil( Template.currentData().item ));
+        self.TM.isNew.set( _.isNil( Template.currentData().item ));
     });
 
     // setup the item to be edited
     self.autorun(() => {
-        self.AM.item.set( _.cloneDeep( Template.currentData().item || {} ));
+        self.TM.item.set( _.cloneDeep( Template.currentData().item || {} ));
     });
 });
 
@@ -58,21 +79,25 @@ Template.TenantEditPanel.onRendered( function(){
     const self = this;
 
     // whether we are running inside of a Modal
-    self.AM.isModal = self.$( '.TenantEditPanel' ).closest( '.modal-dialog' ).length > 0;
+    self.autorun(() => {
+        self.TM.isModal.set( self.$( '.TenantEditPanel' ).closest( '.modal-dialog' ).length > 0 );
+    });
 
     // set the modal target+title
-    if( self.AM.isModal ){
-        Modal.set({
-            target: self.$( '.TenantEditPanel' )
-        });
-    }
+    self.autorun(() => {
+        if( self.TM.isModal.get()){
+            Modal.set({
+                target: self.$( '.TenantEditPanel' )
+            });
+        }
+    });
 
     // allocate an Checker for this (topmost parent) template
     self.autorun(() => {
-        self.AM.checker.set( new Forms.Checker( self, {
-            messager: self.AM.messager,
+        self.TM.checker.set( new Forms.Checker( self, {
+            messager: self.TM.messager,
             okFn( valid ){
-                if( self.AM.isModal ){
+                if( self.TM.isModal ){
                     Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
                 }
             }
@@ -81,19 +106,34 @@ Template.TenantEditPanel.onRendered( function(){
 });
 
 Template.TenantEditPanel.helpers({
-    // parms to coreErrorMsg
+    // text translation
+    i18n( arg ){
+        return pwixI18n.label( I18N, arg.hash.key );
+    },
+
+    // do we run inside of a modal ?
+    isModal(){
+        return Template.instance().TM.isModal.get();
+    },
+
+    // whether we want create a new entity ?
+    isNew(){
+        return Template.instance().TM.isNew.get();
+    },
+
+    // parms to FormsMessager
     parmsMessager(){
         return {
-            messager: Template.instance().AM.messager
+            messager: Template.instance().TM.messager
         };
     },
 
-    // parms for TabbedTemplate
+    // parms for ValidityTemplate
     parmsTabbed(){
         const dataContext = this;
         const paneData = {
-            item: Template.instance().AM.item,
-            checker: Template.instance().AM.checker
+            item: Template.instance().TM.item,
+            checker: Template.instance().TM.checker
         };
         return {
             tabs: [
@@ -143,7 +183,7 @@ Template.TenantEditPanel.events({
     //  those who are using FormChecker directly update the edited item
     //  we have to manage others
     'panel-data .TenantEditPanel'( event, instance, data ){
-        //console.debug( 'id', data.id, 'myTabId', instance.AM.tabId.get(), data );
+        //console.debug( 'id', data.id, 'myTabId', instance.TM.tabId.get(), data );
         switch( data.emitter ){
             case 'notes':
                 instance.item.get().notes = data.data;
@@ -164,19 +204,19 @@ Template.TenantEditPanel.events({
     // submit
     'iz-submit .TenantEditPanel'( event, instance ){
         //console.debug( event, instance );
-        let item = instance.AM.item.get();
+        let item = instance.TM.item.get();
         let email = item.emails[0].address;
         // merge all data parts
-        Object.keys( instance.AM.dataParts.all()).every(( emitter ) => {
+        Object.keys( instance.TM.dataParts.all()).every(( emitter ) => {
             // ident panel
             if( emitter === 'ident' ){
                 ;
             } else if( emitter === 'roles' ){
-                item.roles = instance.AM.dataParts.get( emitter ).data;
+                item.roles = instance.TM.dataParts.get( emitter ).data;
             } else if( emitter === 'settings' ){
                 ;
             } else if( emitter === 'notes' ){
-                item.notes = instance.AM.dataParts.get( emitter ).data
+                item.notes = instance.TM.dataParts.get( emitter ).data
             }
             return true;
         });
@@ -207,7 +247,7 @@ Template.TenantEditPanel.events({
             }
         }
         // when creating a new account, we let the user create several by reusing the same modal
-        if( instance.AM.isNew.get()){
+        if( instance.TM.isNew.get()){
             AccountsUI.Account.createUser({
                 username: item.username,
                 password: item.password,

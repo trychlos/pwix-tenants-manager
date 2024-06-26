@@ -1,8 +1,16 @@
 <template name="TenantEditPanel">
     <div class="TenantEditPanel">
 
-        {{> Tabbed (parmsTabbed) }}
+        {{> ValidityTabbed (parmsTabbed) }}
         {{> FormsMessager (parmsMessager) }}
+
+        {{#unless isModal }}
+            {{#if isNew }}
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary js-create" type="button">{{ i18n key="panel.create_btn" }}</button>
+                </div>
+            {{/if}}
+        {{/unless}}
 
     </div>
 </template>

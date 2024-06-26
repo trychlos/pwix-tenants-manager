@@ -1,10 +1,12 @@
 /*
- * pwix:tenants-manager/src/common/collections/tenants/server/functions.js
+ * pwix:tenants-manager/src/common/collections/records/server/functions.js
  *
  * Server-only functions
  */
 
-TenantsManager.server = {};
+import { Records } from '../index.js';
+
+Records.server = {};
 
 /*
 TenantsManager.server.removeAccount = async function( id, userId ){

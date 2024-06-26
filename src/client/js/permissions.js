@@ -11,14 +11,17 @@ import { Tracker } from 'meteor/tracker';
 
 TenantsManager.perms = new ReactiveDict();
 
-TenantsManager.perms.resetRoles = function(){
-    TenantsManager.perms.clear();
-    Object.keys( TenantsManager._conf.roles ).forEach(( role ) => {
-        const roleName = TenantsManager._conf.roles[role];
-        if( roleName ){
-            Tracker.autorun(() => {
-                TenantsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
-            });
-        }
-    });
-}
+Tracker.autorun(() => {
+    if( Roles.ready()){
+        TenantsManager.perms.clear();
+        const conf = TenantsManager.configure();
+        Object.keys( conf.roles ).forEach(( role ) => {
+            const roleName = conf.roles[role];
+            if( roleName ){
+                Tracker.autorun(() => {
+                    TenantsManager.perms.set( role, Meteor.userId() && ( Roles.current().globals || [] ).includes( roleName ));
+                });
+            }
+        });
+    }
+});

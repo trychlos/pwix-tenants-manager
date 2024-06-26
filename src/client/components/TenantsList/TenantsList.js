@@ -11,7 +11,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tolert } from 'meteor/pwix:tolert';
 
-import { Tenants } from '../../../common/collections/tenants/index.js';
+import { Entities } from '../../../common/collections/entities/index.js';
 
 import '../TenantEditPanel/TenantEditPanel.js';
 
@@ -22,7 +22,7 @@ Template.TenantsList.onCreated( function(){
 
     self.TM = {
         tenants: {
-            handle: self.subscribe( 'tenants.listAll' ),
+            handle: self.subscribe( 'pwix_tenants_manager_entities_list_all' ),
             list: new ReactiveVar( [] )
         }
     };
@@ -31,7 +31,7 @@ Template.TenantsList.onCreated( function(){
     self.autorun(() => {
         if( self.TM.tenants.handle.ready()){
             let tenants = [];
-            Tenants.find().forEachAsync(( o ) => {
+            Tenants.collection.find().forEachAsync(( o ) => {
                 tenants.push( o );
             }).then(() => {
                 self.TM.tenants.list.set( tenants );
@@ -45,12 +45,18 @@ Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
     canList(){
         return TenantsManager.perms.get( 'list' );
+    },
+
+    // string translation
+    i18n( arg ){
+        return pwixI18n.label( I18N, arg.hash.key );
     }
 });
 
 Template.TenantsList.events({
-    // delete a tenant
+    // delete a tenant - this will delete all the validity records
     'tabular-delete-event .TenantsList'( event, instance, data ){
+        /*
         const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
         Meteor.callAsync( 'account.remove', data._id, ( e, res ) => {
             if( e ){
@@ -59,6 +65,7 @@ Template.TenantsList.events({
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
             }
         });
+        */
         return false; // doesn't propagate
     },
 
@@ -68,7 +75,7 @@ Template.TenantsList.events({
             mdBody: 'TenantEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: 'modal-lg',
-            mdClassesContent: TenantsManager._conf.classes,
+            mdClassesContent: TenantsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
             item: data.item
         });

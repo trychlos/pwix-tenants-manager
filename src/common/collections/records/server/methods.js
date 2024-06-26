@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/common/collections/tenants/server/methods.js
+ * pwix:tenants-manager/src/common/collections/records/server/methods.js
  */
 
 Meteor.methods({
