@@ -6,6 +6,9 @@
  * - by Datatables, via pwix:tabular and aldeed:tabular
  * - when rendering the edition templates
  * - chen cheking the fields in the edition panels
+ *
+ * Note: in this multi-validities domain, the main tabular display is Entities-driven.
+ * We so define in this fieldset some columns which are actually part of the Records fieldset, just to be displayed in the tabular list.
  */
 
 import { Field } from 'meteor/pwix:field';
@@ -24,15 +27,25 @@ const _defaultFieldSet = function( conf ){
             type: String,
             dt_tabular: false
         },
-        // a label
-        //  not mandatory (though recommended) - common for all records of the entity
+        // a mandatory label, must be unique among all entities, common for all records of the entity
         {
             name: 'label',
             type: String,
             optional: true,
+            dt_title: pwixI18n.label( I18N, 'list.label_th' ),
             form_check: Entities.checks.check_label,
             form_type: Forms.FieldType.C.MANDATORY
         },
+        {
+            dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),
+        },
+        {
+            dt_title: pwixI18n.label( I18N, 'list.contact_page_th' ),
+        },
+        {
+            dt_title: pwixI18n.label( I18N, 'list.contact_email_th' ),
+        },
+        // common notes
         Notes.fieldDef(),
         {
             name: 'createdAt',

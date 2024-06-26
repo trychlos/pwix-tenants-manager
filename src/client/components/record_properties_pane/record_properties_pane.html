@@ -1,0 +1,52 @@
+<template name="record_properties_pane">
+    <div class="record-properties-pane">
+
+        <table class="form-table">
+            <tr>
+                <td class="ui-w20 label"><label class="form-label" for="organization-properties-label">{{ i18n key="organizations.properties.label_label" }}</label></td>
+                <td class="ui-w100 d-flex align-items-center">
+                    <input class="form-control flex-grow-1 js-label" type="text" id="organization-properties-label" placeholder="{{ i18n key="organizations.properties.label_ph" }}" title="{{ i18n key="organizations.properties.label_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label ui-vatop ui-pt05"><label class="form-label" for="organization-properties-baseurl">{{ i18n key="organizations.properties.baseurl_label" }}</label></td>
+                <td class="d-flex align-items-start">
+                    <div class="ui-mt05 ui-pr025">
+                    </div>
+                    <div class="flex-grow-1">
+                        <input class="form-control js-baseurl" type="text" id="organization-properties-baseurl" placeholder="{{ i18n key="organizations.properties.baseurl_ph" }}" title="{{ i18n key="organizations.properties.baseurl_title" }}" />
+                        <div class="url">{{{ issuer }}}</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="organization-properties-managers">{{ i18n key="organizations.properties.managers_label" }}</label></td>
+                <td class="d-flex align-items-center">
+                    <input class="form-control flex-grow-1 js-managers" type="text" id="organization-properties-managers" readonly placeholder="{{ i18n key="organizations.properties.managers_ph" }}" title="{{ i18n key="organizations.properties.managers_title" }}" />
+                    <button class="btn btn-sm btn-outline-primary ui-ml025 js-edit-managers" title="{{ editManagers }}">
+                        <span class="fa-solid fa-fw fa-pen-to-square"></span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="organization-properties-support">{{ i18n key="organizations.properties.supporturl_label" }}</label></td>
+                <td class="d-flex align-items-center">
+                    <input class="form-control flex-grow-1 js-support-url" type="text" id="organization-properties-support" placeholder="{{ i18n key="organizations.properties.supporturl_ph" }}" title="{{ i18n key="organizations.properties.supporturl_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="organization-properties-support-email">{{ i18n key="organizations.properties.supportemail_label" }}</label></td>
+                <td class="d-flex align-items-center">
+                    <input class="form-control flex-grow-1 js-support-email" type="text" id="organization-properties-support-email" placeholder="{{ i18n key="organizations.properties.supportemail_ph" }}" title="{{ i18n key="organizations.properties.supportemail_title" }}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><label class="form-label" for="organization-properties-contact">{{ i18n key="organizations.properties.contactemail_label" }}</label></td>
+                <td class="d-flex align-items-center">
+                    <input class="form-control flex-grow-1 js-contact" type="text" id="organization-properties-contact" placeholder="{{ i18n key="organizations.properties.contactemail_ph" }}" title="{{ i18n key="organizations.properties.contactemail_title" }}" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</template>

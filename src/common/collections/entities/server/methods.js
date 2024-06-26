@@ -2,11 +2,11 @@
  * pwix:tenants-manager/src/common/collections/entities/server/methods.js
  */
 
+import { Entities } from '../index.js';
+
 Meteor.methods({
-    /*
-    // remove an account
-    async 'account.remove'( id ){
-        return await Entities.server.removeAccount( id, Meteor.userId());
-    },
-*/
+    // search an entity by an attribute
+    async 'pwix_tenants_manager_entities_getBy'( selector ){
+        return await Entities.server.getBy( selector, Meteor.userId());
+    }
 });

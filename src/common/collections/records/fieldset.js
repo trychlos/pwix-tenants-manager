@@ -22,7 +22,7 @@ const _defaultFieldSet = function( conf ){
             type: String,
             dt_tabular: false
         },
-        // a mandatory unique label, identifies this tenant record, i.e. entity+validity
+        // a mandatory label, identifies this tenant entity, i.e. entity+validity
         {
             name: 'label',
             type: String,
@@ -60,7 +60,7 @@ const _defaultFieldSet = function( conf ){
             name: 'homeUrl',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.homepage_th' ),
+            dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),
         },
         // a page to access the support
         {

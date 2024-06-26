@@ -6,19 +6,16 @@
  * Gathers here organization_properties_pane, validities_fieldset and notes_panel datas.
  *
  * Parms:
- * - edited: the currently edited items as a ReactiveVar
- * - item: the item currently being edited
- * - entityChecker: the EntityChecker which manages the dialog
+ * - entity: the currently edited entity as a ReactiveVar
+ * - record: the entity record currently being edited
+ * - checker: the Checker which manages the parent component
  *
- * Because record_tabbed, which hosts organization properties as tabs, is itself hosted inside of validities_tabbed component with one tab per validity period,
- *  we identify each validity period through the tab identifier allocated by the coreTabbedTemplate parent of this record_tabbed.
- *
- * edited ReactiveVar is only needed when checking the effect start and end dates. All other panes only need an item ReactiveVar.
+ * Because record_tabbed, which hosts tenants properties as tabs, is itself hosted inside of ValidityTabbed component with one tab per validity period,
+ *  we identify each validity period through the tab identifier allocated by the Tabbed parent of this record_tabbed.
  */
 
 import _ from 'lodash';
 
-import { pwixI18n } from 'meteor/pwix:i18n';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -38,12 +35,8 @@ Template.record_tabbed.onCreated( function(){
                 js: '.js-end input',
             }
         },
-        // the Checker instance
-        checker: new ReactiveVar( null ),
         // the pane identifier of this validity period - must be a ReactiveVar as Blaze helpers are run first before view is fully rendered
         tabId: new ReactiveVar( null ),
-        // have an item ReactiveVar to be passed to all child panes
-        itemRv: new ReactiveVar( null ),
 
         // send the panel data to the parent
         sendPanelData( dataContext, valid ){
@@ -108,47 +101,54 @@ Template.record_tabbed.helpers({
     // data context for the record tabbed panes
     parmsRecord(){
         const dataContext = this;
-        const APP = Template.instance().TM;
+        const TM = Template.instance().TM;
+        const notes = Records.fieldSet.get().byName( 'notes' );
         return {
             tabs: [
                 {
-                    navLabel: pwixI18n.label( I18N, 'organizations.panel.properties_tab' ),
-                    paneTemplate: 'organization_properties_pane',
+                    navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                    paneTemplate: 'record_properties_pane',
                     paneData: {
-                        item: APP.itemRv,
-                        entityChecker: dataContext.entityChecker,
-                        vtpid: APP.tabId.get()
+                        item: dataContext.entity,
+                        checker: dataContext.checker,
+                        vtpid: TM.tabId.get()
                     }
                 },
                 {
                     navLabel: pwixI18n.label( I18N, 'organizations.panel.urls_tab' ),
                     paneTemplate: 'organization_urls_pane',
                     paneData: {
-                        item: APP.itemRv,
-                        entityChecker: dataContext.entityChecker,
-                        vtpid: APP.tabId.get()
+                        item: dataContext.entity,
+                        checker: dataContext.checker,
+                        vtpid: TM.tabId.get()
                     }
                 },
                 {
                     navLabel: pwixI18n.label( I18N, 'organizations.panel.logo_tab' ),
                     paneTemplate: 'organization_logo_pane',
                     paneData: {
-                        item: APP.itemRv,
-                        entityChecker: dataContext.entityChecker,
-                        vtpid: APP.tabId.get()
+                        item: dataContext.entity,
+                        checker: dataContext.checker,
+                        vtpid: TM.tabId.get()
                     }
                 },
                 {
-                    navLabel: pwixI18n.label( I18N, 'ext_notes.panel.tab_title' ),
-                    paneTemplate: 'ext_notes_panel',
+                    navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                    paneTemplate: 'NotesEdit',
                     paneData(){
                         return {
-                            notes: APP.itemRv.get().notes,
-                            event: 'panel-data',
-                            data: {
-                                emitter: 'notes',
-                                id: APP.tabId.get()
-                            }
+                            item: dataContext.record,
+                            field: notes
+                        };
+                    }
+                },
+                {
+                    //navLabel: userNotes.toForm().title,
+                    paneTemplate: 'NotesEdit',
+                    paneData(){
+                        return {
+                            item: dataContext.item,
+                            field: userNotes
                         };
                     }
                 }

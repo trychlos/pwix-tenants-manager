@@ -5,18 +5,6 @@
  * For example: permissions are common.
  */
 
-export const Tenants = {
-    checks: {
-        async canDelete( userId ){
-            return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.delete );
-        },
-        async canEdit( userId ){
-            return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.edit );
-        },
-        async canList( userId ){
-            return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.list );
-        }
-    }
-};
+export { Tenants } from './collection.js';
 
-console.debug( 'defining Tenants' );
+import './checks.js';

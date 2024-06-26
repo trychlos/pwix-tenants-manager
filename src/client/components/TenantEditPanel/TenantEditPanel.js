@@ -15,7 +15,7 @@
  *     |       |
  *     |       +- Tabbed
  *     |       |   |
- *     |       |   +- organization_properties_pane
+ *     |       |   +- record_properties_pane
  *     |       |   +- organization_urls_pane
  *     |       |   +- organization_logo_panel
  *     |       |   +- ext_notes_panel
@@ -41,7 +41,8 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 
 import '../entity_edit/entity_edit.js';
-//import '../record_tabbed/record_tabbed.js';
+import '../record_properties_pane/record_properties_pane.js';
+import '../record_tabbed/record_tabbed.js';
 
 import './TenantEditPanel.html';
 
