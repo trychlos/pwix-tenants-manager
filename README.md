@@ -26,6 +26,16 @@ The exported `TenantsManager` global object provides following items:
 
 #### Functions
 
+##### `TenantsManager.configure( o<Object> )`
+
+See [below](#configuration)
+
+##### `TenantsManager.i18n.namespace()`
+
+Returns the i18n namespace used by the package. Used to add translations at runtime.
+
+Available both on the client and the server.
+
 #### Blaze components
 
 ##### `TenantsList`

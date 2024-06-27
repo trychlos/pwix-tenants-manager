@@ -1,10 +1,11 @@
 /*
- * pwix:tenants-manager/src/common/collections/entities/server/publish.js
+ * pwix:tenants-manager/src/common/collections/tenants/server/publish.js
  */
 
-import { Entities } from '../index.js';
+import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
-import { Tenants } from '../../tenants/index.js';
+
+import { Tenants } from '../index.js';
 
 // returns a cursor of all tenants, to be rendered in the Entities tabular display
 // we publish here a 'tenants_all' pseudo collection
@@ -57,7 +58,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
     });
 
     self.onStop( function(){
-        observer.then(( h ) => { h.stop(); });
+        observer.then(( handle ) => { handle.stop(); });
     });
 
     self.ready();

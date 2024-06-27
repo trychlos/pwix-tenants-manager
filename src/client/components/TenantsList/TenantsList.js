@@ -22,7 +22,7 @@ Template.TenantsList.onCreated( function(){
     self.TM = {
         tenants: {
             collection: new Mongo.Collection( 'tenants_all' ),
-            handle: self.subscribe( 'pwix_tenants_manager_entities_list_all' ),
+            handle: self.subscribe( 'pwix_tenants_manager_tenants_list_all' ),
             list: new ReactiveVar( [] )
         }
     };
