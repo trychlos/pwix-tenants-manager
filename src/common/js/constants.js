@@ -4,6 +4,11 @@
 
 TenantsManager.C = {
 
+    // publication names
+    publish: {
+        tenantsAll: 'tenants_all'
+    },
+
     // verbosity levels
     Verbose: {
         NONE: 0,

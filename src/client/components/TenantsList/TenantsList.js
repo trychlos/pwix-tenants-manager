@@ -21,11 +21,23 @@ Template.TenantsList.onCreated( function(){
 
     self.TM = {
         tenants: {
-            collection: new Mongo.Collection( 'tenants_all' ),
-            handle: self.subscribe( 'pwix_tenants_manager_tenants_list_all' ),
+            collection: null,
+            handle: null,
             list: new ReactiveVar( [] )
         }
     };
+
+    // get the local collection from our client store, allocating it if needed
+    self.TM.tenants.collection = TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ];
+    if( !self.TM.tenants.collection ){
+        TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ] = new Mongo.Collection( TenantsManager.C.publish.tenantsAll );
+        self.TM.tenants.collection = TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ];
+    }
+
+    // subscribe only after having created the collection
+    if( !self.TM.tenants.handle ){
+        self.TM.tenants.handle = self.subscribe( 'pwix_tenants_manager_tenants_list_all' );
+    }
 
     // maintain here the list of tenants as an array of ReactiveVar's, each being a tenant entity
     //  each entity holds itself a DYN.records array of tenant records

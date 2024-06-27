@@ -19,7 +19,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
             'Unallowed to list tenants' );
     }
     const self = this;
-    const collection_name = 'tenants_all';
+    let initializing = true;
 
     // find ORG_SCOPED_MANAGER allowed users, and add to each entity the list of its records
     const f_transform = function( item ){
@@ -47,15 +47,19 @@ Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
     // in order the same query may be applied on client side, we have to add to item required fields
     const observer = Entities.collection.find({}).observe({
         added: function( item ){
-            self.added( collection_name, item._id, f_transform( item ));
+            self.added( TenantsManager.C.publish.tenantsAll, item._id, f_transform( item ));
         },
         changed: function( newItem, oldItem ){
-            self.changed( collection_name, newItem._id, f_transform( newItem ));
+            if( !initializing ){
+                self.changed( TenantsManager.C.publish.tenantsAll, newItem._id, f_transform( newItem ));
+            }
         },
         removed: function( oldItem ){
-            self.removed( collection_name, oldItem._id, oldItem );
+            self.removed( TenantsManager.C.publish.tenantsAll, oldItem._id, oldItem );
         }
     });
+
+    initializing = false;
 
     self.onStop( function(){
         observer.then(( handle ) => { handle.stop(); });
