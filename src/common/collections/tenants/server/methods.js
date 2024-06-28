@@ -5,10 +5,13 @@
 import { Tenants } from '../index.js';
 
 Meteor.methods({
-    // search an entity by an attribute
-    /*
-    async 'pwix_tenants_manager_entities_getBy'( selector ){
-        return await Entities.server.getBy( selector, Meteor.userId());
+    // update the managers of a tenant
+    async 'pwix_tenants_manager_tenants_set_managers'( item ){
+        return await Tenants.server.setManagers( item, Meteor.userId());
+    },
+
+    // upsert a tenant
+    async 'pwix_tenants_manager_tenants_upsert'( item ){
+        return await Tenants.server.upsert( item, Meteor.userId());
     }
-        */
 });

@@ -9,8 +9,6 @@ import { Modal } from 'meteor/pwix:modal';
 import { Mongo } from 'meteor/mongo';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Roles } from 'meteor/pwix:roles';
-import { Tolert } from 'meteor/pwix:tolert';
 
 import '../TenantEditPanel/TenantEditPanel.js';
 
@@ -21,23 +19,11 @@ Template.TenantsList.onCreated( function(){
 
     self.TM = {
         tenants: {
-            collection: null,
-            handle: null,
+            collection: TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ),
+            handle: self.subscribe( TenantsManager.C.pub.tenantsAll.publish ),
             list: new ReactiveVar( [] )
         }
     };
-
-    // get the local collection from our client store, allocating it if needed
-    self.TM.tenants.collection = TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ];
-    if( !self.TM.tenants.collection ){
-        TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ] = new Mongo.Collection( TenantsManager.C.publish.tenantsAll );
-        self.TM.tenants.collection = TenantsManager.collections[ TenantsManager.C.publish.tenantsAll ];
-    }
-
-    // subscribe only after having created the collection
-    if( !self.TM.tenants.handle ){
-        self.TM.tenants.handle = self.subscribe( 'pwix_tenants_manager_tenants_list_all' );
-    }
 
     // maintain here the list of tenants as an array of ReactiveVar's, each being a tenant entity
     //  each entity holds itself a DYN.records array of tenant records

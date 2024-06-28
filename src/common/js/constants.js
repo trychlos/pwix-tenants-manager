@@ -4,9 +4,16 @@
 
 TenantsManager.C = {
 
-    // publication names
-    publish: {
-        tenantsAll: 'tenants_all'
+    // publication names and the collection they publish
+    pub: {
+        tenantsAll: {
+            collection: 'tenants_all',
+            publish: 'pwix_tenants_manager_tenants_list_all'
+        },
+        tenantsList: {
+            collection: 'tenants_list',
+            publish: 'pwix_tenants_manager_tenants_list_tabular'
+        }
     },
 
     // verbosity levels

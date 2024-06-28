@@ -8,7 +8,7 @@
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar
  * - record: the entity record currently being edited as a ReactiveVar
- * - checker: the Checker which manages the parent component
+ * - checker: the Forms.Checker which manages the parent component
  *
  * Because record_tabbed, which hosts tenants properties as tabs, is itself hosted inside of ValidityTabbed component with one tab per validity period,
  *  we identify each validity period through the tab identifier allocated by the ValidityTabbed (which happens to be the Tabbed parent of this record_tabbed).
@@ -84,7 +84,8 @@ Template.record_tabbed.onRendered( function(){
                 parent: parentChecker,
                 panel: new Forms.Panel( fields, Records.fieldSet.get()),
                 data: {
-                    item: Template.currentData().record
+                    item: Template.currentData().record,
+                    entity: Template.currentData().entity
                 }
             }));
         }
@@ -103,7 +104,8 @@ Template.record_tabbed.helpers({
                     navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
                     paneTemplate: 'record_properties_pane',
                     paneData: {
-                        item: dataContext.record,
+                        entity: dataContext.entity,
+                        record: dataContext.record,
                         checker: dataContext.checker,
                         vtpid: TM.tabId.get()
                     }

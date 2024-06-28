@@ -11,38 +11,28 @@
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
-import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
+import { Validity } from 'meteor/pwix:validity';
 
 import { Records } from './index.js';
 
 const _defaultFieldSet = function( conf ){
     let columns = [
-        {
-            name: '_id',
-            type: String,
-            dt_tabular: false
-        },
         // a mandatory label, identifies the tenant entity
         {
             name: 'label',
             type: String,
-            dt_title: pwixI18n.label( I18N, 'list.label_th' ),
-            //form_check: AccountsManager.checks.check_email_address,
+            dt_tabular: false,
+            form_check: Records.checks.label,
             form_type: Forms.FieldType.C.MANDATORY
-        },
-        // the entity identifier (from the entities collection)
-        {
-            name: 'entity',
-            type: String,
-            dt_visible: false
         },
         // personal data management policy page
         {
             name: 'pdmpUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.pdmpUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // general terms of use
@@ -50,7 +40,8 @@ const _defaultFieldSet = function( conf ){
             name: 'gtuUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.gtuUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // legals terms page
@@ -58,7 +49,8 @@ const _defaultFieldSet = function( conf ){
             name: 'legalsUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.legalsUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page which describes the organization
@@ -66,7 +58,8 @@ const _defaultFieldSet = function( conf ){
             name: 'homeUrl',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),
+            dt_tabular: false,
+            form_check: Records.checks.homeUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page to access the support
@@ -74,7 +67,8 @@ const _defaultFieldSet = function( conf ){
             name: 'supportUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.supportUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a contact page
@@ -82,7 +76,8 @@ const _defaultFieldSet = function( conf ){
             name: 'contactUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.contactUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // the organization logo (either an Url or an embedded image, or both)
@@ -90,14 +85,14 @@ const _defaultFieldSet = function( conf ){
             name: 'logoUrl',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         {
             name: 'logoImage',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // support email address
@@ -105,7 +100,8 @@ const _defaultFieldSet = function( conf ){
             name: 'supportEmail',
             type: String,
             optional: true,
-            dt_visible: false,
+            dt_tabular: false,
+            form_check: Records.checks.supportEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // contact email address
@@ -113,32 +109,32 @@ const _defaultFieldSet = function( conf ){
             name: 'contactEmail',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.contact_email_th' ),
+            dt_tabular: false,
+            form_check: Records.checks.contactEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         Notes.fieldDef(),
         {
             name: 'createdAt',
             schema: false,
-            dt_visible: false
+            dt_tabular: false
         },
         {
             name: 'createdBy',
             schema: false,
-            dt_visible: false
+            dt_tabular: false
         },
         {
             name: 'updatedAt',
             schema: false,
-            dt_visible: false
+            dt_tabular: false
         },
         {
             name: 'updatedBy',
             schema: false,
-            dt_visible: false
+            dt_tabular: false
         }
     ];
-
     return columns;
 };
 
@@ -149,5 +145,10 @@ Tracker.autorun(() => {
     if( conf.recordFields ){
         _fieldset.extend( conf.recordFields );
     }
+    _fieldset.extend({
+        where: Field.C.Insert.BEFORE,
+        name: 'createdAt',
+        fields: Validity.recordsFieldDef()
+    });
     Records.fieldSet.set( _fieldset );
 });

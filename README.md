@@ -42,6 +42,8 @@ Available both on the client and the server.
 
 The component list the defined tenants as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
+Each rendered line of the table displays an entity, and the closest values for each column.
+
 ## Configuration
 
 The package's behavior can be configured through a call to the `TenantsManager.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.

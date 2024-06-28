@@ -4,8 +4,9 @@
  * Organization properties pane.
  *
  * Parms:
- * - item: a ReactiveVar which holds the organization validity record to edit
- * - checker: the parent Forms.Checker as a ReactiveVar
+ * - entity: the currently edited entity as a ReactiveVar
+ * - record: the entity record currently being edited as a ReactiveVar
+ * - checker: the Forms.Checker which manages the parent component
  * - vtpid: the identifier of the validity tab period, to be used in 'panel-data' events
  */
 
@@ -23,16 +24,36 @@ import './record_properties_pane.html';
 Template.record_properties_pane.onCreated( function(){
     const self = this;
 
-    self.APP = {
+    self.TM = {
         fields: {
             label: {
-                js: '.js-label',
-                type: 'SAVE'
+                js: '.js-label'
             },
-            baseUrl: {
-                js: '.js-baseurl',
-                type: 'WORK'
+            pdmpUrl: {
+                js: '.js-pdmp'
             },
+            gtuUrl: {
+                js: '.js-gtu'
+            },
+            legalsUrl: {
+                js: '.js-legals'
+            },
+            homeUrl: {
+                js: '.js-home'
+            },
+            supportUrl: {
+                js: '.js-support-url'
+            },
+            contactUrl: {
+                js: '.js-contact-url'
+            },
+            supportEmail: {
+                js: '.js-support-email'
+            },
+            contactEmail: {
+                js: '.js-contact-email'
+            },
+            /*
             managers: {
                 js: '.js-managers',
                 val( item ){
@@ -45,21 +66,10 @@ Template.record_properties_pane.onCreated( function(){
                 },
                 type: 'INFO'
             },
-            supportUrl: {
-                js: '.js-support-url',
-                type: 'OPTIONAL'
-            },
-            supportEmail: {
-                js: '.js-support-email',
-                type: 'OPTIONAL'
-            },
-            contactEmail: {
-                js: '.js-contact',
-                type: 'OPTIONAL'
-            }
+            */
         },
-        // the CoreApp.FormChecker instance
-        form: new ReactiveVar( null ),
+        // the Checker instance
+        checker: new ReactiveVar( null ),
 
         // send the panel data to the parent
         sendPanelData( dataContext, valid ){
@@ -68,7 +78,7 @@ Template.record_properties_pane.onCreated( function(){
                     emitter: 'properties',
                     id: dataContext.vtpid,
                     ok: valid,
-                    data: self.APP.form.get().getForm()
+                    data: self.TM.form.get().getForm()
                 });
             }
         }
@@ -79,28 +89,22 @@ Template.record_properties_pane.onRendered( function(){
     const self = this;
     const dataContext = Template.currentData();
 
-    // initialize the FormChecker for this panel
-    /*
+    // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        self.APP.form.set( new Forms.Checker({
-            instance: self,
-            collection: Organizations,
-            fields: self.APP.fields,
-            entityChecker: Template.currentData().entityChecker
-        }));
+        const parentChecker = Template.currentData().checker.get();
+        const checker = self.TM.checker.get();
+        if( parentChecker && !checker ){
+            self.TM.checker.set( new Forms.Checker( self, {
+                parent: parentChecker,
+                panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                data: {
+                    item: Template.currentData().record,
+                    entity: Template.currentData().entity
+                },
+                setForm: Template.currentData().record.get()
+            }));
+        }
     });
-
-    // set data inside of an autorun so that it is reactive to data context changes
-    // initialize the display (check indicators) - let the error messages be displayed here: there should be none (though may be warnings)
-    self.autorun(() => {
-        const dataContext = Template.currentData();
-        self.APP.form.get().setData({
-            item: dataContext.item
-        });
-        self.APP.form.get().setForm( dataContext.item.get());
-        self.APP.form.get().check({ update: false }).then(( valid ) => { self.APP.sendPanelData( dataContext, valid ); });
-    });
-    */
 });
 
 Template.record_properties_pane.helpers({
@@ -118,14 +122,14 @@ Template.record_properties_pane.events({
             mdBody: 'accounts_select',
             mdButtons: [{ id: Modal.C.Button.NEW, classes: 'btn-outline-primary me-auto' }, Modal.C.Button.CANCEL, { id: Modal.C.Button.OK, type: 'submit' }],
             mdClasses: 'modal-lg',
-            mdClassesContent: Meteor.APP.Pages.current.page().get( 'theme' ),
+            mdClassesContent: Meteor.TM.Pages.current.page().get( 'theme' ),
             mdTitle: pwixI18n.label( I18N, 'organizations.properties.managers_modal' ),
             selected: self.item.get().DYN.managers || [],
             update( selected ){
                 // get the item updated
                 self.item.get().DYN.managers = selected;
                 // get the form updated
-                instance.APP.form.get().setField( 'managers', self.item.get());
+                instance.TM.form.get().setField( 'managers', self.item.get());
                 // advertize parents
                 instance.$( '.c-organization-properties-pane' ).trigger( 'panel-data', {
                     emitter: 'managers',
@@ -141,12 +145,12 @@ Template.record_properties_pane.events({
     'input .c-organization-properties-pane'( event, instance ){
         const dataContext = this;
         if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
-            instance.APP.form.get().inputHandler( event ).then(( valid ) => { instance.APP.sendPanelData( dataContext, valid ); });
+            instance.TM.form.get().inputHandler( event ).then(( valid ) => { instance.TM.sendPanelData( dataContext, valid ); });
         }
     },
 
     // ask for clear the panel
     'iz-clear-panel .c-organization-properties-pane'( event, instance ){
-        instance.APP.form.get().clear();
+        instance.TM.form.get().clear();
     }
 });

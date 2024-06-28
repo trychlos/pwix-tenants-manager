@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/common/js/collections.js
+ * pwix:tenants-manager/src/common/js/collections-define.js
  */
 
 import { Tenants } from '../../common/collections/tenants/index.js';

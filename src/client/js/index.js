@@ -6,7 +6,6 @@
 //
 import '../../common/js/index.js';
 //
-import './collections.js';
 import './permissions.js';
 //
 import '../stylesheets/tenants_manager.less';

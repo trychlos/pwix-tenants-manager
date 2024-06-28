@@ -2,10 +2,8 @@
  * pwix:tenants-manager/src/common/collections/entities/checks.js
  */
 
+import _ from 'lodash';
 const assert = require( 'assert' ).strict;
-
-import { pwixI18n } from 'meteor/pwix:i18n';
-import { TM } from 'meteor/pwix:typed-message';
 
 import { Entities } from './index.js';
 
@@ -26,50 +24,3 @@ const _assert_data_itemrv = function( caller, data ){
     assert.ok( data.item, caller+' data.item required' );
     assert.ok( data.item instanceof ReactiveVar, caller+' data.item expected to be a ReactiveVar' );
 }
-
-// the label must be set, and unique among any entities and any records
-Entities.checks.check_label = async function( value, data, opts ){
-    _assert_data_itemrv( 'Entities.checks.check_label()', data );
-    let item = data.item.get();
-    if( opts.update !== false ){
-        item.label = value;
-    }
-    if( !value ){
-        return new TM.TypedMessage({
-            level: TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'entities.check.label_unset' )
-        });
-    } else {
-        const fn = function( result ){
-            console.debug( 'result', result );
-            let ok = false;
-            if( result.length ){
-                // we have found an existing label
-                //  this is normal if the found entity is the same than ours
-                const found_entity = result[0].entity;
-                if( item.entity === found_entity ){
-                    ok = true;
-                }
-            } else {
-                ok = true;
-            }
-            return ok ? null : new TM.TypedMessage({
-                type: TM.MessageLevel.C.ERROR,
-                message: pwixI18n.label( I18N, 'entities.check.label_exists' )
-            });
-        };
-        const promise =
-            Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.server.getBy({ label: value });
-        promise
-            .then(( result ) => {
-                if( result ){
-                    return result;
-                } else {
-                    return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.server.getBy({ label: value });
-                }
-            })
-            .then(( result ) => {
-                return fn( result );
-            });
-    }
-};

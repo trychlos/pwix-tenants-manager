@@ -9,7 +9,7 @@
  *     |
  *     +- Tabbed                                    manage both the entity tabs and the validities
  *     |   |
- *     |   +- entity_properties_pane
+ *     |   +- entity_properties_pane                (unused)
  *     |   |
  *     |   +- NotesEdit                             entity notes
  *     |   |
@@ -26,12 +26,12 @@
  *     |           |
  *     |           +- ValidityFieldset
  *     |
- *     +- FormsMessager                             the messages area
+ *     +- Forms.Messager                            the messages area
  *
  *  This template hierarchy can run inside of a plain page or of a modal; this is up to the caller, and dynamically identified here.
  *
  * Parms:
- * - item: the to-be-edited item, null when new
+ * - item: the to-be-edited entity item, null when new
  *      including DYN.managers and DYN.records arrays
  *      this item will be left unchanged until panel submission
  */
@@ -42,7 +42,8 @@ import { Forms } from 'meteor/pwix:forms';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Roles } from 'meteor/pwix:roles';
+import { Tolert } from 'meteor/pwix:tolert';
+import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
@@ -209,78 +210,26 @@ Template.TenantEditPanel.events({
     // submit
     'iz-submit .TenantEditPanel'( event, instance ){
         //console.debug( event, instance );
-        let item = instance.TM.item.get();
-        let email = item.emails[0].address;
-        // merge all data parts
-        Object.keys( instance.TM.dataParts.all()).every(( emitter ) => {
-            // ident panel
-            if( emitter === 'ident' ){
-                ;
-            } else if( emitter === 'roles' ){
-                item.roles = instance.TM.dataParts.get( emitter ).data;
-            } else if( emitter === 'settings' ){
-                ;
-            } else if( emitter === 'notes' ){
-                item.notes = instance.TM.dataParts.get( emitter ).data
-            }
-            return true;
-        });
+        const item = instance.TM.item.get();
+        const label = Validity.closest( item ).record.label || '';
         console.debug( 'item', item );
-        // after the user has been created we get back its internal identifier to be used on updates for other panels
-        //  a Promise which resolves to the newly created user account
-        const _getAccountAfterCreation = function( email ){
-            return Meteor.callPromise( 'account.byEmail', email );
-        };
-        // whether the user has been just created or is to be updated, other panels are to be considered separately
-        const _updateFromPanels = function(){
-            // roles panel: replace all roles for the user
-            Roles.removeAllRolesFromUser( item._id ).then(( res ) => {
-                item.roles.every(( role ) => {
-                    const scope = role.scope;
-                    Meteor.callPromise( 'Roles.addUsersToRoles', item._id, role._id, scope === 'NONE' ? {} : { scope: scope })
-                        .then(( res ) => {
-                            //console.debug( 'Roles.addUsersToRoles()', role.doc._id, res );
-                        });
-                    return true;
-                });
-            });
-            // notes panel
-            if( item.notes ){
-                Meteor.callPromise( 'account.setAttribute', item._id, { notes: item.notes });
-            } else {
-                Meteor.callPromise( 'account.clearAttributes', item._id, [ 'notes' ]);
-            }
-        }
-        // when creating a new account, we let the user create several by reusing the same modal
-        if( instance.TM.isNew.get()){
-            /*
-            AccountsUI.Account.createUser({
-                username: item.username,
-                password: item.password,
-                email: email
-            }, {
-                autoConnect: false,
-                successFn(){
-                    _getAccountAfterCreation( item.email ).then(( user ) => {
-                        if( user ){
-                            item._id = user._id;
-                            _updateFromPanels();
-                        } else {
-                            console.warn( 'unable to retrieve the user account', item.email );
-                        }
-                    });
+        Meteor.callAsync( 'pwix_tenants_manager_tenants_upsert', item )
+            .then(( res ) => {
+                console.debug( 'res', res );
+                return Meteor.callAsync( 'pwix_tenants_manager_tenants_set_managers', item )
+            })
+            .then(() => {
+                Tolert.success( pwixI18n.label( I18N, instance.TM.isNew.get() ? 'edit.new_success' : 'edit.edit_success', label ));
+                if( instance.TM.isModal.get()){
+                    Modal.close();
+                } else {
+                    instance.$( '.c-record-properties-pane' ).trigger( 'iz-clear-panel' );
+                    instance.$( 'NotesEdit' ).trigger( 'iz-clear-panel' );
                 }
+            })
+            .catch(( e ) => {
+                console.error( e );
+                Tolert.error( pwixI18n.label( I18N, 'edit.error' ));
             });
-            */
-            instance.$( '.c-account-ident-panel .ac-signup' ).trigger( 'ac-clear-panel' );
-            instance.$( '.c-account-roles-panel' ).trigger( 'clear-panel' );
-            instance.$( '.c-account-settings-panel' ).trigger( 'clear-panel' );
-            instance.$( '.c-notes-panel' ).trigger( 'clear-panel' );
-        } else {
-            // update users
-            Meteor.call( 'account.updateUser', item );
-            _updateFromPanels();
-            Modal.close();
-        }
     }
 });

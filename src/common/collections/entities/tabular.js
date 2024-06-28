@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/common/js/entities-tabular.js
+ * pwix:tenants-manager/src/common/js/tabular.js
  */
 
 import { pwixI18n } from 'meteor/pwix:i18n';
@@ -15,6 +15,7 @@ Tracker.autorun(() => {
             name: 'Entities',
             collection: Entities.collection,
             columns: Entities.fieldSet.get().toTabular(),
+            pub: TenantsManager.C.pub.tenantsList.publish,
             tabular: {
                 // display the organization label instead of the identifier in the button title
                 deleteButtonTitle( it ){

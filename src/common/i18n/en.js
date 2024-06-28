@@ -15,25 +15,19 @@ TenantsManager.i18n = {
                 success: 'The "%s" tenant has been successfully deleted'
             },
             edit: {
-                modal_title: 'Editing a tenant'
-            },
-            entities: {
-                check: {
-                    label_exists: 'The label is already used by another tenant',
-                    label_unset: 'Common label is not set'
-                },
-                edit: {
-                    label_label: 'Common label :',
-                    label_ph: 'The tenant common label',
-                    label_help: ''  // should be taken from the Field description
-                },
+                edit_success: 'The tenant "%s" has been successfully updated',
+                error: 'An unknown error unfortunately occurred. Please retry later',
+                modal_title: 'Editing a tenant',
+                new_success: 'The tenant "%s" has been successfully created'
             },
             list: {
                 contact_email_th: 'Contact email',
                 contact_page_th: 'Contact page',
+                effect_end_th: 'Ending',
                 home_page_th: 'Home page',
                 label_th: 'Label',
-                notes_th: 'Notes'
+                notes_th: 'Notes',
+                effect_start_th: 'Starting',
             },
             new: {
                 btn_plus_label: 'New tenant',
@@ -45,6 +39,18 @@ TenantsManager.i18n = {
                 notes_tab: 'Notes'
             },
             records: {
+                check: {
+                    contact_email_invalid: 'The contact email address is invalid',
+                    contact_url_invalid: 'The contact page URL is invalid',
+                    gtu_url_invalid: 'The General Terms of Use page URL is invalid',
+                    home_url_invalid: 'The home page URL is invalid',
+                    label_exists: 'The label is already used by another tenant',
+                    label_unset: 'The label is not set',
+                    legals_url_invalid: 'The Legals page URL is invalid',
+                    pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
+                    support_email_invalid: 'The support email address is invalid',
+                    support_url_invalid: 'The support page URL is invalid'
+                },
                 panel: {
                     properties_tab: 'Properties'
                 },

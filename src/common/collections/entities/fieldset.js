@@ -12,22 +12,22 @@
  */
 
 import { Field } from 'meteor/pwix:field';
-import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
 
 import { Entities } from './index.js';
 
+const label = function(){
+    console.debug( 'label function' )
+    return this.label;
+};
+
 const _defaultFieldSet = function( conf ){
     let columns = [
+        // displayed columns come from tenants_all publication
         {
-            // the internal identifier of the entity document acts as the entity identifier
-            name: '_id',
-            type: String,
-            dt_tabular: false
-        },
-        {
+            dt_data: 'label()',
             dt_title: pwixI18n.label( I18N, 'list.label_th' )
         },
         {
@@ -38,6 +38,12 @@ const _defaultFieldSet = function( conf ){
         },
         {
             dt_title: pwixI18n.label( I18N, 'list.contact_email_th' ),
+        },
+        {
+            dt_title: pwixI18n.label( I18N, 'list.effect_start_th' ),
+        },
+        {
+            dt_title: pwixI18n.label( I18N, 'list.effect_end_th' ),
         },
         // common notes
         Notes.fieldDef(),
@@ -62,7 +68,6 @@ const _defaultFieldSet = function( conf ){
             dt_visible: false
         }
     ];
-
     return columns;
 };
 

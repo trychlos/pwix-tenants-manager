@@ -2,11 +2,15 @@
  * pwix:tenants-manager/src/common/collections/records/checks.js
  */
 
+import _ from 'lodash';
 const assert = require( 'assert' ).strict;
+import validator from 'email-validator';
+import validUrl from 'valid-url';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { TM } from 'meteor/pwix:typed-message';
 
+import { Entities } from '../entities/index.js';
 import { Records } from './index.js';
 
 Records.checks = {};
@@ -38,145 +42,196 @@ const _id2index = function( array, id ){
     return -1;
 }
 
-/*
-TenantsManager.checks.check_email_address = async function( value, data, opts ){
-    _assert_data_itemrv( 'TenantsManager.checks.check_email_address()', data );
-    console.debug( 'check_email_address', arguments );
+// contact email
+//  must be valid if set
+Records.checks.contactEmail = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.contactEmail()', data );
     let item = data.item.get();
-    const index = opts.id ? _id2index( item.emails, opts.id ) : -1;
     if( opts.update !== false ){
-        if( index < 0 ){
-            item.emails = item.emails || [];
-            item.emails.push({ id: opts.id });
-            index = 0;
+        item.contactEmail = value;
+    }
+    if( value ){
+        if( !validator.validate( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.contact_email_invalid' )
+            });
         }
-        item.emails[index].address = value;
+    }
+    return null;
+};
+
+// contact page url
+//  must be valid if set
+Records.checks.contactUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.contactUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.contactUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.contact_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// general terms o fuse page url
+//  must be valid if set
+Records.checks.gtuUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.gtuUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.gtuUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.gtu_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// home page url
+//  must be valid if set
+Records.checks.homeUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.homeUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.homeUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.home_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// the label must be set, and must identify the entity
+Records.checks.label = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.label()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.label = value;
     }
     if( !value ){
         return new TM.TypedMessage({
             level: TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'check.email_unset' )
+            message: pwixI18n.label( I18N, 'records.check.label_unset' )
         });
-    }
-    if( !validator.validate( value )){
-        return new TM.TypedMessage({
-            level: TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'check.email_invalid' )
-        });
-    }
-    return AccountsTools.byEmail( value )
-        .then(( user ) => {
-            let ok = false;
-            if( user ){
-                // we have found a user
-                ok = user._id === item._id;
-            } else {
-                ok = true;
+    } else {
+        const fn = function( result ){
+            let ok = true;
+            if( result.length ){
+                // we have found an existing label
+                //  this is normal if the found entity is the same than ours
+                const found_entity = result[0].entity;
+                ok = ( item.entity === found_entity );
             }
             return ok ? null : new TM.TypedMessage({
-                level: TM.MessageLevel.C.ERROR,
-                message: pwixI18n.label( I18N, 'accounts.check.email_exists' )
+                type: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'records.check.label_exists' )
             });
-        });
-};
-*/
-
-// loginAlllowed
-//  emit a warning when the user is about to disallow himself
-
-/*
-
-import { Accounts } from 'meteor/accounts-base';
-import { Mongo } from 'meteor/mongo';
-
-// check functions to be able to use a FormChecker in the UI
-export const AccountsChecks = {
-    async check_apiAllowed( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item.apiAllowed = value;
-        }
-        return Promise.resolve( null );
-    },
-
-    async check_isAllowed( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item.isAllowed = value;
-        }
-        return Promise.resolve( null );
-    },
-
-    async check_email( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item = data.item || {};
-            data.item.emails = data.item.emails || [];
-            data.item.emails[0] = data.item.emails[0] || {};
-            data.item.emails[0].address = value;
-        }
-        return Promise.resolve( null )
-            .then(() => {
-                if( !value ){
-                    return new CoreApp.TypedMessage({
-                        type: CoreApp.MessageType.C.ERROR,
-                        message: pwixI18n.label( I18N, 'accounts.check.email_unset' )
-                    });
-                } else if( !validator.validate( value )){
-                    return new CoreApp.TypedMessage({
-                        type: CoreApp.MessageType.C.ERROR,
-                        message: pwixI18n.label( I18N, 'accounts.check.email_invalid' )
-                    });
+        };
+        const promise =
+            Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.server.getBy({ label: value });
+        return promise
+            .then(( result ) => {
+                if( result ){
+                    return result;
                 } else {
-                    return Meteor.callPromise( 'account.byEmail', value )
-                        .then(( user ) => {
-                            let ok = false;
-                            if( user ){
-                                // we have found a user
-                                ok = user._id === data.item._id;
-                            } else {
-                                ok = true;
-                            }
-                            return ok ? null : new CoreApp.TypedMessage({
-                                type: CoreApp.MessageType.C.ERROR,
-                                message: pwixI18n.label( I18N, 'accounts.check.email_exists' )
-                            });
-                        });
+                    return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.server.getBy({ label: value });
                 }
+            })
+            .then(( result ) => {
+                return fn( result );
             });
-    },
-
-    async check_username( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item.username = value;
-        }
-        return Promise.resolve( null )
-            .then(() => {
-                if( value ){
-                    return Meteor.callPromise( 'account.byUsername', value )
-                        .then(( user ) => {
-                            let ok = false;
-                            if( user ){
-                                // we have found a user
-                                ok = user._id === data.item._id;
-                            } else {
-                                ok = true;
-                            }
-                            return ok ? null : new CoreApp.TypedMessage({
-                                type: CoreApp.MessageType.C.ERROR,
-                                message: pwixI18n.label( I18N, 'accounts.check.username_exists' )
-                            });
-                        });
-                }
-                return null;
-            });
-    },
-
-    async check_verified( value, data, coreApp={} ){
-        if( coreApp.update !== false ){
-            data.item = data.item || {};
-            data.item.emails = data.item.emails || [];
-            data.item.emails[0] = data.item.emails[0] || {};
-            data.item.emails[0].verified = value;
-        }
-        return Promise.resolve( null );
     }
-}
-*/
+};
+
+// legal terms page url
+//  must be valid if set
+Records.checks.legalsUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.legalsUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.legalsUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.legals_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// personal data management policy page url
+//  must be valid if set
+Records.checks.pdmpUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.pdmpUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.pdmpUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.pdmp_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// support email
+//  must be valid if set
+Records.checks.supportEmail = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.supportEmail()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.supportEmail = value;
+    }
+    if( value ){
+        if( !validator.validate( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.support_email_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// support page url
+//  must be valid if set
+Records.checks.supportUrl = async function( value, data, opts ){
+    _assert_data_itemrv( 'Records.checks.supportUrl()', data );
+    let item = data.item.get();
+    if( opts.update !== false ){
+        item.supportUrl = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.WARNING,
+                message: pwixI18n.label( I18N, 'check.support_url_invalid' )
+            });
+        }
+    }
+    return null;
+};

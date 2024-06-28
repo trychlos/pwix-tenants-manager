@@ -2,17 +2,20 @@
  * pwix:tenants-manager/src/common/collections/tenants/server/publish.js
  */
 
+import { Validity } from 'meteor/pwix:validity';
+
 import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
 
 import { Tenants } from '../index.js';
 
-// returns a cursor of all tenants, to be rendered in the Entities tabular display
-// we publish here a 'tenants_all' pseudo collection
-//  where each item is a tenant entity, which contains a DYN sub-object with:
-//  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
-//  - records: the list of validity records for this entity
-Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
+/*
+ * returns a cursor of all tenants as a full tenants list, published here as a 'tenants_all' pseudo collection
+ *  where each item is a tenant entity, which contains a DYN sub-object with:
+ *  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
+ *  - records: the list of validity records for this entity
+ */
+Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     if( !await Tenants.checks.canList( this.userId )){
         throw new Meteor.Error(
             'Tenants.check.canList',
@@ -22,12 +25,13 @@ Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
     let initializing = true;
 
     // find ORG_SCOPED_MANAGER allowed users, and add to each entity the list of its records
-    const f_transform = function( item ){
+    const f_transform = async function( item ){
         item.DYN = {
             managers: [],
             records: []
         };
-        Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER', scope: item._id }).fetchAsync().then(( fetched ) => {
+        let promises = [];
+        promises.push( Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER', scope: item._id }).fetchAsync().then(( fetched ) => {
             fetched.forEach(( it ) => {
                 Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
                     if( user ){
@@ -37,25 +41,78 @@ Meteor.publish( 'pwix_tenants_manager_tenants_list_all', async function(){
                     }
                 });
             });
-        });
-        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            return true;
+        }));
+        promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
             item.DYN.records = fetched;
-        });
-        return item;
+            return true;
+        }));
+        return Promise.allSettled( promises ).then(() => {
+            return item;
+        })
     };
 
     // in order the same query may be applied on client side, we have to add to item required fields
     const observer = Entities.collection.find({}).observe({
-        added: function( item ){
-            self.added( TenantsManager.C.publish.tenantsAll, item._id, f_transform( item ));
+        added: async function( item ){
+            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
         },
-        changed: function( newItem, oldItem ){
+        changed: async function( newItem, oldItem ){
             if( !initializing ){
-                self.changed( TenantsManager.C.publish.tenantsAll, newItem._id, f_transform( newItem ));
+                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_transform( newItem ));
             }
         },
-        removed: function( oldItem ){
-            self.removed( TenantsManager.C.publish.tenantsAll, oldItem._id, oldItem );
+        removed: async function( oldItem ){
+            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id, oldItem );
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        observer.then(( handle ) => { handle.stop(); });
+    });
+
+    self.ready();
+});
+
+/*
+ * returns a cursor of all tenants, to be rendered in the Entities tabular display
+ * we publish here a 'tenants_tabular' pseudo collection of entities where each is the closest record of the entity
+ */
+Meteor.publish( TenantsManager.C.pub.tenantsList.publish, async function( tableName, ids, fields ){
+    if( !await Tenants.checks.canList( this.userId )){
+        throw new Meteor.Error(
+            'Tenants.check.canList',
+            'Unallowed to list tenants' );
+    }
+    const self = this;
+    let initializing = true;
+    console.debug( TenantsManager.C.pub.tenantsList.publish, 'arguments', arguments );
+
+    // for each entity 'item', find the closest validity record
+    const f_transform = async function( item ){
+        return await Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            let closest = Validity.closestByRecords( fetched ).record;
+            const id = closest._id;
+            closest._id = item._id;
+            closest._record = id;
+            return closest;
+        });
+    };
+
+    // in order the same query may be applied on client side, we have to add to item required fields
+    const observer = Entities.collection.find({}).observe({
+        added: async function( item ){
+            self.added( Entities.collectionName, item._id, await f_transform( item ));
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                self.changed( Entities.collectionName, newItem._id, await f_transform( newItem ));
+            }
+        },
+        removed: async function( oldItem ){
+            self.removed( Entities.collectionName, oldItem._id, oldItem );
         }
     });
 
