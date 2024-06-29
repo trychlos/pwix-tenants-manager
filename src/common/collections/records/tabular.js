@@ -1,21 +1,26 @@
 /*
- * pwix:tenants-manager/src/common/js/tabular.js
+ * pwix:tenants-manager/src/common/collections/records/tabular.js
+ *
+ * Though the Tabular display is primarily driven by Entities, it is defined in the Records collection as most (if not all) data come from there.
  */
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
 
-import { Entities } from './index.js';
+import { Records } from './index.js';
+
+const _identifier = function( it ){
+    return it.label;
+};
 
 Tracker.autorun(() => {
     const conf = TenantsManager.configure();
-    if( Entities.collectionReady.get() && Entities.fieldSet.get()){
-        Entities.tabular = new Tabular.Table({
-            name: 'Entities',
-            collection: Entities.collection,
-            columns: Entities.fieldSet.get().toTabular(),
-            pub: TenantsManager.C.pub.tenantsList.publish,
+    if( Records.collectionReady.get() && Records.fieldSet.get()){
+        Records.tabular = new Tabular.Table({
+            name: 'Records',
+            collection: Records.collection,
+            columns: Records.fieldSet.get().toTabular(),
             tabular: {
                 // display the organization label instead of the identifier in the button title
                 deleteButtonTitle( it ){

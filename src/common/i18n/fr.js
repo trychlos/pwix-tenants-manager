@@ -9,7 +9,7 @@ TenantsManager.i18n = {
             buttons: {
                 delete_title: 'Supprime le tenant "%s"',
                 edit_title: 'Edite le tenant "%s"',
-                info_title: 'Informations sur l\'enregistrement "%s"'
+                info_title: 'Informations sur le tenant "%s"'
             },
             delete: {
                 success: 'Le tenant "%s" a été supprimé avec succès'

@@ -9,7 +9,7 @@ TenantsManager.i18n = {
             buttons: {
                 delete_title: 'Delete the "%s" tenant',
                 edit_title: 'Edit the "%s" tenant',
-                info_title: 'Informations about the "%s" tenant record'
+                info_title: 'Informations about the "%s" tenant'
             },
             delete: {
                 success: 'The "%s" tenant has been successfully deleted'

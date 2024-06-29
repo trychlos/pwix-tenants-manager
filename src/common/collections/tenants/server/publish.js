@@ -77,9 +77,10 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 });
 
 /*
- * returns a cursor of all tenants, to be rendered in the Entities tabular display
- * we publish here a 'tenants_tabular' pseudo collection of entities where each is the closest record of the entity
+ * returns a cursor of all tenants, to be rendered in the Records tabular display
+ * we publish here a 'tenants_tabular' pseudo collection of records where each is the closest record of the entity
  */
+/*
 Meteor.publish( TenantsManager.C.pub.tenantsList.publish, async function( tableName, ids, fields ){
     if( !await Tenants.checks.canList( this.userId )){
         throw new Meteor.Error(
@@ -93,26 +94,22 @@ Meteor.publish( TenantsManager.C.pub.tenantsList.publish, async function( tableN
     // for each entity 'item', find the closest validity record
     const f_transform = async function( item ){
         return await Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
-            let closest = Validity.closestByRecords( fetched ).record;
-            const id = closest._id;
-            closest._id = item._id;
-            closest._record = id;
-            return closest;
+            return Validity.closestByRecords( fetched ).record;
         });
     };
 
     // in order the same query may be applied on client side, we have to add to item required fields
-    const observer = Entities.collection.find({}).observe({
+    const observer = Records.collection.find({}).observe({
         added: async function( item ){
-            self.added( Entities.collectionName, item._id, await f_transform( item ));
+            self.added( Records.collectionName, item._id, await f_transform( item ));
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                self.changed( Entities.collectionName, newItem._id, await f_transform( newItem ));
+                self.changed( Records.collectionName, newItem._id, await f_transform( newItem ));
             }
         },
         removed: async function( oldItem ){
-            self.removed( Entities.collectionName, oldItem._id, oldItem );
+            self.removed( Records.collectionName, oldItem._id, oldItem );
         }
     });
 
@@ -124,3 +121,4 @@ Meteor.publish( TenantsManager.C.pub.tenantsList.publish, async function( tableN
 
     self.ready();
 });
+*/
