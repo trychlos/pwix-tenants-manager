@@ -54,7 +54,7 @@ Records.checks.contactEmail = async function( value, data, opts ){
         if( !validator.validate( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.contact_email_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.contact_email_invalid' )
             });
         }
     }
@@ -73,7 +73,7 @@ Records.checks.contactUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.contact_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.contact_url_invalid' )
             });
         }
     }
@@ -92,7 +92,7 @@ Records.checks.gtuUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.gtu_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.gtu_url_invalid' )
             });
         }
     }
@@ -111,7 +111,7 @@ Records.checks.homeUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.home_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.home_url_invalid' )
             });
         }
     }
@@ -172,7 +172,7 @@ Records.checks.legalsUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.legals_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.legals_url_invalid' )
             });
         }
     }
@@ -191,7 +191,7 @@ Records.checks.pdmpUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.pdmp_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.pdmp_url_invalid' )
             });
         }
     }
@@ -210,7 +210,7 @@ Records.checks.supportEmail = async function( value, data, opts ){
         if( !validator.validate( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.support_email_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.support_email_invalid' )
             });
         }
     }
@@ -229,7 +229,7 @@ Records.checks.supportUrl = async function( value, data, opts ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'check.support_url_invalid' )
+                message: pwixI18n.label( I18N, 'records.check.support_url_invalid' )
             });
         }
     }

@@ -49,7 +49,13 @@ Entities.server.upsert = async function( entity, userId ){
         result.orig = await Entities.collection.findOneAsync({ _id: entity._id });
         selector = { _id: entity._id };
         //console.debug( 'selector', selector );
-        result.numberAfftected = await Entities.collection.updateAsync( selector, { $set: item });
+        // Error: After filtering out keys not in the schema, your modifier is now empty
+        //  this is normal as long as we do not set any data in the document
+        //  so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
+        //item.updatedBy = userId;
+        //console.debug( 'item', item );
+        //console.debug( 'schema', Entities.collection.simpleSchema());
+        result.numberAfftected = await Entities.collection.updateAsync( selector, { $set: item }, { filter: false });
     } else {
         result.insertedId = await Entities.collection.insertAsync( item );
         result.numberAfftected = 1;

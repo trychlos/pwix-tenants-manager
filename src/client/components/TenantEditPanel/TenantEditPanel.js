@@ -185,19 +185,6 @@ Template.TenantEditPanel.helpers({
 });
 
 Template.TenantEditPanel.events({
-    // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
-    //  those who are using FormChecker directly update the edited item
-    //  we have to manage others
-    'panel-data .TenantEditPanel'( event, instance, data ){
-        //console.debug( 'id', data.id, 'myTabId', instance.TM.tabId.get(), data );
-        switch( data.emitter ){
-            case 'notes':
-                instance.item.get().notes = data.data;
-                break;
-        }
-        // let bubble the event to be handled by client_edit
-    },
-
     // submit
     //  event triggered in case of a modal
     'md-click .TenantEditPanel'( event, instance, data ){

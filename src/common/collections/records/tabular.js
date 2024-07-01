@@ -8,9 +8,16 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
 
+import { Entities } from '../entities/index.js';
+
 import { Records } from './index.js';
 
-const _identifier = function( it ){
+const _entity = async function( data ){
+    const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: data.entity }) : await Entities.server.getBy({ _id: data.entity }, Meteor.userId());
+    return entity[0];
+};
+
+const _record_label = function( it ){
     return it.label;
 };
 
@@ -23,15 +30,27 @@ Tracker.autorun(() => {
             columns: Records.fieldSet.get().toTabular(),
             tabular: {
                 // display the organization label instead of the identifier in the button title
-                deleteButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.delete_title', _identifier( it ));
+                async deleteButtonTitle( it ){
+                    return pwixI18n.label( I18N, 'buttons.delete_title', _record_label( it ));
                 },
-                editButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.edit_title', _identifier( it ));
+                async deleteItem( it ){
+                    return await _entity( it );
                 },
-                infoButtonTitle( it ){
-                    return pwixI18n.label( I18N, 'buttons.info_title', _identifier( it ));
-                }
+                async editButtonTitle( it ){
+                    return pwixI18n.label( I18N, 'buttons.edit_title', _record_label( it ));
+                },
+                async editItem( it ){
+                    return await _entity( it );
+                },
+                async infoButtonTitle( it ){
+                    return pwixI18n.label( I18N, 'buttons.info_title', _record_label( it ));
+                },
+                async infoItem( it ){
+                    return await _entity( it );
+                },
+                async infoModalTitle( it ){
+                    return pwixI18n.label( I18N, 'buttons.info_modal', _record_label( it ));
+                },
             },
             destroy: true
         });

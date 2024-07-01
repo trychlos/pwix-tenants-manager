@@ -6,7 +6,6 @@
  */
 
 import { Modal } from 'meteor/pwix:modal';
-import { Mongo } from 'meteor/mongo';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -22,10 +21,23 @@ Template.TenantsList.onCreated( function(){
             collection: TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ),
             handle: self.subscribe( TenantsManager.C.pub.tenantsAll.publish ),
             list: new ReactiveVar( [] )
+        },
+
+        // returns the entity document and its DYN objects
+        byEntity( entity ){
+            const list = self.TM.tenants.list.get();
+            let found = null;
+            list.every(( it ) => {
+                if( it._id === entity ){
+                    found = it;
+                }
+                return found === null;
+            });
+            return found;
         }
     };
 
-    // maintain here the list of tenants as an array of ReactiveVar's, each being a tenant entity
+    // maintain here the array of tenants entities
     //  each entity holds itself a DYN.records array of tenant records
     //  and a DYN.managers array of scoped managers user docs
     self.autorun(() => {
@@ -70,6 +82,7 @@ Template.TenantsList.events({
     },
 
     // edit a tenant
+    //  the buttons from tabular provide the entity document
     'tabular-edit-event .TenantsList'( event, instance, data ){
         Modal.run({
             mdBody: 'TenantEditPanel',
@@ -77,7 +90,7 @@ Template.TenantsList.events({
             mdClasses: 'modal-xl',
             mdClassesContent: TenantsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
-            item: data.item
+            item: instance.TM.byEntity( data.item._id )
         });
         return false;
     }

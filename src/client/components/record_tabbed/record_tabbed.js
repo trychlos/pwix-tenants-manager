@@ -26,7 +26,7 @@ import './record_tabbed.html';
 
 Template.record_tabbed.onCreated( function(){
     const self = this;
-    console.debug( this );
+    //console.debug( this );
 
     self.TM = {
         // the Checker instance
@@ -131,37 +131,5 @@ Template.record_tabbed.helpers({
             startDate: this.record.get().effectStart,
             endDate: this.record.get().effectEnd
         };
-    }
-});
-
-Template.record_tabbed.events({
-    // input checks
-    //  happens that this handler is "above" the other panels in the DOM hierarchy - we so get all 'input' events here
-    //  the FormChecker will return a null Promise
-    'input .c-organization-tabbed'( event, instance ){
-        const dataContext = this;
-        if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
-            instance.TM.checker.get().inputHandler( event ).then(( valid ) => { instance.TM.sendPanelData( dataContext, valid ); });
-        }
-    },
-
-    // this component is expected to 'know' which of its subcomponents uses or not a FormChecker.
-    //  those who are using FormChecker directly update the edited array
-    //  we have to manage others
-    'panel-data .c-organization-tabbed'( event, instance, data ){
-        if( data.id ){
-            //console.debug( event, data );
-            if( data.id === instance.TM.tabId.get()){
-                switch( data.emitter ){
-                    case 'notes':
-                        this.item.notes = data.data;
-                        break;
-                }
-            }
-            // let bubble the event to be handled by organization_edit
-        } else {
-            console.warn( 'got panel-data event with id=null', data );
-            return false;
-        }
     }
 });
