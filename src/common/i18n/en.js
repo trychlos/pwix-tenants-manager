@@ -13,6 +13,8 @@ TenantsManager.i18n = {
                 info_title: 'Informations about the "%s" tenant'
             },
             delete: {
+                confirmation_text: 'You are about to delete the "%s" tenant.<br />Are you sure ?',
+                confirmation_title: 'Deleting a tenant',
                 success: 'The "%s" tenant has been successfully deleted'
             },
             edit: {

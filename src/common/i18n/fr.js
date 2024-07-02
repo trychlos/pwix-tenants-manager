@@ -12,6 +12,8 @@ TenantsManager.i18n = {
                 info_title: 'Informations sur le tenant "%s"'
             },
             delete: {
+                confirmation_text: 'Vous êtes sur le point de supprimer le tenant "%s".<br />Etes-vous sûr ?',
+                confirmation_title: 'Supprimer un tenant',
                 success: 'Le tenant "%s" a été supprimé avec succès'
             },
             edit: {
