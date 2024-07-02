@@ -164,7 +164,7 @@ Template.TenantEditPanel.helpers({
                     entity: TM.item,
                     checker: TM.checker,
                     template: 'record_tabbed',
-                    withValidities: true
+                    withValidities: TenantsManager.configure().withValidities
                 }
             },
             {

@@ -26,7 +26,8 @@ TenantsManager._defaults = {
     recordFields: null,
     tenantsCollection: 'tenants',
     // runtime
-    verbosity: TenantsManager.C.Verbose.CONFIGURE
+    verbosity: TenantsManager.C.Verbose.CONFIGURE,
+    withValidities: true
 };
 
 /**

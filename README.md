@@ -120,6 +120,10 @@ Known configuration options are:
 
     Defaults to `TenantsManager.C.Verbose.CONFIGURE`.
 
+- `withValidities`
+
+    Whether we want manage validity periods for the tenants, defaulting to `true`.
+
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.
 
 Please note that `TenantsManager.configure()` method should be called in the same terms both in client and server sides.
