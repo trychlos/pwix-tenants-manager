@@ -27,6 +27,13 @@ const _defaultFieldSet = function( conf ){
             form_check: Records.checks.label,
             form_type: Forms.FieldType.C.MANDATORY
         },
+        // entity notes
+        {
+            schema: false,
+            dt_title: pwixI18n.label( I18N, 'list.entity_notes_th' ),
+            dt_className: 'dt-center',
+            dt_template: Meteor.isClient && Template.dt_entity_notes
+        },
         // personal data management policy page
         {
             name: 'pdmpUrl',

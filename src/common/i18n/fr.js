@@ -24,6 +24,7 @@ TenantsManager.i18n = {
                 contact_email_th: 'Contact',
                 contact_page_th: 'Page de contact',
                 effect_end_th: 'Au',
+                entity_notes_th: 'Notes du tenant',
                 home_page_th: 'Site principal',
                 label_th: 'Label',
                 notes_th: 'Notes',
