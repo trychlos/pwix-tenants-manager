@@ -103,6 +103,12 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
         });
     };
 
+    // an entity is changed - even if the closest doesn't change, the tabular display may need to be updated
+    const f_entityChanged = async function( item ){
+        console.debug( 'changing', entities[item._id] );
+        self.changed( TenantsManager.C.pub.closests.collection, entities[item._id] );
+    };
+
     // an entity is removed
     const f_entityRemoved = async function( item ){
         const closest_id = entities[item._id];
@@ -131,6 +137,9 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             f_entityAdded( item );
+        },
+        changed: async function( item ){
+            f_entityChanged( item );
         },
         removed: async function( oldItem ){
             f_entityRemoved( oldItem );
@@ -162,6 +171,103 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     self.ready();
 });
 
+/*
+ * the publication for the tabular display
+ * @param {String} tableName
+ * @param {Array} ids all id's of the Records collection - will be filtered by TenantsList component
+ * @param {Object} fields the Mongo mmodifier which select the output fields
+ * 
+ *  [Arguments] {
+ *    '0': 'Tenants',
+ *    '1': [ 'Xi4PkJdirWQWALLNx', 'a2YdM4JPwB3wsHpqR' ],
+ *    '2': {
+ *      label: 1,
+ *      entity_notes: 1,
+ *      pdmpUrl: 1,
+ *      gtuUrl: 1,
+ *      legalsUrl: 1,
+ *      homeUrl: 1,
+ *      supportUrl: 1,
+ *      contactUrl: 1,
+ *      logoUrl: 1,
+ *      logoImage: 1,
+ *      supportEmail: 1,
+ *      contactEmail: 1,
+ *      notes: 1,
+ *      entity: 1,
+ *      effectStart: 1,
+ *      effectEnd: 1,
+ *      createdAt: 1,
+ *      createdBy: 1,
+ *      updatedAt: 1,
+ *      updatedBy: 1,
+ *      DYN: 1
+ *    }
+ *  }
+ */
+Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableName, ids, fields ){
+
+    const self = this;
+    const collectionName = Records.collectionName;
+    let initializing = true;
+    let entities = {};
+
+    // for tabular display we have to provide:
+    // - entity_notes
+    // - a DYN object which contains:
+    //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
+    //   > count: the count of records for this tenant
+    const f_transform = async function( item ){
+        let promises = [];
+        item.DYN = {};
+        // get the entity
+        promises.push( Entities.collection.findOneAsync({ _id: item.entity }).then(( res ) => {
+            if( res.notes ){
+                item.entity_notes = res.notes;
+            }
+        }));
+        // get all the records
+        promises.push( Records.collection.find({ entity: item.entity }).fetchAsync().then(( fetched ) => {
+            item.DYN.analyze = Validity.analyze( fetched );
+            item.DYN.count = fetched.length;
+        }));
+        await Promise.allSettled( promises );
+        return item;
+    };
+
+    const entitiesObserver = Entities.collection.find().observeAsync({
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                self.changed( collectionName, entities[newItem._id] );
+            }
+        }
+    });
+
+    const recordsObserver = Records.collection.find({ _id: { $in: ids }}).observeAsync({
+        added: async function( item ){
+            entities[item.entity] = item._id;
+            self.added( collectionName, item._id, await f_transform( item ));
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                self.changed( collectionName, newItem._id, await f_transform( newItem ));
+            }
+        },
+        removed: async function( oldItem ){
+            self.removed( collectionName, oldItem._id);
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
+    });
+
+    self.ready();
+});
+
 // just publish someting is a pseudo-collection and see if we can later find in this collection
 Meteor.publish( 'pwix_tenants_manager_test', async function(){
 
@@ -178,7 +284,7 @@ Meteor.publish( 'pwix_tenants_manager_test', async function(){
             }
         },
         removed: async function( oldItem ){
-            self.reùmoved( 'pwix_tenants_manager_test', oldItem._id );
+            self.removed( 'pwix_tenants_manager_test', oldItem._id );
         }
     });
 

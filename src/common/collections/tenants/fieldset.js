@@ -89,7 +89,11 @@ const _defaultFieldSet = function( conf ){
         },
         Notes.fieldDef(),
         Validity.recordsFieldDef(),
-        Timestampable.fieldDef()
+        Timestampable.fieldDef(),
+        {
+            name: 'DYN',
+            dt_visible: false
+        }
     ];
     return columns;
 };
@@ -101,6 +105,31 @@ Tracker.autorun(() => {
     // add application-configured fieldset if any
     if( conf.tenantFields ){
         fieldset.extend( conf.tenantFields );
+    }
+    // update the fieldSet definitions to display start and end effect dates
+    let def = fieldset.byName( 'effectStart' );
+    if( def ){
+        def.set({
+            dt_visible: true,
+            dt_title: pwixI18n.label( I18N, 'list.effect_start_th' ),
+            dt_templateContext( rowData ){
+                return {
+                    date: rowData.effectStart
+                };
+            }
+        });
+    }
+    def = fieldset.byName( 'effectEnd' );
+    if( def ){
+        def.set({
+            dt_visible: true,
+            dt_title: pwixI18n.label( I18N, 'list.effect_end_th' ),
+            dt_templateContext( rowData ){
+                return {
+                    date: rowData.effectEnd
+                };
+            }
+        });
     }
     Tenants.fieldSet.set( fieldset );
 });

@@ -26,10 +26,23 @@ const _record_label = function( it ){
 
 Tracker.autorun(() => {
     if( Entities.collectionReady.get() && Records.collectionReady.get()){
+
+        // build the defined columns indexed by name
+        let columns = {};
+        let i = 0;
+        Tenants.fieldSet.get().names().forEach(( it ) => {
+            columns[it] = {
+                def: Tenants.fieldSet.get().byName( it ),
+                index: i
+            };
+            i += 1;
+        });
+
         Tenants.tabular = new Tabular.Table({
             name: 'Tenants',
             collection: Records.collection,
             columns: Tenants.fieldSet.get().toTabular(),
+            pub: 'pwix_tenants_manager_tenants_tabular',
             tabular: {
                 // display the organization label instead of the identifier in the button title
                 async deleteButtonTitle( it ){
@@ -64,6 +77,16 @@ Tracker.autorun(() => {
             order: {
                 name: 'entity',
                 dir: 'asc'
+            },
+            // the publication takes care of providing the list of fields which have not the same value among all records
+            createdRow( row, data, dataIndex, cells ){
+                console.debug( data );
+                data.DYN.analyze.diffs.forEach(( it ) => {
+                    const def = columns[it].def;
+                    if( def && def.dt_tabular !== false && def.dt_visible !== false ){
+                        $( cells[columns[it].index] ).addClass( 'dt-different' );   
+                    }
+                });
             }
         });
     }
