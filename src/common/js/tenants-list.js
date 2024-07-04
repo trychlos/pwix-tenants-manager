@@ -67,8 +67,8 @@ if( Meteor.isClient ){
 // fill up and track and maintain the tenants array server side
 if( Meteor.isServer ){
     Tracker.autorun(() => {
-        TenantsManager.list.collection.find().fetchAsync().then(( fetched ) => {
-            //console.debug( 'fetched', fetched );
+        TenantsManager.collections.get( 'pwix_tenants_manager_test' ).find().fetchAsync().then(( fetched ) => {
+            console.debug( 'TEST pwix_tenants_manager_test fetched', fetched );
         });
     });
 }

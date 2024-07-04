@@ -1,17 +1,18 @@
 /*
- * pwix:tenants-manager/src/common/js/records-fieldset.js
+ * pwix:tenants-manager/src/common/collections/records/fieldset.js
  *
  * Define here the fields we manage at the pwix:tenants-manager level, so that these definitions can be used:
  * - by SimpleSchema
- * - by Datatables, via pwix:tabular and aldeed:tabular
  * - when rendering the edition templates
- * - chen cheking the fields in the edition panels
+ * - chen cheking the fields in the edition panels.
+ * 
+ * Note: in this multi-validities domain, the main tabular display is Tenants-driven.
+ * We do not define here the tabular display. See Tenants/fieldset for that.
  */
 
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
-import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
 import { Validity } from 'meteor/pwix:validity';
 
@@ -23,16 +24,8 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'label',
             type: String,
-            dt_title: pwixI18n.label( I18N, 'list.label_th' ),
             form_check: Records.checks.label,
             form_type: Forms.FieldType.C.MANDATORY
-        },
-        // entity notes
-        {
-            schema: false,
-            dt_title: pwixI18n.label( I18N, 'list.entity_notes_th' ),
-            dt_className: 'dt-center',
-            dt_template: Meteor.isClient && Template.dt_entity_notes
         },
         // personal data management policy page
         {
@@ -66,7 +59,6 @@ const _defaultFieldSet = function( conf ){
             name: 'homeUrl',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.home_page_th' ),
             form_check: Records.checks.homeUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -84,7 +76,6 @@ const _defaultFieldSet = function( conf ){
             name: 'contactUrl',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.contact_page_th' ),
             form_check: Records.checks.contactUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -117,11 +108,11 @@ const _defaultFieldSet = function( conf ){
             name: 'contactEmail',
             type: String,
             optional: true,
-            dt_title: pwixI18n.label( I18N, 'list.contact_email_th' ),
             form_check: Records.checks.contactEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         Notes.fieldDef(),
+        Validity.recordsFieldDef(),
         Timestampable.fieldDef()
     ];
     return columns;
@@ -135,11 +126,5 @@ Tracker.autorun(() => {
     if( conf.recordFields ){
         fieldset.extend( conf.recordFields );
     }
-    // extend with Validity fieldset
-    fieldset.extend({
-        where: Field.C.Insert.BEFORE,
-        name: 'createdAt',
-        fields: Validity.recordsFieldDef()
-    });
     Records.fieldSet.set( fieldset );
 });

@@ -54,7 +54,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     };
 
     // in order the same query may be applied on client side, we have to add to item required fields
-    const observer = Entities.collection.find({}).observe({
+    const observer = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
         },
@@ -128,7 +128,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     };
 
     // observe the entities to maintain a list of existing entities and react to their changes
-    const entitiesObserver = Entities.collection.find({}).observe({
+    const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             f_entityAdded( item );
         },
@@ -138,7 +138,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     });
 
     // observe the records to maintain a list of existing records per entity and react to their changes
-    const recordsObserver = Records.collection.find({}).observe({
+    const recordsObserver = Records.collection.find({}).observeAsync({
         added: async function( item ){
             f_closestChanged( item.entity );
         },
@@ -159,6 +159,36 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
         recordsObserver.then(( handle ) => { handle.stop(); });
     });
 
+    self.ready();
+});
+
+// just publish someting is a pseudo-collection and see if we can later find in this collection
+Meteor.publish( 'pwix_tenants_manager_test', async function(){
+
+    const self = this;
+    let initializing = true;
+
+    const observer = Records.collection.find().observeAsync({
+        added: async function( item ){
+            self.added( 'pwix_tenants_manager_test', item._id, item );
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                self.changed( 'pwix_tenants_manager_test', newItem._id, newItem );
+            }
+        },
+        removed: async function( oldItem ){
+            self.reùmoved( 'pwix_tenants_manager_test', oldItem._id );
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        observer.then(( handle ) => { handle.stop(); });
+    });
+
+    console.debug( 'TEST pwix_tenants_manager_test ready' );
     self.ready();
 });
 

@@ -29,7 +29,7 @@ Tracker.autorun(() => {
         Tenants.tabular = new Tabular.Table({
             name: 'Tenants',
             collection: Records.collection,
-            columns: Records.fieldSet.get().toTabular(),
+            columns: Tenants.fieldSet.get().toTabular(),
             tabular: {
                 // display the organization label instead of the identifier in the button title
                 async deleteButtonTitle( it ){

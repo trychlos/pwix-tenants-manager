@@ -7,8 +7,8 @@ TenantsManager.C = {
     // publication names and the collection they publish
     pub: {
         closests: {
-            collection: 'pwix_tenants_manager_closests',
-            publish: 'pwix_tenants_manager_tenants_closests'
+            collection: 'pwix_tenants_manager_closests_ids',
+            publish: 'pwix_tenants_manager_tenants_closests_ids'
         },
         tenantsAll: {
             collection: 'pwix_tenants_manager_tenants_all',

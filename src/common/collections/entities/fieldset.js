@@ -3,12 +3,11 @@
  *
  * Define here the fields we manage at the pwix:tenants-manager level, so that these definitions can be used:
  * - by SimpleSchema
- * - by Datatables, via pwix:tabular and aldeed:tabular
  * - when rendering the edition templates
  * - chen cheking the fields in the edition panels
  *
- * Note: in this multi-validities domain, the main tabular display is Entities-driven.
- * We so define in this fieldset some columns which are actually part of the Records fieldset, just to be displayed in the tabular list.
+ * Note: in this multi-validities domain, the main tabular display is Tenants-driven.
+ * We do not define here the tabular display. See Tenants/fieldset for that.
  */
 
 import { Field } from 'meteor/pwix:field';
@@ -23,7 +22,9 @@ const _defaultFieldSet = function( conf ){
         // common notes
         Notes.fieldDef(),
         // timestampable behaviour
-        Timestampable.fieldDef()
+        Timestampable.fieldDef(),
+        // validity fieldset,
+        Validity.entitiesFieldDef()
     ];
     return columns;
 };
