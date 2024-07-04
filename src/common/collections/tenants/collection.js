@@ -7,6 +7,4 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import '../../js/index.js';
 
 export const Tenants = {
-    closests: new ReactiveVar( [] ),
-    closestsReady: new ReactiveVar( false )
 };

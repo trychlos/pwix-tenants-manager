@@ -10,9 +10,8 @@
  */
 
 export { Tenants } from './collection.js';
-//export { Tenants };
 
 import './checks.js';
 import './tabular.js';
 
-console.debug( 'defined Tenants' );
+//console.debug( 'defined Tenants' );

@@ -27,6 +27,7 @@ Tenants.server = {};
  * Rationale: we want maintain on server-side a pseudo (not serialized) collection which gathers entities, records, their managers and their properties, on a reactive way.
  * We are here reactive to both: roleAssignment, entities and records collections.
  */
+/*
 Tenants.server.cursorTenantsAll = async function(){
 
     let initializing = true;
@@ -110,11 +111,11 @@ Tenants.server.cursorTenantsAll = async function(){
 
     initializing = false;
 };
+*/
 
 /*
- * @param {String} userId
- * @returns {Array} the list of the closests ids of all entities
- */
+    KEEP as an example of async iterable
+
 Tenants.server.getClosests = async function( userId ){
     check( userId, String );
     let closests = [];
@@ -125,6 +126,7 @@ Tenants.server.getClosests = async function( userId ){
     }));
     return closests;
 };
+*/
 
 /*
  * @param {Object} entity

@@ -2,11 +2,10 @@
  * pwix:tenants-manager/src/common/collections/records/index.js
  */
 
-import { Records } from './collection.js';
-export { Records };
+export { Records } from './collection.js';
 
 import './checks.js';
 import './fieldset.js';
 import './schema.js';
 
-console.debug( 'defined Records' );
+//console.debug( 'defined Records' );

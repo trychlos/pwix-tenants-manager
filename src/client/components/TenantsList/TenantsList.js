@@ -20,12 +20,21 @@ Template.TenantsList.onCreated( function(){
     const self = this;
 
     self.TM = {
-        closests: new ReactiveVar( [] )
+        closests: new ReactiveVar( [] ),
+        handle: self.subscribe( TenantsManager.C.pub.closests.publish )
     };
 
-    // get the closest record for each entity
+    // subscribe to the ad-hoc publication to get the list of closest ids
     self.autorun(() => {
-        Meteor.callAsync( 'pwix_tenants_manager_tenants_get_closests' ).then(( res ) => { self.TM.closests.set( res ); });
+        if( self.TM.handle.ready()){
+            let closests = [];
+            TenantsManager.collections.get( TenantsManager.C.pub.closests.collection ).find().fetchAsync().then(( fetched ) => {
+                fetched.forEach(( it ) => {
+                    closests.push( it._id );
+                });
+                self.TM.closests.set( closests );
+            });
+        }
     });
 });
 
@@ -44,7 +53,6 @@ Template.TenantsList.helpers({
     selector(){
         const selector = { _id: {}};
         selector._id.$in = Template.instance().TM.closests.get();
-        console.debug( 'selector', selector );
         return selector;
 },
 

@@ -78,11 +78,97 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 });
 
 /*
+ * This publishes a list of the closest record ids for all entities
+ * A tabular requisite
+ * Publishes an array of { _id } objects
+ */
+Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
+    if( !await Tenants.checks.canList( this.userId )){
+        return false;
+    }
+
+    const self = this;
+    let initializing = true;
+
+    // map the entities to their closest record and maintain that
+    //  index is entity_id, value is closest_id
+    let entities = {};
+
+    // a new entity is added -> have to push a new closest
+    const f_entityAdded = async function( item ){
+        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            entities[item._id] = closest._id;
+            self.added( TenantsManager.C.pub.closests.collection, closest._id );
+        });
+    };
+
+    // an entity is removed
+    const f_entityRemoved = async function( item ){
+        const closest_id = entities[item._id];
+        delete entities[item._id];
+        self.removed( TenantsManager.C.pub.closests.collection, closest_id );
+    };
+
+    // records are changed, added or removed for a given entity: have to recompute the closest
+    const f_closestChanged = async function( entity_id ){
+        const prev_closest = entities[entity_id];
+        Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            entities[entity_id] = closest._id;
+            if( prev_closest ){
+                if( closest._id !== prev_closest ){
+                    self.removed( TenantsManager.C.pub.closests.collection, prev_closest );
+                    self.added( TenantsManager.C.pub.closests.collection, closest._id );
+                }
+            } else {
+                self.added( TenantsManager.C.pub.closests.collection, closest._id );
+            }
+        });
+    };
+
+    // observe the entities to maintain a list of existing entities and react to their changes
+    const entitiesObserver = Entities.collection.find({}).observe({
+        added: async function( item ){
+            f_entityAdded( item );
+        },
+        removed: async function( oldItem ){
+            f_entityRemoved( oldItem );
+        }
+    });
+
+    // observe the records to maintain a list of existing records per entity and react to their changes
+    const recordsObserver = Records.collection.find({}).observe({
+        added: async function( item ){
+            f_closestChanged( item.entity );
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                f_closestChanged( newItem.entity );
+            }
+        },
+        removed: async function( oldItem ){
+            f_closestChanged( oldItem.entity );
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
+    });
+
+    self.ready();
+});
+
+/*
  * returns a cursor of, for each entity, the closest record, plus an array of the fields which are not the same between all the records
  * this collection serves as a data source for the datatables tabular display
  * it is reactive to changes both in entities and their records
  * @params {Array} ids the list of entities
  */
+/*
 Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName, ids, fields ){
     if( !await Tenants.checks.canList( this.userId )){
         return false;
@@ -208,3 +294,4 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName
     console.debug( 'closests pub ready' );
     self.ready();
 });
+*/

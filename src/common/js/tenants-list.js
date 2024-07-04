@@ -68,7 +68,7 @@ if( Meteor.isClient ){
 if( Meteor.isServer ){
     Tracker.autorun(() => {
         TenantsManager.list.collection.find().fetchAsync().then(( fetched ) => {
-            console.debug( 'fetched', fetched );
+            //console.debug( 'fetched', fetched );
         });
     });
 }

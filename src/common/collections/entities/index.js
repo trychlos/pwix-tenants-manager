@@ -2,11 +2,10 @@
  * pwix:tenants-manager/src/common/collections/entities/index.js
  */
 
-import { Entities } from './collection.js';
-export { Entities };
+export { Entities } from './collection.js';
 
 import './checks.js';
 import './fieldset.js';
 import './schema.js';
 
-console.debug( 'defined Entities' );
+//console.debug( 'defined Entities' );
