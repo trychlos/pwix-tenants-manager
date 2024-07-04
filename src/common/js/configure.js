@@ -24,6 +24,7 @@ TenantsManager._defaults = {
     // collections
     entityFields: null,
     recordFields: null,
+    tenantFields: null,
     tenantsCollection: 'tenants',
     // runtime
     verbosity: TenantsManager.C.Verbose.CONFIGURE,

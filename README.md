@@ -58,7 +58,7 @@ Known configuration options are:
 
 - `entityFields`
 
-    Let the application extends the Entities default schema by providing additional fields as an array of `Field.Def`-valid definitions, or as a function which returns such an array of `Field.Def`-valid definitions.
+    Let the application extends the Entities default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
 
     Defauts to nothing.
 
@@ -68,9 +68,15 @@ Known configuration options are:
     TenantsManager.configure({
         entityFields: [
             {
-                name: 'label',
-                type: String,
-                optional: true
+                where: Field.C.Insert.BEFORE,
+                name: 'notes',
+                fields: [
+                    {
+                        name: 'label',
+                        type: String,
+                        optional: true
+                    }
+                ]
             }
         ]
     });
@@ -89,7 +95,7 @@ Known configuration options are:
 
 - `recordFields`
 
-    Let the application extends the Records default schema by providing additional fields as an array of `Field.Def`-valid definitions, or as a function which returns such an array of `Field.Def`-valid definitions.
+    Let the application extends the Records default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
 
     Defauts to nothing.
 
@@ -99,9 +105,15 @@ Known configuration options are:
     TenantsManager.configure({
         recordFields: [
             {
-                name: 'secondaryLabel',
-                type: String,
-                optional: true
+                where: Field.C.Insert.AFTER,
+                name: 'label',
+                fields: [
+                    {
+                        name: 'secondaryLabel',
+                        type: String,
+                        optional: true
+                    }
+                ]
             }
         ]
     });
@@ -130,6 +142,33 @@ Known configuration options are:
     - `create`: defaulting to `null` (allowed to all)
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
+
+- `tenantFields`
+
+    Let the application extends the Tenants default tabular display by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
+
+    Defauts to nothing.
+
+    Example:
+
+```js
+    TenantsManager.configure({
+        tenantFields: [
+            {
+                where: Field.C.Insert.AFTER,
+                name: 'label',
+                fields: [
+                    {
+                        name: 'column',
+                        schema: false,
+                        dt_title: 'My title',
+                        dt_className: 'dt-center'
+                    }
+                ]
+            }
+        ]
+    });
+```
 
 - `tenantsCollection`
 

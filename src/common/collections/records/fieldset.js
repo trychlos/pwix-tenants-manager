@@ -32,7 +32,6 @@ const _defaultFieldSet = function( conf ){
             name: 'pdmpUrl',
             type: String,
             optional: true,
-            dt_visible: false,
             form_check: Records.checks.pdmpUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -41,7 +40,6 @@ const _defaultFieldSet = function( conf ){
             name: 'gtuUrl',
             type: String,
             optional: true,
-            dt_visible: false,
             form_check: Records.checks.gtuUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -50,7 +48,6 @@ const _defaultFieldSet = function( conf ){
             name: 'legalsUrl',
             type: String,
             optional: true,
-            dt_visible: false,
             form_check: Records.checks.legalsUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -67,7 +64,6 @@ const _defaultFieldSet = function( conf ){
             name: 'supportUrl',
             type: String,
             optional: true,
-            dt_visible: false,
             form_check: Records.checks.supportUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
@@ -84,14 +80,12 @@ const _defaultFieldSet = function( conf ){
             name: 'logoUrl',
             type: String,
             optional: true,
-            dt_visible: false,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         {
             name: 'logoImage',
             type: String,
             optional: true,
-            dt_visible: false,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // support email address
@@ -99,7 +93,6 @@ const _defaultFieldSet = function( conf ){
             name: 'supportEmail',
             type: String,
             optional: true,
-            dt_visible: false,
             form_check: Records.checks.supportEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },

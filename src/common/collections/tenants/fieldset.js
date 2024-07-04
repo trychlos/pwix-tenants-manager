@@ -98,5 +98,9 @@ Tracker.autorun(() => {
     const conf = TenantsManager.configure();
     let columns = _defaultFieldSet( conf );
     let fieldset = new Field.Set( columns );
+    // add application-configured fieldset if any
+    if( conf.tenantFields ){
+        fieldset.extend( conf.tenantFields );
+    }
     Tenants.fieldSet.set( fieldset );
 });
