@@ -7,11 +7,27 @@
 
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
+
+import { Tenants } from '../../../common/collections/tenants/index.js';
 
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';
+
+Template.TenantsList.onCreated( function(){
+    const self = this;
+
+    self.TM = {
+        closests: new ReactiveVar( [] )
+    };
+
+    // get the closest record for each entity
+    self.autorun(() => {
+        Meteor.callAsync( 'pwix_tenants_manager_tenants_get_closests' ).then(( res ) => { self.TM.closests.set( res ); });
+    });
+});
 
 Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
@@ -23,6 +39,14 @@ Template.TenantsList.helpers({
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
     },
+
+    // a display selector
+    selector(){
+        const selector = { _id: {}};
+        selector._id.$in = Template.instance().TM.closests.get();
+        console.debug( 'selector', selector );
+        return selector;
+},
 
     // tabular identifier
     tabularId(){

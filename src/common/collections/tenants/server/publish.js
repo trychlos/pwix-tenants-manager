@@ -128,11 +128,13 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName
 
     // an entity is changed
     const f_entityChanged = async function( item ){
-        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
-            const closest = Validity.closestByRecords( fetched ).record;
-            console.debug( 'changing', closest.entity );
-            self.changed( TenantsManager.C.pub.closests.collection, closest.entity, f_computeDifferences( item, closest, fetched ));
-        });
+        if( !initializing ){
+            Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+                const closest = Validity.closestByRecords( fetched ).record;
+                console.debug( 'changing', closest.entity );
+                self.changed( TenantsManager.C.pub.closests.collection, closest.entity, f_computeDifferences( item, closest, fetched ));
+            });
+        }
     };
 
     // an entity is removed
@@ -167,9 +169,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName
         },
         changed: async function( newItem, oldItem ){
             entities[newItem._id] = newItem;
-            if( !initializing ){
-                f_entityChanged( newItem );
-            }
+            f_entityChanged( newItem );
         },
         removed: async function( oldItem ){
             delete entities[oldItem._id];
@@ -205,5 +205,6 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName
         recordsObserver.then(( handle ) => { handle.stop(); });
     });
 
+    console.debug( 'closests pub ready' );
     self.ready();
 });

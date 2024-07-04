@@ -9,8 +9,8 @@
  * But we do not have any fieldset here, nor any serialization.
  */
 
-import { Tenants } from './collection.js';
-export { Tenants };
+export { Tenants } from './collection.js';
+//export { Tenants };
 
 import './checks.js';
 import './tabular.js';

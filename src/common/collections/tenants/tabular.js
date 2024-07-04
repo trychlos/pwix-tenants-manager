@@ -6,13 +6,14 @@ import _ from 'lodash';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
 import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
 
-console.debug( 'tabular.js' );
+import { Tenants } from './index.js';
 
 const _entity = async function( data ){
     const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: data.entity }) : await Entities.server.getBy({ _id: data.entity }, Meteor.userId());
@@ -23,34 +24,42 @@ const _record_label = function( it ){
     return it.label;
 };
 
-let _handle = null;
-
 /*
-if( Meteor.isClient ){
-    Tracker.autorun(() => {
-        if( Records.collectionReady.get() && Records.fieldSet.get()){
-            _handle = Meteor.subscribe( TenantsManager.C.pub.closests.publish );
-        }
-    });
-}
-    */
+Tracker.autorun(() => {
+    if( Entities.collectionReady.get() && Records.collectionReady.get()){
+        const promise = Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_tenants_get_closests' ) : Promise.resolve( [] );//Tenants.server.getClosests( Meteor.userId());
+        promise.then(( res ) => {
+            Tenants.closests.set( res );
+            Tenants.closestsReady.set( true );
+        });
+    }
+});
+
+// track closests content
+Tracker.autorun(() => {
+    console.debug( 'closests', Tenants.closests.get());
+});
+*/
 
 Tracker.autorun(() => {
-    const conf = TenantsManager.configure();
-    let rowgroups = {};
-    //if( Meteor.isServer || ( _handle && _handle.ready())){
-    if( Entities.collectionReady.get()){
-        Records.tabular = new Tabular.Table({
-            name: 'Records',
-            collection: Entities.collection,
+    if( Entities.collectionReady.get() && Records.collectionReady.get()){
+        Tenants.tabular = new Tabular.Table({
+            name: 'Tenants',
+            collection: Records.collection,
             /*
+            selector( userId ){
+                const selector = { _id: {}};
+                selector._id.$in = Tenants.closests.get();
+                console.debug( 'selector', selector );
+                return selector;
+            },
             changeSelector( selector, userId ){
                 const closests = TenantsManager.list.getClosests();
                 console.debug( 'closests', closests );
                 return { _id: { $in: closests }};
             },
             */
-            pub: TenantsManager.C.pub.closests.publish,
+            //pub: TenantsManager.C.pub.closests.publish,
             //collection: TenantsManager.collections.get( TenantsManager.C.pub.closests.collection ),
             columns: Records.fieldSet.get().toTabular(),
             tabular: {

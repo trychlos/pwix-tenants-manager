@@ -6,6 +6,11 @@ import { Tenants } from '../index.js';
 
 Meteor.methods({
     // update the managers of a tenant
+    async 'pwix_tenants_manager_tenants_get_closests'(){
+        return await Tenants.server.getClosests( Meteor.userId());
+    },
+
+    // update the managers of a tenant
     async 'pwix_tenants_manager_tenants_set_managers'( item ){
         return await Tenants.server.setManagers( item, Meteor.userId());
     },

@@ -4,7 +4,7 @@
 
 
         {{#if canList }}
-            {{> tabular_ext table=TabularTables.Records id=tabularId class="table table-striped table-bordered table-condensed" }}
+            {{> tabular_ext table=TabularTables.Tenants id=tabularId selector=selector class="table table-striped table-bordered table-condensed" }}
         {{else}}
             <div class="not-allowed">
                 {{{ i18n key="list.not_allowed" }}}

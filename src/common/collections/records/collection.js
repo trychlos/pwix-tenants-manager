@@ -6,6 +6,8 @@ import { Mongo } from 'meteor/mongo';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
 
+import '../../js/index.js';
+
 export const Records = {
     collectionReady: new ReactiveVar( false ),
     fieldSet: new ReactiveVar( null )

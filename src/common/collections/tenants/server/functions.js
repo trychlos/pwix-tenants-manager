@@ -7,6 +7,7 @@
 import _ from 'lodash';
 
 import { check } from 'meteor/check';
+import { Validity } from 'meteor/pwix:validity';
 
 import { Tenants } from '../index.js';
 
@@ -62,17 +63,18 @@ Tenants.server.cursorTenantsAll = async function(){
     };
 
     // observe the roleAssignment collection
-    const rolesObserver = Entities.collection.find({}).observeAsync({
+    //  we 'observe' user and scope
+    const rolesObserver = Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER' }).observeAsync({
         added: async function( item ){
-            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
+            //
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_transform( newItem ));
+                //
             }
         },
         removed: async function( oldItem ){
-            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
+            //  
         }
     });
 
@@ -107,6 +109,21 @@ Tenants.server.cursorTenantsAll = async function(){
     });
 
     initializing = false;
+};
+
+/*
+ * @param {String} userId
+ * @returns {Array} the list of the closests ids of all entities
+ */
+Tenants.server.getClosests = async function( userId ){
+    check( userId, String );
+    let closests = [];
+    const entities = await Entities.collection.find().fetchAsync();
+    await Promise.all( entities.map( async ( it ) => {
+        const records = await Records.collection.find({ entity: it._id }).fetchAsync();
+        closests.push( Validity.closestByRecords( records ).record._id );
+    }));
+    return closests;
 };
 
 /*

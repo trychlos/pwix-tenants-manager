@@ -2,4 +2,11 @@
  * pwix:tenants-manager/src/common/collections/tenants/collection.js
  */
 
-export const Tenants = {};
+import { ReactiveVar } from 'meteor/reactive-var';
+
+import '../../js/index.js';
+
+export const Tenants = {
+    closests: new ReactiveVar( [] ),
+    closestsReady: new ReactiveVar( false )
+};
