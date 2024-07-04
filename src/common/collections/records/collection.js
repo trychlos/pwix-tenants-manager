@@ -20,5 +20,3 @@ Tracker.autorun(() => {
         Records.collectionReady.set( true );
     }
 });
-
-console.debug( 'defining Records' );

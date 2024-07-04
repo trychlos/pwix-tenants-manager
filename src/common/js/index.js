@@ -8,6 +8,7 @@ import './configure.js';
 import './i18n.js';
 import './trace.js';
 //
-import './collections-get.js';
-//
 import './collections-define.js';
+//
+import './collections-get.js';
+import './tenants-list.js';

@@ -20,5 +20,3 @@ Tracker.autorun(() => {
         Entities.collectionReady.set( true );
     }
 });
-
-console.debug( 'defining Entities' );

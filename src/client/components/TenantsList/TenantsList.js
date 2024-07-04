@@ -7,51 +7,11 @@
 
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
-import { ReactiveVar } from 'meteor/reactive-var';
+import { Tolert } from 'meteor/pwix:tolert';
 
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';
-
-Template.TenantsList.onCreated( function(){
-    const self = this;
-
-    self.TM = {
-        tenants: {
-            collection: TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ),
-            handle: self.subscribe( TenantsManager.C.pub.tenantsAll.publish ),
-            list: new ReactiveVar( [] )
-        },
-
-        // returns the entity document and its DYN objects
-        byEntity( entity ){
-            const list = self.TM.tenants.list.get();
-            let found = null;
-            list.every(( it ) => {
-                if( it._id === entity ){
-                    found = it;
-                }
-                return found === null;
-            });
-            return found;
-        }
-    };
-
-    // maintain here the array of tenants entities
-    //  each entity holds itself a DYN.records array of tenant records
-    //  and a DYN.managers array of scoped managers user docs
-    self.autorun(() => {
-        if( self.TM.tenants.handle.ready()){
-            let tenants = [];
-            self.TM.tenants.collection.find().forEachAsync(( o ) => {
-                tenants.push( o );
-            }).then(() => {
-                self.TM.tenants.list.set( tenants );
-                console.debug( 'tenants', tenants );
-            });
-        }
-    });
-});
 
 Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
@@ -62,6 +22,11 @@ Template.TenantsList.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
+    },
+
+    // tabular identifier
+    tabularId(){
+        return TABULAR_ID;
     }
 });
 
@@ -90,7 +55,7 @@ Template.TenantsList.events({
             mdClasses: 'modal-xl',
             mdClassesContent: TenantsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title' ),
-            item: instance.TM.byEntity( data.item._id )
+            item: TenantsManager.list.byEntity( data.item._id )
         });
         return false;
     }

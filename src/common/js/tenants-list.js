@@ -26,6 +26,26 @@ TenantsManager.list = {
             return found === null;
         });
         return found;
+    },
+
+    // returns the list of closest ids
+    getClosests(){
+        const list = TenantsManager.list.array.get();
+        let closests = [];
+        list.forEach(( it ) => {
+            closests.push( it.DYN.closest._id );
+        });
+        return closests;
+    },
+
+    // returns the list of entities as an array of ids
+    getEntities(){
+        const list = TenantsManager.list.array.get();
+        let entities = [];
+        list.forEach(( it ) => {
+            entities.push( it._id );
+        });
+        return entities;
     }
 };
 
@@ -47,5 +67,8 @@ if( Meteor.isClient ){
 // fill up and track and maintain the tenants array server side
 if( Meteor.isServer ){
     Tracker.autorun(() => {
+        TenantsManager.list.collection.find().fetchAsync().then(( fetched ) => {
+            console.debug( 'fetched', fetched );
+        });
     });
 }

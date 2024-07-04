@@ -21,7 +21,7 @@ TenantsManager._defaults = {
         edit: null,
         delete: null
     },
-    // storage
+    // collections
     entityFields: null,
     recordFields: null,
     tenantsCollection: 'tenants',

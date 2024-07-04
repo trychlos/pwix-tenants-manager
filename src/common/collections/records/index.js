@@ -2,12 +2,11 @@
  * pwix:tenants-manager/src/common/collections/records/index.js
  */
 
-// have to make sure that common/index is executed before any try to define this dynamically named collection
-import '../../js/index.js';
-
-export { Records } from './collection.js';
+import { Records } from './collection.js';
+export { Records };
 
 import './checks.js';
 import './fieldset.js';
 import './schema.js';
-import './tabular.js';
+
+console.debug( 'defined Records' );

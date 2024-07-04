@@ -14,12 +14,11 @@ import { Tenants } from '../index.js';
  *  where each item is a tenant entity, which contains a DYN sub-object with:
  *  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
  *  - records: the list of validity records for this entity
+ *  - closest: the closest record
  */
 Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     if( !await Tenants.checks.canList( this.userId )){
-        throw new Meteor.Error(
-            'Tenants.check.canList',
-            'Unallowed to list tenants' );
+        return false;
     }
     const self = this;
     let initializing = true;
@@ -28,7 +27,8 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     const f_transform = async function( item ){
         item.DYN = {
             managers: [],
-            records: []
+            records: [],
+            closest: null
         };
         let promises = [];
         promises.push( Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER', scope: item._id }).fetchAsync().then(( fetched ) => {
@@ -37,7 +37,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                     if( user ){
                         item.DYN.managers.push( user );
                     } else {
-                        console.warn( 'user not found, but allowed by a scoped role', it.user._id );
+                        console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
                     }
                 });
             });
@@ -45,6 +45,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         }));
         promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
             item.DYN.records = fetched;
+            item.DYN.closest = Validity.closestByRecords( fetched ).record;
             return true;
         }));
         return Promise.allSettled( promises ).then(() => {
@@ -63,7 +64,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             }
         },
         removed: async function( oldItem ){
-            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id, oldItem );
+            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
         }
     });
 
@@ -77,48 +78,132 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 });
 
 /*
- * returns a cursor of all tenants, to be rendered in the Records tabular display
- * we publish here a 'tenants_tabular' pseudo collection of records where each is the closest record of the entity
+ * returns a cursor of, for each entity, the closest record, plus an array of the fields which are not the same between all the records
+ * this collection serves as a data source for the datatables tabular display
+ * it is reactive to changes both in entities and their records
+ * @params {Array} ids the list of entities
  */
-/*
-Meteor.publish( TenantsManager.C.pub.tenantsList.publish, async function( tableName, ids, fields ){
+Meteor.publish( TenantsManager.C.pub.closests.publish, async function( tableName, ids, fields ){
     if( !await Tenants.checks.canList( this.userId )){
-        throw new Meteor.Error(
-            'Tenants.check.canList',
-            'Unallowed to list tenants' );
+        return false;
     }
+
     const self = this;
     let initializing = true;
-    console.debug( TenantsManager.C.pub.tenantsList.publish, 'arguments', arguments );
+    console.debug( TenantsManager.C.pub.closests.publish, arguments );
 
-    // for each entity 'item', find the closest validity record
-    const f_transform = async function( item ){
-        return await Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
-            return Validity.closestByRecords( fetched ).record;
+    let entities = {};
+    let records = {};
+    let closests = {};
+
+    // add to the closest record a DYN.diffs array of the fields which are not equal in all records
+    const f_computeDifferences = function( entity, closest, records ){
+        let diffs = [];
+        Object.keys( closest ).forEach(( field ) => {
+            const value = closest[field];
+            let isDiff = false;
+            records.every(( it ) => {
+                isDiff = ( it[field] !== value );
+                return !isDiff;
+            });
+            if( isDiff ){
+                diffs.push( field );
+            }
+        });
+        closest.DYN = {
+            entity: entity,
+            diffs: diffs
+        };
+        return closest;
+    };
+
+    // a new entity is added
+    const f_entityAdded = async function( item ){
+        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            console.debug( 'adding', closest.entity );
+            self.added( TenantsManager.C.pub.closests.collection, closest.entity, f_computeDifferences( item, closest, fetched ));
         });
     };
 
-    // in order the same query may be applied on client side, we have to add to item required fields
-    const observer = Records.collection.find({}).observe({
+    // an entity is changed
+    const f_entityChanged = async function( item ){
+        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            console.debug( 'changing', closest.entity );
+            self.changed( TenantsManager.C.pub.closests.collection, closest.entity, f_computeDifferences( item, closest, fetched ));
+        });
+    };
+
+    // an entity is removed
+    const f_entityRemoved = async function( item ){
+        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            console.debug( 'removing', closest.entity );
+            self.removed( TenantsManager.C.pub.closests.collection, closest.entity, f_computeDifferences( item, closest, fetched ));
+        });
+    };
+
+    // a new record is added
+    const f_recordAdded = async function( item ){
+        Entities.collection.findOneAsync({ _id: item.entity }).then(( it ) => { f_entityChanged( it ); });
+    };
+
+    // a record is changed
+    const f_recordChanged = async function( item ){
+        Entities.collection.findOneAsync({ _id: item.entity }).then(( it ) => { f_entityChanged( it ); });
+    };
+
+    // a record is removed
+    const f_recordRemoved = async function( item ){
+        Entities.collection.findOneAsync({ _id: item.entity }).then(( it ) => { f_entityChanged( it ); });
+    };
+
+    // observe the entities to maintain a list of existing entities and react to their changes
+    const entitiesObserver = Entities.collection.find({}).observe({
         added: async function( item ){
-            self.added( Records.collectionName, item._id, await f_transform( item ));
+            entities[item._id] = item;
+            f_entityAdded( item );
         },
         changed: async function( newItem, oldItem ){
+            entities[newItem._id] = newItem;
             if( !initializing ){
-                self.changed( Records.collectionName, newItem._id, await f_transform( newItem ));
+                f_entityChanged( newItem );
             }
         },
         removed: async function( oldItem ){
-            self.removed( Records.collectionName, oldItem._id, oldItem );
+            delete entities[oldItem._id];
+            f_entityRemoved( oldItem );
+        }
+    });
+
+    // observe the records to maintain a list of existing records per entity and react to their changes
+    const recordsObserver = Records.collection.find({}).observe({
+        added: async function( item ){
+            records[item.entity] = records[item.entity] || {};
+            records[item.entity][item._id] = item;
+            f_recordAdded( item );
+        },
+        changed: async function( newItem, oldItem ){
+            records[newItem.entity] = records[newItem.entity] || {};
+            records[newItem.entity][newItem._id] = newItem;
+            if( !initializing ){
+                f_recordChanged( newItem );
+            }
+        },
+        removed: async function( oldItem ){
+            records[oldItem.entity] = records[oldItem.entity] || {};
+            delete records[oldItem.entity][oldItem._id];
+            f_recordRemoved( oldItem );
         }
     });
 
     initializing = false;
 
     self.onStop( function(){
-        observer.then(( handle ) => { handle.stop(); });
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
     });
 
     self.ready();
 });
-*/

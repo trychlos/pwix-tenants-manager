@@ -122,26 +122,7 @@ const _defaultFieldSet = function( conf ){
             form_type: Forms.FieldType.C.OPTIONAL
         },
         Notes.fieldDef(),
-        {
-            name: 'createdAt',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'createdBy',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'updatedAt',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'updatedBy',
-            schema: false,
-            dt_visible: false
-        }
+        Timestampable.fieldDef()
     ];
     return columns;
 };
@@ -149,14 +130,16 @@ const _defaultFieldSet = function( conf ){
 Tracker.autorun(() => {
     const conf = TenantsManager.configure();
     let columns = _defaultFieldSet( conf );
-    let _fieldset = new Field.Set( columns );
+    let fieldset = new Field.Set( columns );
+    // add application-configured fieldset if any
     if( conf.recordFields ){
-        _fieldset.extend( conf.recordFields );
+        fieldset.extend( conf.recordFields );
     }
-    _fieldset.extend({
+    // extend with Validity fieldset
+    fieldset.extend({
         where: Field.C.Insert.BEFORE,
         name: 'createdAt',
         fields: Validity.recordsFieldDef()
     });
-    Records.fieldSet.set( _fieldset );
+    Records.fieldSet.set( fieldset );
 });

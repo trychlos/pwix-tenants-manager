@@ -2,10 +2,9 @@
  * pwix:tenants-manager/src/common/js/collections-define.js
  */
 
-import { Tenants } from '../../common/collections/tenants/index.js';
-//
 import { Entities } from '../../common/collections/entities/index.js';
 import { Records } from '../../common/collections/records/index.js';
+//
+import { Tenants } from '../../common/collections/tenants/index.js';
 
-// as of 2024- 6-26 Entities is defined *after* the below line - bad!
-//console.debug( 'imported common collections', Tenants, Entities, Records );
+console.debug( 'imported common collections:', Tenants && 'Tenants OK', Entities && 'Entites OK', Records && 'Records OK' );

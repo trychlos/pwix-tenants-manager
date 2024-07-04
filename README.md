@@ -56,9 +56,9 @@ Known configuration options are:
 
     Defauts to nothing.
 
-- `fields`
+- `entityFields`
 
-    Let the application extends the default schema by providing additional fields as a `Field.Set` extension, or as a function which returns such a `Field.Set` extension.
+    Let the application extends the Entities default schema by providing additional fields as an array of `Field.Def`-valid definitions, or as a function which returns such an array of `Field.Def`-valid definitions.
 
     Defauts to nothing.
 
@@ -66,30 +66,61 @@ Known configuration options are:
 
 ```js
     TenantsManager.configure({
-        fieldsSet: new Forms.FieldsSet(
+        entityFields: [
             {
-                name: 'apiAllowed',
-                type: Boolean,
-                defaultValue: false
+                name: 'label',
+                type: String,
+                optional: true
             }
-        ),
-        //haveEmailAddress: AC_FIELD_MANDATORY,
-        //haveUsername: AC_FIELD_NONE
-        roles: {
-            list: 'TENANTS_LIST',
-            create: 'TENANT_CREATE',
-            edit: 'TENANT_EDIT',
-            delete: 'TENANT_DELETE'
-        }
-        // verbosity: TenantsManager.C.Verbose.CONFIGURE
+        ]
     });
 ```
+
+    Default Entities fields are:
+
+    - `notes`: common notes
+    - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
 - `hideDisabled`
 
     Whether to hide disabled actions instead of displaying the disabled state.
 
     Defaults to `true`: disabled actions are hidden.
+
+- `recordFields`
+
+    Let the application extends the Records default schema by providing additional fields as an array of `Field.Def`-valid definitions, or as a function which returns such an array of `Field.Def`-valid definitions.
+
+    Defauts to nothing.
+
+    Example:
+
+```js
+    TenantsManager.configure({
+        recordFields: [
+            {
+                name: 'secondaryLabel',
+                type: String,
+                optional: true
+            }
+        ]
+    });
+```
+
+    Default Records fields are:
+
+    - `label`: mandatory unique label
+    - `pdmpUrl`: personal data management policy page url
+    - `gtuUrl`: general terms of use page url
+    - `legalsUrl`: legal terms page url
+    - `homeUrl`: home page url
+    - `supportUrl`: support page url
+    - `contactUrl`: contact page url
+    - `supportEmail`: support email address
+    - `contactEmail`: contact email address
+    - `logoUrl`: logo url
+    - `logoImage`: logo image
+    - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
 - `roles`
 

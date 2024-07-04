@@ -13,6 +13,7 @@
 
 import { Field } from 'meteor/pwix:field';
 import { Notes } from 'meteor/pwix:notes';
+import { Timestampable } from 'meteor/pwix:collection-timestampable';
 import { Tracker } from 'meteor/tracker';
 
 import { Entities } from './index.js';
@@ -22,26 +23,7 @@ const _defaultFieldSet = function( conf ){
         // common notes
         Notes.fieldDef(),
         // timestampable behaviour
-        {
-            name: 'createdAt',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'createdBy',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'updatedAt',
-            schema: false,
-            dt_visible: false
-        },
-        {
-            name: 'updatedBy',
-            schema: false,
-            dt_visible: false
-        }
+        Timestampable.fieldDef()
     ];
     return columns;
 };
@@ -49,9 +31,10 @@ const _defaultFieldSet = function( conf ){
 Tracker.autorun(() => {
     const conf = TenantsManager.configure();
     let columns = _defaultFieldSet( conf );
-    let _fieldset = new Field.Set( columns );
+    let fieldset = new Field.Set( columns );
+    // add application-configured fieldset if any
     if( conf.entityFields ){
-        _fieldset.extend( conf.entityFields );
+        fieldset.extend( conf.entityFields );
     }
-    Entities.fieldSet.set( _fieldset );
+    Entities.fieldSet.set( fieldset );
 });

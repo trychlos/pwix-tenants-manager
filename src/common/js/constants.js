@@ -6,8 +6,12 @@ TenantsManager.C = {
 
     // publication names and the collection they publish
     pub: {
+        closests: {
+            collection: 'pwix_tenants_manager_closests',
+            publish: 'pwix_tenants_manager_tenants_closests'
+        },
         tenantsAll: {
-            collection: 'tenants_all',
+            collection: 'pwix_tenants_manager_tenants_all',
             publish: 'pwix_tenants_manager_tenants_list_all'
         }
     },
@@ -22,4 +26,8 @@ TenantsManager.C = {
 
 // non exported variables
 
+// tabular identifier
+TABULAR_ID = 'pwix:tenants-manager/tabular';
+
+// i18n namespace
 I18N = 'pwix:tenants-manager:i18n:namespace';
