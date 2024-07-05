@@ -26,7 +26,7 @@ const _entity = async function( data ){
 };
 
 const _record_label = function( it ){
-    return it.label;
+    return it ? it.label : '';
 };
 
 Tracker.autorun(() => {
@@ -43,12 +43,24 @@ Tracker.autorun(() => {
             i += 1;
         });
 
+        // instanciates the tabular Table
         Tenants.tabular = new Tabular.Table({
             name: 'Tenants',
             collection: Records.collection,
             columns: Tenants.fieldSet.get().toTabular(),
             pub: 'pwix_tenants_manager_tenants_tabular',
             tabular: {
+                // have a badge which displays the count of validity records if greater than 1
+                async buttons( it ){
+                    return [
+                        {
+                            where: Tabular.C.Where.BEFORE,
+                            buttons: [
+                                'dt_count_badge'
+                            ]
+                        }
+                    ];
+                },
                 // display the organization label instead of the identifier in the button title
                 async deleteButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.delete_title', _record_label( it ));

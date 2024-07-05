@@ -7,6 +7,7 @@ TenantsManager.i18n = {
     ...{
         en: {
             buttons: {
+                count_badge_title: 'The "%s" tenant has %s validity periods',
                 delete_title: 'Delete the "%s" tenant',
                 edit_title: 'Edit the "%s" tenant',
                 info_modal: 'Informations about the "%s" tenant',

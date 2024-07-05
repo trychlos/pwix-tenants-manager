@@ -30,4 +30,15 @@
         color: gray;
         font-style: italic;
     }
+    .dt-count-badge {
+        display: flex;
+        align-items: center;
+        .badge {
+            --bs-badge-padding-y: 0.5em;
+            background-color: var( --bs-info );
+        }
+        .badge:hover {
+            cursor: default;
+        }
+    }
 }
