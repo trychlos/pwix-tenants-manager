@@ -50,11 +50,11 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         }));
         return Promise.allSettled( promises ).then(() => {
             return item;
-        })
+        });
     };
 
     // in order the same query may be applied on client side, we have to add to item required fields
-    const observer = Entities.collection.find({}).observeAsync({
+    const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
         },
@@ -68,10 +68,26 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         }
     });
 
+    // in order the same query may be applied on client side, we have to add to item required fields
+    const recordsObserver = Records.collection.find({}).observeAsync({
+        added: async function( item ){
+            //self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                //self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_transform( newItem ));
+            }
+        },
+        removed: async function( oldItem ){
+            //self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
+        }
+    });
+
     initializing = false;
 
     self.onStop( function(){
-        observer.then(( handle ) => { handle.stop(); });
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
     });
 
     self.ready();
@@ -109,7 +125,6 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     //  but removed()+added() is ok (though redraws twice the tabular)
     const f_entityChanged = async function( item ){
         console.debug( 'changing', entities[item._id] );
-        //self.changed( TenantsManager.C.pub.closests.collection, entities[item._id] );
         self.removed( TenantsManager.C.pub.closests.collection, entities[item._id] );
         self.added( TenantsManager.C.pub.closests.collection, entities[item._id] );
     };
