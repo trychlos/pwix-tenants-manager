@@ -104,9 +104,14 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     };
 
     // an entity is changed - even if the closest doesn't change, the tabular display may need to be updated
+    //  (e.g. for entity notes indicator)
+    //  it is not enough to just call changed() with an unchanged id
+    //  but removed()+added() is ok (though redraws twice the tabular)
     const f_entityChanged = async function( item ){
         console.debug( 'changing', entities[item._id] );
-        self.changed( TenantsManager.C.pub.closests.collection, entities[item._id] );
+        //self.changed( TenantsManager.C.pub.closests.collection, entities[item._id] );
+        self.removed( TenantsManager.C.pub.closests.collection, entities[item._id] );
+        self.added( TenantsManager.C.pub.closests.collection, entities[item._id] );
     };
 
     // an entity is removed
@@ -217,6 +222,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
     // - a DYN object which contains:
     //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
     //   > count: the count of records for this tenant
+    // - start end end effect dates are modified with the englobing period of the entity
     const f_transform = async function( item ){
         let promises = [];
         item.DYN = {};
@@ -228,8 +234,11 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
         }));
         // get all the records
         promises.push( Records.collection.find({ entity: item.entity }).fetchAsync().then(( fetched ) => {
-            item.DYN.analyze = Validity.analyze( fetched );
+            item.DYN.analyze = Validity.analyzeByRecords( fetched );
             item.DYN.count = fetched.length;
+            const res = Validity.englobingPeriodByRecords( fetched );
+            item.effectStart = res.start;
+            item.effectEnd = res.end;
         }));
         await Promise.allSettled( promises );
         return item;

@@ -26,12 +26,12 @@ TenantsManager.i18n = {
             list: {
                 contact_email_th: 'Contact email',
                 contact_page_th: 'Contact page',
-                effect_end_th: 'Ending',
+                effect_end_th: 'Last ending',
                 entity_notes_th: 'Tenant notes',
                 home_page_th: 'Home page',
                 label_th: 'Label',
                 notes_th: 'Notes',
-                effect_start_th: 'Starting',
+                effect_start_th: 'First starting',
             },
             new: {
                 btn_plus_label: 'New tenant',

@@ -1,5 +1,10 @@
 /*
  * pwix:tenants-manager/src/common/collections/tenants/tabular.js
+ *
+ * The Tenants Manager tabular displays the closest record for each tenant, but:
+ * - lowest start end highest end effect dates are displayed
+ * - a particular class is used when the value is not the same among all the records
+ * - a badge is added when there is more than one record
  */
 
 import _ from 'lodash';
@@ -81,12 +86,16 @@ Tracker.autorun(() => {
             // the publication takes care of providing the list of fields which have not the same value among all records
             createdRow( row, data, dataIndex, cells ){
                 console.debug( data );
+                // set a different display when a value changes between validity records
                 data.DYN.analyze.diffs.forEach(( it ) => {
                     const def = columns[it].def;
                     if( def && def.dt_tabular !== false && def.dt_visible !== false ){
                         $( cells[columns[it].index] ).addClass( 'dt-different' );   
                     }
                 });
+                // display the englobing period as start and end effect dates
+                data.effectStart = data.DYN.start;
+                data.effectEnd = data.DYN.end;
             }
         });
     }
