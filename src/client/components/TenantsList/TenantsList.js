@@ -41,7 +41,9 @@ Template.TenantsList.onCreated( function(){
 Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
     canList(){
-        return TenantsManager.perms.get( 'list' );
+        const res = TenantsManager.perms.get( 'list' );
+        //console.debug( 'res', res );
+        return res;
     },
 
     // string translation

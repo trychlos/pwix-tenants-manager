@@ -31,6 +31,8 @@ TenantsManager.i18n = {
                 home_page_th: 'Site principal',
                 label_th: 'Label',
                 notes_th: 'Notes',
+                not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des tenants.</p>'
+                    +'<p>Merci de vous rapprocher de l\'administrateur de l\'application.<p>',
                 effect_start_th: 'Du',
             },
             new: {

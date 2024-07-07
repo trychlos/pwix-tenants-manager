@@ -114,19 +114,19 @@ Tenants.server.cursorTenantsAll = async function(){
 */
 
 /*
-    KEEP as an example of async iterable
-
-Tenants.server.getClosests = async function( userId ){
-    check( userId, String );
-    let closests = [];
+ * @param {String} userId, may be null when called from common code on the server
+ * @returns {Array} the list of known tenants as objects { _id: <entity_id>, label: <closest_label> }
+ */
+Tenants.server.getScopes = async function( userId ){
+    //check( userId, MatchOneOf( null, String ));
+    let result = [];
     const entities = await Entities.collection.find().fetchAsync();
-    await Promise.all( entities.map( async ( it ) => {
+    await Promise.allSettled( entities.map( async ( it ) => {
         const records = await Records.collection.find({ entity: it._id }).fetchAsync();
-        closests.push( Validity.closestByRecords( records ).record._id );
+        result.push({ _id: it._id, label: Validity.closestByRecords( records ).record.label });
     }));
-    return closests;
+    return result;
 };
-*/
 
 /*
  * @param {Object} entity

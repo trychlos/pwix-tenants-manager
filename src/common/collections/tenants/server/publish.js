@@ -53,7 +53,6 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         });
     };
 
-    // in order the same query may be applied on client side, we have to add to item required fields
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
@@ -68,7 +67,6 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         }
     });
 
-    // in order the same query may be applied on client side, we have to add to item required fields
     const recordsObserver = Records.collection.find({}).observeAsync({
         added: async function( item ){
             //self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
@@ -279,6 +277,76 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
         },
         removed: async function( oldItem ){
             self.removed( collectionName, oldItem._id);
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
+    });
+
+    self.ready();
+});
+
+/*
+ * This publishes a list of the known scopes to be used as a reference when editing scoped roles
+ * Publishes an array of { _id, label } objects
+ */
+Meteor.publish( 'pwix_tenants_manager_tenants_get_scopes', async function(){
+    if( !await Tenants.checks.canList( this.userId )){
+        return false;
+    }
+
+    const self = this;
+    const collectionName = 'pwix_tenants_manager_tenants_get_scopes';
+    let initializing = true;
+
+    // a new entity is added -> have to push a new closest
+    const f_entityAdded = async function( item ){
+        Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            self.added( collectionName, item._id, { _id: item._id, label: closest.label });
+        });
+    };
+
+    // an entity is removed
+    const f_entityRemoved = async function( item ){
+        self.removed( TenantsManager.C.pub.closests.collection, item._id );
+    };
+
+    // records are changed, added or removed for a given entity: have to recompute the closest
+    const f_closestChanged = async function( entity_id ){
+        Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            self.removed( collectionName, entity_id );
+            self.added( collectionName, entity_id, { _id: entity_id, label: closest.label });
+        });
+    };
+
+    // observe the entities to maintain a list of existing entities and react to their changes
+    const entitiesObserver = Entities.collection.find({}).observeAsync({
+        added: async function( item ){
+            f_entityAdded( item );
+        },
+        removed: async function( oldItem ){
+            f_entityRemoved( oldItem );
+        }
+    });
+
+    // observe the records to maintain a list of existing records per entity and react to their changes
+    const recordsObserver = Records.collection.find({}).observeAsync({
+        added: async function( item ){
+            f_closestChanged( item.entity );
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                f_closestChanged( newItem.entity );
+            }
+        },
+        removed: async function( oldItem ){
+            f_closestChanged( oldItem.entity );
         }
     });
 

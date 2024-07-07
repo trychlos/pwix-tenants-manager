@@ -9,3 +9,4 @@ import './i18n.js';
 import './trace.js';
 //
 import './collections-get.js';
+import './functions.js';
