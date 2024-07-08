@@ -302,25 +302,33 @@ Meteor.publish( 'pwix_tenants_manager_tenants_get_scopes', async function(){
     const self = this;
     const collectionName = 'pwix_tenants_manager_tenants_get_scopes';
     let initializing = true;
+    let entities = {};
 
     // a new entity is added -> have to push a new closest
     const f_entityAdded = async function( item ){
         Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
             const closest = Validity.closestByRecords( fetched ).record;
             self.added( collectionName, item._id, { _id: item._id, label: closest.label });
+            entities[item._id] = true;
         });
     };
 
     // an entity is removed
     const f_entityRemoved = async function( item ){
-        self.removed( TenantsManager.C.pub.closests.collection, item._id );
+        if( entities[item._id] ){
+            self.removed( collectionName, item._id );
+            delete entities[item._id];
+        }
     };
 
     // records are changed, added or removed for a given entity: have to recompute the closest
     const f_closestChanged = async function( entity_id ){
         Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
             const closest = Validity.closestByRecords( fetched ).record;
-            self.removed( collectionName, entity_id );
+            if( entities[entity_id] ){
+                self.removed( collectionName, entity_id );
+                delete entities[entity_id];
+            }
             self.added( collectionName, entity_id, { _id: entity_id, label: closest.label });
         });
     };
