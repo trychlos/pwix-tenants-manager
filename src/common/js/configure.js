@@ -11,16 +11,10 @@ let _conf = {};
 TenantsManager._conf = new ReactiveVar( _conf );
 
 TenantsManager._defaults = {
+    allowFn: null,
     // user interface
     classes: '',
     hideDisabled: true,
-    // permissions
-    roles: {
-        list: null,
-        create: null,
-        edit: null,
-        delete: null
-    },
     // collections
     entityFields: null,
     recordFields: null,

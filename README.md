@@ -30,6 +30,14 @@ The exported `TenantsManager` global object provides following items:
 
 See [below](#configuration)
 
+##### `TenantsManager.getScopes()`
+
+An async function which returns an array of known tenants identifier, and their closest label.
+
+This function is not reactive.
+
+If reactivity is desired, the caller should prefer the `pwix_tenants_manager_tenants_get_scopes` publication.
+
 ##### `TenantsManager.i18n.namespace()`
 
 Returns the i18n namespace used by the package. Used to add translations at runtime.
@@ -44,11 +52,46 @@ The component list the defined tenants as a `pwix:tabular_ext` table, with stand
 
 Each rendered line of the table displays an entity, and the closest values for each column.
 
+## Permissions management
+
+This package can take advantage of `pwix:permissions` package to manage the user permissions.
+
+It defines following tasks:
+
+- at the user interface level
+    - `pwix.tenants_manager.feat.delete`, with args `item<Object>`: delete a tenant
+    - `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
+    - `pwix.tenants_manager.feat.new`: create a new tenant
+
+- at the server level
+    - `pwix.tenants_manager.entities.fn.get_by`, with args `selector<Object>`: get entities from a Mongo selector
+    - `pwix.tenants_manager.entities.fn.upsert`, with args `item<Object>`: upsert an entity
+    - `pwix.tenants_manager.records.fn.get_by`, with args `selector<Object>`: get records from a Mongo selector
+    - `pwix.tenants_manager.records.fn.upsert`, with args `item<Object>`: upsert a record
+    - `pwix.tenants_manager.fn.delete_tenant`, with args `entity<String>`: delete a tenant
+    - `pwix.tenants_manager.fn.get_scopes`: provides a list of known scopes
+    - `pwix.tenants_manager.fn.set_managers`, with args `item<Object>`: set managers
+    - `pwix.tenants_manager.fn.upsert`, with args `item<Object>`: upsert a tenant
+
+- on publications
+    - `pwix.tenants_manager.pub.list_all`: list all tenants and their contents
+    - `pwix.tenants_manager.pub.closests`: list the closest record of each tenant, a tabular display requisite
+    - `pwix.tenants_manager.pub.tabular`: a tabular-aware publication
+    - `pwix.tenants_manager.pub.known_scopes`: publishes a list of the known scopes to be used as a reference when editing scoped roles
+
 ## Configuration
 
 The package's behavior can be configured through a call to the `TenantsManager.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
 
 Known configuration options are:
+
+- `allowFn`
+
+    An async function which will be called with an action string identifier, and must return whether the current user is allowed to do the specified action.
+
+    If the function is not provided, then the default is to deny all actions.
+
+    `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
 
 - `classes`
 

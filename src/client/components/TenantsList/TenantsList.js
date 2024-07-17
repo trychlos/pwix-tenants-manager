@@ -41,7 +41,7 @@ Template.TenantsList.onCreated( function(){
 Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
     canList(){
-        const res = TenantsManager.perms.get( 'list' );
+        const res = TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_all' );
         //console.debug( 'res', res );
         return res;
     },
@@ -65,18 +65,17 @@ Template.TenantsList.helpers({
 });
 
 Template.TenantsList.events({
-    // delete a tenant - this will delete all the validity records
+    // delete a tenant - this will delete all the validity records too
     'tabular-delete-event .TenantsList'( event, instance, data ){
-        /*
-        const label = data.item.emails.length ? data.item.emails[0].address : data.item._id;
-        Meteor.callAsync( 'account.remove', data._id, ( e, res ) => {
-            if( e ){
-                Tolert.error({ type:e.error, message:e.reason });
-            } else {
+        const label = data.item.label;
+        Meteor.callAsync( 'pwix_tenants_manager_tenants_delete_tenant', data.item.entity )
+            .then(( res ) => {
+                console.debug( res );
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
-            }
-        });
-        */
+            })
+            .catch(( e ) => {
+                Tolert.error({ type:e.error, message:e.reason });
+            });
         return false; // doesn't propagate
     },
 

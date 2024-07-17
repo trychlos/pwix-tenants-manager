@@ -6,18 +6,6 @@ import { Tenants } from './index.js';
 
 Tenants.checks = {};
 
-Tenants.checks.canDelete = async function( userId ){
-    return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.delete );
-};
-
-Tenants.checks.canEdit = async function( userId ){
-    return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.edit );
-};
-
-Tenants.checks.canList = async function( userId ){
-    return await Roles.userIsInRoles( userId, TenantsManager.configure().roles.list );
-};
-
 // fields check
 //  - value: mandatory, the value to be tested
 //  - data: optional, the data passed to Checker instanciation

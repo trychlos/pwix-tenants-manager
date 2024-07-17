@@ -53,7 +53,7 @@ Records.checks.contactEmail = async function( value, data, opts ){
     if( value ){
         if( !validator.validate( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.contact_email_invalid' )
             });
         }
@@ -72,7 +72,7 @@ Records.checks.contactUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.contact_url_invalid' )
             });
         }
@@ -91,7 +91,7 @@ Records.checks.gtuUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.gtu_url_invalid' )
             });
         }
@@ -110,7 +110,7 @@ Records.checks.homeUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.home_url_invalid' )
             });
         }
@@ -140,7 +140,7 @@ Records.checks.label = async function( value, data, opts ){
                 ok = ( item.entity === found_entity );
             }
             return ok ? null : new TM.TypedMessage({
-                type: TM.MessageLevel.C.ERROR,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.label_exists' )
             });
         };
@@ -148,7 +148,7 @@ Records.checks.label = async function( value, data, opts ){
             Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.server.getBy({ label: value });
         return promise
             .then(( result ) => {
-                if( result ){
+                if( result.length ){
                     return result;
                 } else {
                     return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.server.getBy({ label: value });
@@ -171,7 +171,7 @@ Records.checks.legalsUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.legals_url_invalid' )
             });
         }
@@ -190,7 +190,7 @@ Records.checks.pdmpUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.pdmp_url_invalid' )
             });
         }
@@ -209,7 +209,7 @@ Records.checks.supportEmail = async function( value, data, opts ){
     if( value ){
         if( !validator.validate( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.support_email_invalid' )
             });
         }
@@ -228,7 +228,7 @@ Records.checks.supportUrl = async function( value, data, opts ){
     if( value ){
         if( !validUrl.isWebUri( value )){
             return new TM.TypedMessage({
-                level: TM.MessageLevel.C.WARNING,
+                level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.support_url_invalid' )
             });
         }

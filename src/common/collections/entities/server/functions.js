@@ -12,15 +12,34 @@ import { Entities } from '../index.js';
 
 Entities.server = {};
 
+/**
+ * @summary Make sure all the fields of the fieldset are set in the item, even if undefined
+ * @param {Object} item
+ * @returns {Object} item
+ */
+Entities.server.addUndef = function( item ){
+    Entities.fieldSet.get().names().forEach(( it ) => {
+        if( !Object.keys( item ).includes( it )){
+            item[it] = undefined;
+        }
+    });
+    return item;
+};
+
 /*
  * @param {Object} selector
  * @param {String} userId
- * @returns {Array} may be empty
+ * @returns {Array} may be empty, or null in case of an error
  */
 Entities.server.getBy = async function( selector, userId ){
     check( selector, Object );
     check( userId, String );
-    return await Entities.collection.find( selector ).fetchAsync();
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.get_by', userId, selector )){
+        return null;
+    }
+    const res = await Entities.collection.find( selector ).fetchAsync();
+    //console.debug( 'entitites', selector, res );
+    return res;
 };
 
 /*
@@ -36,6 +55,9 @@ Entities.server.getBy = async function( selector, userId ){
 Entities.server.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.upsert', userId, entity )){
+        return null;
+    }
     let result = {
         orig: null
     };
@@ -53,12 +75,10 @@ Entities.server.upsert = async function( entity, userId ){
         //  this is normal as long as we do not set any data in the document
         //  so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
         //item.updatedBy = userId;
-        //console.debug( 'item', item );
-        //console.debug( 'schema', Entities.collection.simpleSchema());
         result.numberAfftected = await Entities.collection.updateAsync( selector, { $set: item }, { filter: false });
     } else {
         result.insertedId = await Entities.collection.insertAsync( item );
-        result.numberAfftected = 1;
+        result.numberAffected = 1;
         entity._id = result.insertedId;
     }
     console.debug( 'Entities result', result );

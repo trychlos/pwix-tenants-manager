@@ -16,7 +16,8 @@
 |    2 | 2024- 6-28 | have a scheduled job which deletes tenants_e entities which do not have any tenants_r records |
 |      |            | as a label - so a record - is supposed to be mandatory to save a tenant |
 |    3 | 2024- 6-28 | same than #2 for tenants_r which do not have any tenants_e |
-|    4 |  |  |
+|    4 | 2024- 7-16 | do not hardcode ORD_SCOPED_MANAGER in tenantsAll publication |
+|    5 |  |  |
 
 ---
 ## Done

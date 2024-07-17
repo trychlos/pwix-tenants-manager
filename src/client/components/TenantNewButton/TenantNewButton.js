@@ -17,9 +17,9 @@ import '../TenantEditPanel/TenantEditPanel.js';
 import './TenantNewButton.html';
 
 Template.TenantNewButton.helpers({
-    // whether the user is allowed to create new account
+    // whether the user is allowed to create a new tenant
     canCreate(){
-        return AccountsManager.perms.get( 'create' );
+        return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.new' );
     },
 
     // parms for new tenant (plusButton)

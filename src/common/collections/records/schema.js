@@ -8,8 +8,9 @@ import { Tracker } from 'meteor/tracker';
 import { Records } from './index.js';
 
 Tracker.autorun(() => {
-    if( Records.collectionReady.get()){
-        Records.collection.attachSchema( new SimpleSchema( Records.fieldSet?.get().toSchema()), { replace: true });
+    const fieldSet = Records.fieldSet?.get();
+    if( Records.collectionReady.get() && fieldSet ){
+        Records.collection.attachSchema( new SimpleSchema( fieldSet.toSchema()), { replace: true });
         Records.collection.attachBehaviour( 'timestampable', { replace: true });
     }
 });

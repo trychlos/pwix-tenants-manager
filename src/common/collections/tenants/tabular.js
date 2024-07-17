@@ -61,18 +61,18 @@ Tracker.autorun(() => {
                         }
                     ];
                 },
+                async deleteButtonEnabled( it ){
+                    return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.delete', null, it );
+                },
                 // display the organization label instead of the identifier in the button title
                 async deleteButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.delete_title', _record_label( it ));
                 },
                 async deleteConfirmationText( it ){
-                    return pwixI18n.label( I18N, 'delete.confirmation_text', await _record_label( it ));
+                    return pwixI18n.label( I18N, 'delete.confirmation_text', _record_label( it ));
                 },
                 async deleteConfirmationTitle( it ){
-                    return pwixI18n.label( I18N, 'delete.confirmation_title', await _record_label( it ));
-                },
-                async deleteItem( it ){
-                    return await _entity( it );
+                    return pwixI18n.label( I18N, 'delete.confirmation_title', _record_label( it ));
                 },
                 async editButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.edit_title', _record_label( it ));

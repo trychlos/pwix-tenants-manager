@@ -9,8 +9,6 @@ const assert = require( 'assert' ).strict;
 
 import { check } from 'meteor/check';
 
-import { Tenants } from '../../tenants/index.js';
-
 import { Records } from '../index.js';
 
 Records.server = {};
@@ -23,7 +21,12 @@ Records.server = {};
 Records.server.getBy = async function( selector, userId ){
     check( selector, Object );
     check( userId, String );
-    return await Records.collection.find( selector ).fetchAsync();
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.get_by', userId, selector )){
+        return null;
+    }
+    const res = await Records.collection.find( selector ).fetchAsync();
+    //console.debug( 'records', selector, res );
+    return res;
 };
 
 /*
@@ -38,6 +41,9 @@ Records.server.getBy = async function( selector, userId ){
 Records.server.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.upsert', userId, entity )){
+        return null;
+    }
     //console.debug( 'Records.server.upsert()', entity );
     // get the original item records to be able to detect modifications
     //  and build a hash of id -> record
@@ -52,7 +58,7 @@ Records.server.upsert = async function( entity, userId ){
         inserted: 0,
         updated: 0,
         written: [],
-        ignored: [],
+        unchanged: [],
         removed: 0,
         count: 0
     };
@@ -68,15 +74,20 @@ Records.server.upsert = async function( entity, userId ){
         }
         // compare and see if the record is to be updated
         if( _.isEqual( record, origIds[record._id] )){
-            result.ignored.push( record );
+            result.unchanged.push( record );
         } else {
             updatableIds[record._id] = record;
         }
     }
     // for each updatable, then... upsert!
+    // as of 2024- 7-17 and matb33:collection-hooks v 2.0.0-rc.1 there is not yet any hook for async methods (though this work at creation)
     let promises = [];
     Object.keys( updatableIds ).forEach(( id ) => {
         const record = updatableIds[id];
+        if( record._id ){
+            record.updatedBy = userId;
+            record.updatedAt = new Date();
+        }
         record.entity = entity._id;
         promises.push( Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
             //console.debug( 'upsert item', item, 'res', res );

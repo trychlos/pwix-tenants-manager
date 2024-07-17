@@ -16,102 +16,36 @@ import { Records } from '../../records/index.js';
 
 Tenants.server = {};
 
-/*
- * @summary: Returns a cursor on the tenants
- *  The cursors contains the list of entities, each entity holding a DYN object with:
- *  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
- *  - records: the list of the records attached to this entity
- *  - closest: the closest record
- * The returned cursor is a reactive data source.
- * 
- * Rationale: we want maintain on server-side a pseudo (not serialized) collection which gathers entities, records, their managers and their properties, on a reactive way.
- * We are here reactive to both: roleAssignment, entities and records collections.
+/**
+ * @summary Make sure all the fields of the fieldset are set in the item, even if undefined
+ * @param {Object} item
+ * @returns {Object} item
  */
-/*
-Tenants.server.cursorTenantsAll = async function(){
-
-    let initializing = true;
-
-    const f_transform = async function( item ){
-        item.DYN = {
-            managers: [],
-            records: [],
-            closest: null
-        };
-        let promises = [];
-        // find ORG_SCOPED_MANAGER allowed users, and add to each entity the list of its records
-        promises.push( Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER', scope: item._id }).fetchAsync().then(( fetched ) => {
-            fetched.forEach(( it ) => {
-                Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
-                    if( user ){
-                        item.DYN.managers.push( user );
-                    } else {
-                        console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
-                    }
-                });
-            });
-            return true;
-        }));
-        // find ORG_SCOPED_MANAGER allowed users, and add to each entity the list of its records
-        promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
-            item.DYN.records = fetched;
-            item.DYN.closest = Validity.closestByRecords( fetched ).record;
-            return true;
-        }));
-        return Promise.allSettled( promises ).then(() => {
-            return item;
-        })
-    };
-
-    // observe the roleAssignment collection
-    //  we 'observe' user and scope
-    const rolesObserver = Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER' }).observeAsync({
-        added: async function( item ){
-            //
-        },
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                //
-            }
-        },
-        removed: async function( oldItem ){
-            //  
+Tenants.server.addUndef = function( item ){
+    Tenants.fieldSet.get().names().forEach(( it ) => {
+        if( !Object.keys( item ).includes( it )){
+            item[it] = undefined;
         }
     });
-
-    // observe the Entities collection
-    const entitiesObserver = Entities.collection.find({}).observeAsync({
-        added: async function( item ){
-            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
-        },
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_transform( newItem ));
-            }
-        },
-        removed: async function( oldItem ){
-            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
-        }
-    });
-
-    // observe the Records collection
-    const recordsObserver = Records.collection.find({}).observeAsync({
-        added: async function( item ){
-            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_transform( item ));
-        },
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_transform( newItem ));
-            }
-        },
-        removed: async function( oldItem ){
-            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
-        }
-    });
-
-    initializing = false;
+    return item;
 };
-*/
+
+/*
+ * @param {String} entity identifier
+ * @param {String} userId, may be null when called from common code on the server
+ * @returns {Array} the list of known tenants as objects { _id: <entity_id>, label: <closest_label> }
+ */
+Tenants.server.deleteTenant = async function( entity, userId ){
+    check( entity, String );
+    check( userId, Match.OneOf( null, String ));
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.delete_tenant', userId, entity )){
+        return null;
+    }
+    let result = {};
+    result.entities = await Entities.collection.removeAsync({ _id: entity });
+    result.records = await Records.collection.removeAsync({ entity: entity });
+    return result;
+};
 
 /*
  * @param {String} userId, may be null when called from common code on the server
@@ -120,6 +54,9 @@ Tenants.server.cursorTenantsAll = async function(){
 Tenants.server.getScopes = async function( userId ){
     //check( userId, MatchOneOf( null, String ));
     let result = [];
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_scopes', userId )){
+        return null;
+    }
     const entities = await Entities.collection.find().fetchAsync();
     await Promise.allSettled( entities.map( async ( it ) => {
         const records = await Records.collection.find({ entity: it._id }).fetchAsync();
@@ -136,6 +73,9 @@ Tenants.server.getScopes = async function( userId ){
 Tenants.server.setManagers = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.set_managers', userId, entity )){
+        return null;
+    }
 };
 
 /*
@@ -148,6 +88,9 @@ Tenants.server.setManagers = async function( entity, userId ){
 Tenants.server.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.upsert', userId, entity )){
+        return null;
+    }
     //console.debug( 'Tenants.server.upsert()', entity );
 
     // upsert the entity

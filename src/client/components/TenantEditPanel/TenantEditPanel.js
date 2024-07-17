@@ -47,7 +47,7 @@ import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-// not used as we do not want manage any data at the entity level (notes is more than enough)
+// not used at the moment as we do not want manage any data at the entity level (notes is more than enough)
 //import '../entity_properties_pane/entity_properties_pane.js';
 import '../entity_validities_pane/entity_validities_pane.js';
 import '../record_properties_pane/record_properties_pane.js';
