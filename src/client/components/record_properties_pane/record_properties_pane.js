@@ -5,7 +5,7 @@
  *
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar
- * - record: the entity record currently being edited as a ReactiveVar
+ * - index: the index of the edited record
  * - checker: the Forms.Checker which manages the parent component
  * - vtpid: the identifier of the validity tab period, to be used in 'panel-data' events
  */
@@ -98,10 +98,10 @@ Template.record_properties_pane.onRendered( function(){
                 parent: parentChecker,
                 panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
                 data: {
-                    item: Template.currentData().record,
-                    entity: Template.currentData().entity
+                    entity: Template.currentData().entity,
+                    index: Template.currentData().index
                 },
-                setForm: Template.currentData().record.get()
+                setForm: Template.currentData().entity.get().DYN.records[Template.currentData().index].get()
             }));
         }
     });

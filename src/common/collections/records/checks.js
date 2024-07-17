@@ -24,11 +24,17 @@ Records.checks = {};
 //    > id: the identifier of the edited row when editing an array
 // returns a TypedMessage, or an array of TypedMessage, or null
 
-// item is a ReactiveVar which contains the edited record
-const _assert_data_itemrv = function( caller, data ){
-    assert.ok( data, caller+' data required' );
-    assert.ok( data.item, caller+' data.item required' );
-    assert.ok( data.item instanceof ReactiveVar, caller+' data.item expected to be a ReactiveVar' );
+// entity is a ReactiveVar which contains the edited entity document and its validity records
+const _assert_data_content = function( caller, data ){
+    assert.ok( data, caller+' data is required' );
+    assert.ok( data.entity && data.entity instanceof ReactiveVar, caller+' data.entity is expected to be set as a ReactiveVar, got '+data.entity );
+    assert.ok( data.entity.DYN && _.isObject( data.entity.DYN ), caller+' data.entity.DYN is expected to be set as a Object, got '+data.entity.DYN );
+    assert.ok( data.entity.DYN.records && _.isArray( data.entity.DYN.records ), caller+' data.entity.DYN.records is expected to be set as an Array, got '+data.entity.DYN.records );
+    data.entity.DYN.records.forEach(( it ) => {
+        assert.ok( it && it instanceof ReactiveVar, caller+' each record is expected to be a ReactiveVar, got '+it );
+    });
+    // this index because we are managing valdiity periods here
+    assert.ok( _.isNumber( data.index ) && data.index >= 0, caller+' data.index is expected to be a positive or zero integer, got '+data.index );
 }
 
 // returns the index of the identified row in the array
@@ -45,8 +51,8 @@ const _id2index = function( array, id ){
 // contact email
 //  must be valid if set
 Records.checks.contactEmail = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.contactEmail()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.contactEmail()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.contactEmail = value;
     }
@@ -64,8 +70,8 @@ Records.checks.contactEmail = async function( value, data, opts ){
 // contact page url
 //  must be valid if set
 Records.checks.contactUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.contactUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.contactUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.contactUrl = value;
     }
@@ -83,8 +89,8 @@ Records.checks.contactUrl = async function( value, data, opts ){
 // general terms o fuse page url
 //  must be valid if set
 Records.checks.gtuUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.gtuUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.gtuUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.gtuUrl = value;
     }
@@ -102,8 +108,8 @@ Records.checks.gtuUrl = async function( value, data, opts ){
 // home page url
 //  must be valid if set
 Records.checks.homeUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.homeUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.homeUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.homeUrl = value;
     }
@@ -120,8 +126,8 @@ Records.checks.homeUrl = async function( value, data, opts ){
 
 // the label must be set, and must identify the entity
 Records.checks.label = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.label()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.label()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.label = value;
     }
@@ -163,8 +169,8 @@ Records.checks.label = async function( value, data, opts ){
 // legal terms page url
 //  must be valid if set
 Records.checks.legalsUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.legalsUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.legalsUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.legalsUrl = value;
     }
@@ -182,8 +188,8 @@ Records.checks.legalsUrl = async function( value, data, opts ){
 // personal data management policy page url
 //  must be valid if set
 Records.checks.pdmpUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.pdmpUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.pdmpUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.pdmpUrl = value;
     }
@@ -201,8 +207,8 @@ Records.checks.pdmpUrl = async function( value, data, opts ){
 // support email
 //  must be valid if set
 Records.checks.supportEmail = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.supportEmail()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.supportEmail()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.supportEmail = value;
     }
@@ -220,8 +226,8 @@ Records.checks.supportEmail = async function( value, data, opts ){
 // support page url
 //  must be valid if set
 Records.checks.supportUrl = async function( value, data, opts ){
-    _assert_data_itemrv( 'Records.checks.supportUrl()', data );
-    let item = data.item.get();
+    _assert_data_content( 'Records.checks.supportUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.supportUrl = value;
     }

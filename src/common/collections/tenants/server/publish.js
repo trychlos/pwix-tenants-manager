@@ -54,7 +54,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
             // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
             Entities.server.addUndef( item );
-            console.debug( 'list_all', item );
+            //console.debug( 'list_all', item );
             return item;
         });
     };
@@ -79,7 +79,12 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         added: async function( item ){
             Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
                 if( entity ){
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
+                    try {
+                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
+                    } catch( e ){
+                        // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
+                        console.debug( e, 'ignored' );
+                    }
                 } else {
                     console.warn( 'added: entity not found', item.entity );
                 }

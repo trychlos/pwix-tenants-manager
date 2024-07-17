@@ -47,7 +47,7 @@ import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-// not used at the moment as we do not want manage any data at the entity level (notes is more than enough)
+// not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
 //import '../entity_properties_pane/entity_properties_pane.js';
 import '../entity_validities_pane/entity_validities_pane.js';
 import '../record_properties_pane/record_properties_pane.js';
@@ -107,7 +107,7 @@ Template.TenantEditPanel.onRendered( function(){
         }
     });
 
-    // allocate an Checker for this (topmost parent) template
+    // allocate a Checker for this (topmost parent) template
     self.autorun(() => {
         self.TM.checker.set( new Forms.Checker( self, {
             messager: self.TM.messager,
@@ -202,7 +202,7 @@ Template.TenantEditPanel.events({
         console.debug( 'item', item );
         Meteor.callAsync( 'pwix_tenants_manager_tenants_upsert', item )
             .then(( res ) => {
-                console.debug( 'res', res );
+                //console.debug( 'res', res );
                 return Meteor.callAsync( 'pwix_tenants_manager_tenants_set_managers', item )
             })
             .then(() => {

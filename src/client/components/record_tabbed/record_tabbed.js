@@ -7,7 +7,7 @@
  *
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar
- * - record: the entity record currently being edited as a ReactiveVar
+ * - index: the index of the edited record
  * - checker: the Forms.Checker which manages the parent component
  *
  * Because record_tabbed, which hosts tenants properties as tabs, is itself hosted inside of ValidityTabbed component with one tab per validity period,
@@ -31,7 +31,7 @@ Template.record_tabbed.onCreated( function(){
     self.TM = {
         // the Checker instance
         checker: new ReactiveVar( null ),
-        // the pane identifier of this validity period - must be a ReactiveVar as Blaze helpers are run first before view is fully rendered
+        // the pane identifier of this validity period - must be a ReactiveVar as Blaze helpers are run before view is fully rendered
         tabId: new ReactiveVar( null ),
 
         // send the panel data to the parent
@@ -56,12 +56,6 @@ Template.record_tabbed.onCreated( function(){
     self.autorun(() => {
         //console.debug( 'setting tabId to', self.TM.tabId.get());
     });
-
-    // tracking notes of the current item
-    self.autorun(() => {
-        //console.debug( 'edited', Template.currentData().edited.get());
-        //console.debug( 'item', Template.currentData().item );
-    });
 });
 
 Template.record_tabbed.onRendered( function(){
@@ -84,8 +78,8 @@ Template.record_tabbed.onRendered( function(){
                 parent: parentChecker,
                 panel: new Forms.Panel( fields, Records.fieldSet.get()),
                 data: {
-                    item: Template.currentData().record,
-                    entity: Template.currentData().entity
+                    entity: Template.currentData().entity,
+                    index: Template.currentData().index
                 }
             }));
         }
@@ -96,40 +90,47 @@ Template.record_tabbed.helpers({
     // data context for the record tabbed panes
     parmsRecord(){
         const dataContext = this;
-        const TM = Template.instance().TM;
-        const notes = Records.fieldSet.get().byName( 'notes' );
-        return {
-            tabs: [
-                {
-                    navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                    paneTemplate: 'record_properties_pane',
-                    paneData: {
-                        entity: dataContext.entity,
-                        record: dataContext.record,
-                        checker: dataContext.checker,
-                        vtpid: TM.tabId.get()
+        if( dataContext.index > dataContext.entity.get().DYN.records.length ){
+            console.warn( 'inconsistent data context' );
+        } else {
+            console.debug( 'index', dataContext.index );
+            console.debug( 'records', dataContext.entity.get().DYN.records );
+            console.debug( 'record', dataContext.entity.get().DYN.records[dataContext.index].get());
+            const TM = Template.instance().TM;
+            const notes = Records.fieldSet.get().byName( 'notes' );
+            return {
+                tabs: [
+                    {
+                        navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                        paneTemplate: 'record_properties_pane',
+                        paneData: {
+                            entity: dataContext.entity,
+                            index: dataContext.index,
+                            checker: dataContext.checker,
+                            vtpid: TM.tabId.get()
+                        }
+                    },
+                    {
+                        navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                        paneTemplate: 'NotesEdit',
+                        paneData(){
+                            return {
+                                item: dataContext.entity.get().DYN.records[dataContext.index].get(),
+                                field: notes
+                            };
+                        }
                     }
-                },
-                {
-                    navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                    paneTemplate: 'NotesEdit',
-                    paneData(){
-                        return {
-                            item: dataContext.record,
-                            field: notes
-                        };
-                    }
-                }
-            ],
-            name: 'record_tabbed'
+                ],
+                name: 'record_tabbed'
+            }
         }
     },
 
     // data context for ValidityFieldset
     parmsValidity(){
         return {
-            startDate: this.record.get().effectStart,
-            endDate: this.record.get().effectEnd
+            startDate: this.entity.get().DYN.records[this.index].get().effectStart,
+            endDate: this.entity.get().DYN.records[this.index].get().effectEnd
         };
     }
 });
