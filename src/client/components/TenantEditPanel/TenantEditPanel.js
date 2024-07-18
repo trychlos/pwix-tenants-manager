@@ -15,7 +15,7 @@
  *     |   |
  *     |   +- entity_validities_pane
  *     |       |
- *     |       +- ValidityTabbed                        manage the validities with one pane per validity period
+ *     |       +- ValiditiesTabbed                      manage the validities with one pane per validity period
  *     |           |
  *     |           +- record_tabbed                         the record edition panel, as a tabbed component
  *     |           |   |

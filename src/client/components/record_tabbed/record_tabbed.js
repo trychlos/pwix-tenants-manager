@@ -12,6 +12,8 @@
  *
  * Because record_tabbed, which hosts tenants properties as tabs, is itself hosted inside of ValidityTabbed component with one tab per validity period,
  *  we identify each validity period through the tab identifier allocated by the ValidityTabbed (which happens to be the Tabbed parent of this record_tabbed).
+ * Note too that Validity is able to (is actually built to do that) modify the validity periods. This implies that this record_tabbed may be changed,
+ * or even dynamically removed. But due to Blaze latencies and asynchronicities, we may receive here updates for a to-be-destroyed view. So care of that.
  */
 
 import _ from 'lodash';
@@ -29,32 +31,67 @@ Template.record_tabbed.onCreated( function(){
     //console.debug( this );
 
     self.TM = {
+        fields: {
+            effectStart: {
+                js: '.js-start input',
+            },
+            effectEnd: {
+                js: '.js-end input',
+            }
+        },
         // the Checker instance
         checker: new ReactiveVar( null ),
-        // the pane identifier of this validity period - must be a ReactiveVar as Blaze helpers are run before view is fully rendered
-        tabId: new ReactiveVar( null ),
-
-        // send the panel data to the parent
-        sendPanelData( dataContext, valid ){
-            if( _.isBoolean( valid )){
-                self.$( '.c-organization-tabbed' ).trigger( 'panel-data', {
-                    emitter: 'validity',
-                    id: dataContext.vtpid,
-                    ok: valid,
-                    data: self.TM.checker.get().getForm()
-                });
-            }
-        }
+        // the tabs for this record
+        parmsRecord: new ReactiveVar( null ),
+        // the ValidityFieldset parameters
+        parmsValidity: new ReactiveVar( null )
     };
 
-    // set the tab identifier of this validity record (as a ReactiveVar as tabs may be re-identified by coreTabbedTemplate when validities are changed)
+    // prepare the record tabbed parms
     self.autorun(() => {
-        self.TM.tabId.set( Template.currentData().tabbedTabId );
+        const dataContext = Template.currentData();
+        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+            const notes = Records.fieldSet.get().byName( 'notes' );
+            const parms = {
+                tabs: [
+                    {
+                        navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                        paneTemplate: 'record_properties_pane',
+                        paneData: {
+                            entity: dataContext.entity,
+                            index: dataContext.index,
+                            checker: dataContext.checker
+                        }
+                    },
+                    {
+                        navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                        paneTemplate: 'NotesEdit',
+                        paneData: {
+                            item: dataContext.entity.get().DYN.records[dataContext.index].get(),
+                            field: notes
+                        }
+                    }
+                ],
+                name: 'record_tabbed'
+            };
+            self.TM.parmsRecord.set( parms );
+        } else {
+            self.TM.parmsRecord.set( null );
+        }
     });
 
-    // tracking the tab identifier
+    // prepare the validity fieldset parms
     self.autorun(() => {
-        //console.debug( 'setting tabId to', self.TM.tabId.get());
+        const dataContext = Template.currentData();
+        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+            const parms = {
+                startDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectStart,
+                endDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectEnd
+            };
+            self.TM.parmsValidity.set( parms );
+        } else {
+            self.TM.parmsValidity.set( null );
+        }
     });
 });
 
@@ -63,25 +100,22 @@ Template.record_tabbed.onRendered( function(){
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        const fields = {
-            effectStart: {
-                js: '.js-start input',
-            },
-            effectEnd: {
-                js: '.js-end input',
+        const dataContext = Template.currentData();
+        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+            const parentChecker = dataContext.checker.get();
+            const checker = self.TM.checker.get();
+            if( parentChecker && !checker ){
+                self.TM.checker.set( new Forms.Checker( self, {
+                    parent: parentChecker,
+                    panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                    data: {
+                        entity: dataContext.entity,
+                        index: dataContext.index
+                    }
+                }));
             }
-        };
-        const parentChecker = Template.currentData().checker.get();
-        const checker = self.TM.checker.get();
-        if( parentChecker && !checker ){
-            self.TM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                panel: new Forms.Panel( fields, Records.fieldSet.get()),
-                data: {
-                    entity: Template.currentData().entity,
-                    index: Template.currentData().index
-                }
-            }));
+        } else {
+            self.TM.checker.set( null );
         }
     });
 });
@@ -89,48 +123,11 @@ Template.record_tabbed.onRendered( function(){
 Template.record_tabbed.helpers({
     // data context for the record tabbed panes
     parmsRecord(){
-        const dataContext = this;
-        if( dataContext.index > dataContext.entity.get().DYN.records.length ){
-            console.warn( 'inconsistent data context' );
-        } else {
-            console.debug( 'index', dataContext.index );
-            console.debug( 'records', dataContext.entity.get().DYN.records );
-            console.debug( 'record', dataContext.entity.get().DYN.records[dataContext.index].get());
-            const TM = Template.instance().TM;
-            const notes = Records.fieldSet.get().byName( 'notes' );
-            return {
-                tabs: [
-                    {
-                        navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                        paneTemplate: 'record_properties_pane',
-                        paneData: {
-                            entity: dataContext.entity,
-                            index: dataContext.index,
-                            checker: dataContext.checker,
-                            vtpid: TM.tabId.get()
-                        }
-                    },
-                    {
-                        navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                        paneTemplate: 'NotesEdit',
-                        paneData(){
-                            return {
-                                item: dataContext.entity.get().DYN.records[dataContext.index].get(),
-                                field: notes
-                            };
-                        }
-                    }
-                ],
-                name: 'record_tabbed'
-            }
-        }
+        return Template.instance().TM.parmsRecord.get();
     },
 
     // data context for ValidityFieldset
     parmsValidity(){
-        return {
-            startDate: this.entity.get().DYN.records[this.index].get().effectStart,
-            endDate: this.entity.get().DYN.records[this.index].get().effectEnd
-        };
+        return Template.instance().TM.parmsValidity.get();
     }
 });

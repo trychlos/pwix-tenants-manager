@@ -69,19 +69,7 @@ Template.record_properties_pane.onCreated( function(){
             */
         },
         // the Checker instance
-        checker: new ReactiveVar( null ),
-
-        // send the panel data to the parent
-        sendPanelData( dataContext, valid ){
-            if( _.isBoolean( valid )){
-                self.$( '.c-organization-properties-pane' ).trigger( 'panel-data', {
-                    emitter: 'properties',
-                    id: dataContext.vtpid,
-                    ok: valid,
-                    data: self.TM.form.get().getForm()
-                });
-            }
-        }
+        checker: new ReactiveVar( null )
     };
 });
 
@@ -139,14 +127,6 @@ Template.record_properties_pane.events({
                 });
             }
         });
-    },
-
-    // input checks
-    'input .c-organization-properties-pane'( event, instance ){
-        const dataContext = this;
-        if( !Object.keys( event.originalEvent ).includes( 'FormChecker' ) || event.originalEvent['FormChecker'].handled !== true ){
-            instance.TM.form.get().inputHandler( event ).then(( valid ) => { instance.TM.sendPanelData( dataContext, valid ); });
-        }
     },
 
     // ask for clear the panel
