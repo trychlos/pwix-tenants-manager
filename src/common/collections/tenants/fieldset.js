@@ -1,7 +1,7 @@
 /*
  * pwix:tenants-manager/src/common/collections/tenants/fieldset.js
  *
- * Define here the fields to be rendered in the tabular display.
+ * Define here the fields to be published and/or rendered in the tabular display.
  */
 
 import { Field } from 'meteor/pwix:field';

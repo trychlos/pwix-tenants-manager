@@ -16,6 +16,8 @@ import { Notes } from 'meteor/pwix:notes';
 import { Tracker } from 'meteor/tracker';
 import { Validity } from 'meteor/pwix:validity';
 
+import { Tenants } from '../tenants/index.js';
+
 import { Records } from './index.js';
 
 const _defaultFieldSet = function( conf ){
@@ -24,7 +26,7 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'label',
             type: String,
-            form_check: Records.checks.label,
+            form_check: Tenants.checks.label,
             form_type: Forms.FieldType.C.MANDATORY
         },
         // personal data management policy page
@@ -32,7 +34,7 @@ const _defaultFieldSet = function( conf ){
             name: 'pdmpUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.pdmpUrl,
+            form_check: Tenants.checks.pdmpUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // general terms of use
@@ -40,7 +42,7 @@ const _defaultFieldSet = function( conf ){
             name: 'gtuUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.gtuUrl,
+            form_check: Tenants.checks.gtuUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // legals terms page
@@ -48,7 +50,7 @@ const _defaultFieldSet = function( conf ){
             name: 'legalsUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.legalsUrl,
+            form_check: Tenants.checks.legalsUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page which describes the organization
@@ -56,7 +58,7 @@ const _defaultFieldSet = function( conf ){
             name: 'homeUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.homeUrl,
+            form_check: Tenants.checks.homeUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a page to access the support
@@ -64,7 +66,7 @@ const _defaultFieldSet = function( conf ){
             name: 'supportUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.supportUrl,
+            form_check: Tenants.checks.supportUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // a contact page
@@ -72,7 +74,7 @@ const _defaultFieldSet = function( conf ){
             name: 'contactUrl',
             type: String,
             optional: true,
-            form_check: Records.checks.contactUrl,
+            form_check: Tenants.checks.contactUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // the organization logo (either an Url or an embedded image, or both)
@@ -93,7 +95,7 @@ const _defaultFieldSet = function( conf ){
             name: 'supportEmail',
             type: String,
             optional: true,
-            form_check: Records.checks.supportEmail,
+            form_check: Tenants.checks.supportEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // contact email address
@@ -101,7 +103,7 @@ const _defaultFieldSet = function( conf ){
             name: 'contactEmail',
             type: String,
             optional: true,
-            form_check: Records.checks.contactEmail,
+            form_check: Tenants.checks.contactEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         Notes.fieldDef(),
