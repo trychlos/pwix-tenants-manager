@@ -4,7 +4,6 @@
 
 export { Entities } from './collection.js';
 
-import './checks.js';
 import './fieldset.js';
 import './schema.js';
 
