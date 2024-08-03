@@ -10,6 +10,10 @@ TenantsManager.C = {
             collection: 'pwix_tenants_manager_closests_ids',
             publish: 'pwix_tenants_manager_tenants_closests_ids'
         },
+        selecting: {
+            collection: 'pwix_tenants_manager_selecting',
+            publish: 'pwix_tenants_manager_selecting'
+        },
         tenantsAll: {
             collection: 'pwix_tenants_manager_tenants_all',
             publish: 'pwix_tenants_manager_tenants_list_all'

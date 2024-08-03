@@ -2,11 +2,12 @@
 
 ## ChangeLog
 
-### 1.0.1-rc
+### 1.1.0-rc
 
     Release date: 
 
-    - 
+    - Introduce 'pwix_tenants_manager_selecting' publication to let a user select a tenant and a validity period
+    - Let both entity and record tabbed views be extended, thus bumping minor candidate version number
 
 ### 1.0.0
 

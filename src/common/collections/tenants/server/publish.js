@@ -390,6 +390,75 @@ Meteor.publish( 'pwix_tenants_manager_tenants_get_scopes', async function(){
     self.ready();
 });
 
+/*
+ * This publishes a list of the allowed scopes and validity periods to be used as a reference when selecting a tenant as a run context
+ */
+Meteor.publish( 'pwix_tenants_manager_selecting', async function(){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.selecting', this.userId )){
+        this.ready();
+        return false;
+    }
+
+    const self = this;
+    const collectionName = 'pwix_tenants_manager_selecting';
+    let initializing = true;
+    let entities = {};
+
+    // an entity is removed
+    const f_entityRemoved = async function( item ){
+        if( entities[item._id] ){
+            self.removed( collectionName, item._id );
+            delete entities[item._id];
+        }
+    };
+
+    // records are changed, added or removed for a given entity: have to recompute the closest
+    const f_closestChanged = async function( entity_id ){
+        Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
+            const closest = Validity.closestByRecords( fetched ).record;
+            if( entities[entity_id] ){
+                self.removed( collectionName, entity_id );
+                delete entities[entity_id];
+            }
+            if( closest ){
+                self.added( collectionName, entity_id, { _id: entity_id, label: closest.label });
+                entities[entity_id] = closest;
+            }
+        });
+    };
+
+    // observe the entities to maintain a list of existing entities and react to their changes
+    const entitiesObserver = Entities.collection.find({}).observeAsync({
+        removed: async function( oldItem ){
+            f_entityRemoved( oldItem );
+        }
+    });
+
+    // observe the records to maintain a list of existing records per entity and react to their changes
+    const recordsObserver = Records.collection.find({}).observeAsync({
+        added: async function( item ){
+            f_closestChanged( item.entity );
+        },
+        changed: async function( newItem, oldItem ){
+            if( !initializing ){
+                f_closestChanged( newItem.entity );
+            }
+        },
+        removed: async function( oldItem ){
+            f_closestChanged( oldItem.entity );
+        }
+    });
+
+    initializing = false;
+
+    self.onStop( function(){
+        entitiesObserver.then(( handle ) => { handle.stop(); });
+        recordsObserver.then(( handle ) => { handle.stop(); });
+    });
+
+    self.ready();
+});
+
 // just publish someting in a pseudo-collection and see if we can later find in this collection
 Meteor.publish( 'pwix_tenants_manager_test', async function(){
 

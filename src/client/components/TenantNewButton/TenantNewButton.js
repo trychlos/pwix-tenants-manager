@@ -38,6 +38,7 @@ Template.TenantNewButton.helpers({
 Template.TenantNewButton.events({
     'click .plusButton'( event, instance ){
         Modal.run({
+            ...this,
             mdBody: 'TenantEditPanel',
             mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
             mdClasses: 'modal-xl',

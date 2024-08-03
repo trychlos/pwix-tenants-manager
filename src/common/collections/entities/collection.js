@@ -22,3 +22,5 @@ Tracker.autorun(() => {
         Entities.collectionReady.set( true );
     }
 });
+
+TenantsManager.Entities = Entities;

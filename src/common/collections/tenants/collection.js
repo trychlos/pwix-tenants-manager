@@ -9,3 +9,5 @@ import '../../js/index.js';
 export const Tenants = {
     fieldSet: new ReactiveVar( null )
 };
+
+TenantsManager.Tenants = Tenants;

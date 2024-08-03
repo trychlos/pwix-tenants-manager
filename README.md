@@ -46,11 +46,39 @@ Available both on the client and the server.
 
 #### Blaze components
 
+##### `TenantEditPanel`
+
+A tabbed editing panel to be run inside of a page or of a modal. This is a two-levels `Tabbed` component with:
+
+- the first level manages the entity, and contains a sub-`Tabbed` component for the records and an `entity_notes_tab` pane for the entity notes
+
+- each validity period is in second-level tab, with record properties and notes panes.
+
+When run from [`TenantsList`](#tenantslist), it is run in a modal to edit the current item.
+
+The `TenantEditPanel` component accepts a data context as:
+
+- `item`: the item to be edited, or null (or unset)
+
+- `entityTabs`: a list of tabs to be inserted before the 'notes' tabs of the entity
+
+- `recordTabs`: a list of tabs to be inserted before the 'notes' tabs of the record
+
+##### `TenantNewButton`
+
+A `PlusButton` component customized to create a new tenant.
+
+It takes itself care of checking the permissions of the user, and, depending of its runtime parameters, either is disabled, or doesn't display at all if the user is not allowed.
+
+It takes the very same data context than below `TenantEditPanel`.
+
 ##### `TenantsList`
 
 The component list the defined tenants as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
 Each rendered line of the table displays an entity, and the closest values for each column.
+
+It takes the very same data context than below `TenantEditPanel`.
 
 ## Permissions management
 
@@ -111,8 +139,7 @@ Known configuration options are:
     TenantsManager.configure({
         entityFields: [
             {
-                where: Field.C.Insert.BEFORE,
-                name: 'notes',
+                before: 'notes',
                 fields: [
                     {
                         name: 'label',
@@ -148,8 +175,7 @@ Known configuration options are:
     TenantsManager.configure({
         recordFields: [
             {
-                where: Field.C.Insert.AFTER,
-                name: 'label',
+                before: 'label',
                 fields: [
                     {
                         name: 'secondaryLabel',

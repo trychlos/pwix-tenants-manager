@@ -52,29 +52,42 @@ Template.record_tabbed.onCreated( function(){
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const notes = Records.fieldSet.get().byName( 'notes' );
-            const parms = {
-                tabs: [
-                    {
-                        navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                        paneTemplate: 'record_properties_pane',
-                        paneData: {
-                            entity: dataContext.entity,
-                            index: dataContext.index,
-                            checker: dataContext.checker
-                        }
-                    },
-                    {
-                        navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                        paneTemplate: 'NotesEdit',
-                        paneData: {
-                            item: dataContext.entity.get().DYN.records[dataContext.index].get(),
-                            field: notes
-                        }
-                    }
-                ],
-                name: 'record_tabbed'
+            const paneData = {
+                entity: dataContext.entity,
+                index: dataContext.index,
+                checker: dataContext.checker
             };
-            self.TM.parmsRecord.set( parms );
+            let tabs = [
+                {
+                    navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                    paneTemplate: 'record_properties_pane',
+                    paneData: paneData
+                }
+            ];
+            if( dataContext.recordTabs ){
+                if( _.isArray( dataContext.recordTabs ) && dataContext.recordTabs.length ){
+                    dataContext.recordTabs.forEach(( tab ) => {
+                        tab.paneData = paneData;
+                        tabs.push( tab );
+                    });
+                } else {
+                    console.warn( 'expect tabs be an array, got', dataContext.recordTabs );
+                }
+            }
+            tabs.push(
+                {
+                    navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                    paneTemplate: 'NotesEdit',
+                    paneData: {
+                        item: dataContext.entity.get().DYN.records[dataContext.index].get(),
+                        field: notes
+                    }
+                }
+            );
+            self.TM.parmsRecord.set({
+                name: 'record_tabbed',
+                tabs: tabs
+            });
         } else {
             self.TM.parmsRecord.set( null );
         }

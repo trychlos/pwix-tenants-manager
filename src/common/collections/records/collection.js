@@ -22,3 +22,5 @@ Tracker.autorun(() => {
         Records.collectionReady.set( true );
     }
 });
+
+TenantsManager.Records = Records;

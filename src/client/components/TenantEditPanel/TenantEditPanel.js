@@ -153,7 +153,7 @@ Template.TenantEditPanel.helpers({
             checker: TM.checker
         };
         const notesField = Entities.fieldSet.get().byName( 'notes' );
-        const tabs = [
+        let tabs = [
             {
                 tabid: 'entity_validities_tab',
                 paneid: 'entity_validities_pane',
@@ -166,7 +166,19 @@ Template.TenantEditPanel.helpers({
                     template: 'record_tabbed',
                     withValidities: TenantsManager.configure().withValidities
                 }
-            },
+            }
+        ];
+        if( this.entityTabs ){
+            if( _.isArray( this.entityTabs ) && this.entityTabs.length ){
+                this.entityTabs.forEach(( tab ) => {
+                    tab.paneData = paneData;
+                    tabs.push( tab );
+                });
+            } else {
+                console.warn( 'expect tabs be an array, got', this.entityTabs );
+            }
+        }
+        tabs.push(
             {
                 tabid: 'entity_notes_tab',
                 paneid: 'entity_notes_pane',
@@ -177,7 +189,7 @@ Template.TenantEditPanel.helpers({
                     field: notesField
                 }
             }
-        ];
+        );
         return {
             tabs: tabs
         };
