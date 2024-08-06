@@ -1,8 +1,6 @@
 <template name="TenantsList">
     <div class="TenantsList">
 
-
-
         {{#if canList }}
             {{> tabular_ext table=TabularTables.Tenants id=tabularId selector=selector class="table table-striped table-bordered table-condensed" }}
         {{else}}

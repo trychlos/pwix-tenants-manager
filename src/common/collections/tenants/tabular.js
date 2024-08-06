@@ -11,9 +11,7 @@ import _ from 'lodash';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
-import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
-import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
