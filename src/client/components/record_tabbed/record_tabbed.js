@@ -28,7 +28,7 @@ import './record_tabbed.html';
 
 Template.record_tabbed.onCreated( function(){
     const self = this;
-    //console.debug( this );
+    //console.debug( this, Template.currentData());
 
     self.TM = {
         fields: {
