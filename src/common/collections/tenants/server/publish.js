@@ -252,7 +252,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
     // - a DYN object which contains:
     //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
     //   > count: the count of records for this tenant
-    // - start end end effect dates are modified with the englobing period of the entity
+    // - start and end effect dates are modified with the englobing period of the entity
     const f_transform = async function( item ){
         let promises = [];
         item.DYN = {};
