@@ -233,6 +233,9 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
  *      updatedBy: 1
  *    }
  *  }
+ * 
+ * These are the fields from the closest record, plus the entity_notes from the entity,
+ *  and with effectStart and effectEnd being from the first and last records.
  */
 Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableName, ids, fields ){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.tabular', this.userId )){
@@ -244,15 +247,18 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
     const collectionName = Records.collectionName;
     let initializing = true;
 
-    // for each entity, the record sent after transformation
+    // for each entity, the (closest) record sent after transformation
     let entities = {};
 
     // for tabular display we have to provide:
     // - entity_notes
     // - a DYN object which contains:
     //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
-    //   > count: the count of records for this tenant
+    //   > entity: the entity document
+    //   > records: an array of the record documents
     // - start and end effect dates are modified with the englobing period of the entity
+    // @param {Object} item the Record item
+    // @returns {Object} item the closest record for this entity
     const f_transform = async function( item ){
         let promises = [];
         item.DYN = {};
@@ -261,7 +267,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
         // get all the records
         promises.push( Records.collection.find({ entity: item.entity }).fetchAsync().then(( fetched ) => {
             item.DYN.analyze = Validity.analyzeByRecords( fetched );
-            item.DYN.count = fetched.length;
+            item.DYN.records = fetched;
             const res = Validity.englobingPeriodByRecords( fetched );
             item.effectStart = res.start;
             item.effectEnd = res.end;
@@ -278,6 +284,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
         }
         if( entity ){
             item.entity_notes = entity.notes;
+            item.DYN.entity = entity;
         }
     };
 
@@ -300,7 +307,6 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             if( !initializing ){
                 const transformed = await f_transform( newItem );
                 entities[newItem.entity] = transformed;
-                console.debug( 'transformed', transformed );
                 self.changed( collectionName, newItem._id, transformed );
             }
         },

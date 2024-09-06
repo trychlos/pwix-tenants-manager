@@ -10,6 +10,7 @@
     - Let both entity and record tabbed views be extended, thus bumping minor candidate version number
     - Let the edition modal size be provided by the caller, defaulting to 'modal-xl'
     - Let the caller extends the buttons displayed on the right side of each row
+    - Extend the tabular publication to have entity and records
 
 ### 1.0.0
 
