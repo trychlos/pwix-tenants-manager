@@ -212,6 +212,29 @@ Known configuration options are:
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
 
+- `tenantButtons`
+
+    Let the application extends the Tenants default tabular display by providing additional buttons as an array of template names, or as a function which returns such an array.
+
+    The template will be called with the current row item as its data context.
+
+    Defauts to nothing.
+
+    Example:
+
+```js
+    TenantsManager.configure({
+        tenantButtons: [
+            {
+                where: Tabular.C.Where.AFTER,
+                buttons: [
+                    'my_template'
+                ]
+            }
+        ]
+    });
+```
+
 - `tenantFields`
 
     Let the application extends the Tenants default tabular display by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
@@ -224,8 +247,7 @@ Known configuration options are:
     TenantsManager.configure({
         tenantFields: [
             {
-                where: Field.C.Insert.AFTER,
-                name: 'label',
+                before: 'label',
                 fields: [
                     {
                         name: 'column',

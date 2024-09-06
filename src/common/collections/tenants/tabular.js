@@ -49,8 +49,9 @@ Tracker.autorun(() => {
             pub: 'pwix_tenants_manager_tenants_tabular',
             tabular: {
                 // have a badge which displays the count of validity records if greater than 1
-                async buttons( it ){
-                    return [
+                // let this array be extended by the calling application
+                async buttons(){
+                    let buttons = [
                         {
                             where: Tabular.C.Where.BEFORE,
                             buttons: [
@@ -58,6 +59,9 @@ Tracker.autorun(() => {
                             ]
                         }
                     ];
+                    let extend = TenantsManager.configure().tenantButtons;
+                    extend = extend ? ( typeof extend === 'function' ? await extend() : extend ) : null;
+                    return extend ? buttons.concat( extend ) : buttons;
                 },
                 async deleteButtonEnabled( it ){
                     return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.delete', null, it );
