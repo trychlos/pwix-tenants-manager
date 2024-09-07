@@ -48,6 +48,22 @@ Tenants.server.deleteTenant = async function( entity, userId ){
 };
 
 /*
+ * @param {Object} selector
+ * @param {String} userId, may be null when called from common code on the server
+ * @returns {Object} the result as an object { entities: Array, records: Array }
+ */
+Tenants.server.getBy = async function( selector, userId ){
+    //check( userId, MatchOneOf( null, String ));
+    let result = {};
+    if( userId && !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_by', userId )){
+        return null;
+    }
+    result.entities = await Entities.collection.find( selector ).fetchAsync();
+    result.records = await Records.collection.find( selector ).fetchAsync();
+    return result;
+};
+
+/*
  * @param {String} userId, may be null when called from common code on the server
  * @returns {Array} the list of known tenants as objects { _id: <entity_id>, label: <closest_label> }
  */

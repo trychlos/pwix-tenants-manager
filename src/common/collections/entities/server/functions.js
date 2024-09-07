@@ -33,9 +33,11 @@ Entities.server.addUndef = function( item ){
  */
 Entities.server.getBy = async function( selector, userId ){
     check( selector, Object );
-    check( userId, String );
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.get_by', userId, selector )){
-        return null;
+    if( userId ){
+        check( userId, String );
+        if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.get_by', userId, selector )){
+            return null;
+        }
     }
     const res = await Entities.collection.find( selector ).fetchAsync();
     //console.debug( 'entitites', selector, res );
