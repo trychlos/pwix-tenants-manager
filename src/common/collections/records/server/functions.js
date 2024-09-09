@@ -81,6 +81,9 @@ Records.server.upsert = async function( entity, userId ){
             updatableIds[record._id] = record;
         }
     }
+    //console.debug( 'leftIds', leftIds );
+    //console.debug( 'updatableIds', updatableIds );
+
     // for each updatable, then... upsert!
     // as of 2024- 7-17 and matb33:collection-hooks v 2.0.0-rc.1 there is not yet any hook for async methods (though this work at creation)
     let promises = [];
@@ -91,10 +94,25 @@ Records.server.upsert = async function( entity, userId ){
             record.updatedAt = new Date();
         }
         record.entity = entity._id;
+        // the below code to be able to see SimpleSchema errors which are hidden by the promises.push()
+        if( false ){
+            Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
+                console.debug( 'upsert record', record, 'res', res );
+                if( res.numberAffected > 0 ){
+                    if( record._id ){
+                        result.updated += 1;
+                    } else if( res.insertedId ){
+                        result.inserted += 1;
+                    }
+                    result.written.push( record );
+                }
+                return res;
+            });
+        }
         promises.push( Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-            //console.debug( 'upsert item', item, 'res', res );
+            console.debug( 'upsert record', record, 'res', res );
             if( res.numberAffected > 0 ){
-                if( item._id ){
+                if( record._id ){
                     result.updated += 1;
                 } else if( res.insertedId ){
                     result.inserted += 1;
