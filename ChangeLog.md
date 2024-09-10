@@ -12,6 +12,7 @@
     - Let the caller extends the buttons displayed on the right side of each row
     - Extend the tabular publication to have entity and records
     - Entities.getBy() and Records.getBy() run without a userId
+    - Display its label when editing a tenant
 
 ### 1.0.0
 

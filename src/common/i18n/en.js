@@ -21,7 +21,7 @@ TenantsManager.i18n = {
             edit: {
                 edit_success: 'The tenant "%s" has been successfully updated',
                 error: 'An unknown error unfortunately occurred. Please retry later',
-                modal_title: 'Editing a tenant',
+                modal_title: 'Editing the "%s" tenant',
                 new_success: 'The tenant "%s" has been successfully created'
             },
             list: {
