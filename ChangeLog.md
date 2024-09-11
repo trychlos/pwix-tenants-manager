@@ -15,6 +15,7 @@
     - Display its label when editing a tenant
     - Upgrade pwix:tabbed to v 1.3.0
     - Track the Checker status and validity
+    - Name the TenantEditPanel Tabbed component
 
 ### 1.0.0
 

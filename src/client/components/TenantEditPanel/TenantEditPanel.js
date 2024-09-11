@@ -197,6 +197,7 @@ Template.TenantEditPanel.helpers({
             }
         );
         return {
+            name: 'TenantEditPanel',
             tabs: tabs
         };
     }
