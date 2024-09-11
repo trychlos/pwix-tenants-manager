@@ -155,8 +155,7 @@ Template.TenantEditPanel.helpers({
         const notesField = Entities.fieldSet.get().byName( 'notes' );
         let tabs = [
             {
-                tabid: 'entity_validities_tab',
-                paneid: 'entity_validities_pane',
+                name: 'tenant_entity_validities_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
                 paneTemplate: 'entity_validities_pane',
                 paneData: {
@@ -180,8 +179,7 @@ Template.TenantEditPanel.helpers({
         }
         tabs.push(
             {
-                tabid: 'entity_notes_tab',
-                paneid: 'entity_notes_pane',
+                name: 'tenant_entity_notes_tab',
                 navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
                 paneTemplate: 'NotesEdit',
                 paneData: {

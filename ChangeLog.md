@@ -13,6 +13,7 @@
     - Extend the tabular publication to have entity and records
     - Entities.getBy() and Records.getBy() run without a userId
     - Display its label when editing a tenant
+    - Upgrade pwix:tabbed to v 1.3.0
 
 ### 1.0.0
 

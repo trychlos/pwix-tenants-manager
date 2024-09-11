@@ -59,6 +59,7 @@ Template.record_tabbed.onCreated( function(){
             };
             let tabs = [
                 {
+                    name: 'tenant_record_properties_tab',
                     navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
                     paneTemplate: 'record_properties_pane',
                     paneData: paneData
@@ -76,6 +77,7 @@ Template.record_tabbed.onCreated( function(){
             }
             tabs.push(
                 {
+                    name: 'tenant_record_notes_tab',
                     navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
                     paneTemplate: 'NotesEdit',
                     paneData: {
