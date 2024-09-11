@@ -14,6 +14,7 @@
     - Entities.getBy() and Records.getBy() run without a userId
     - Display its label when editing a tenant
     - Upgrade pwix:tabbed to v 1.3.0
+    - Track the Checker status and validity
 
 ### 1.0.0
 

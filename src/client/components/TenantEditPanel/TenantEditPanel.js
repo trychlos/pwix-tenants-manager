@@ -118,6 +118,14 @@ Template.TenantEditPanel.onRendered( function(){
             }
         }));
     });
+
+    // track the Checker status and validity
+    self.autorun(() => {
+        const checker = self.TM.checker.get();
+        if( checker ){
+            //.console.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
+        }
+    });
 });
 
 Template.TenantEditPanel.helpers({
