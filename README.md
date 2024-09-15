@@ -279,6 +279,14 @@ Known configuration options are:
 
         Trace configuration operations
 
+    - `TenantsManager.C.Verbose.FUNCTIONS`
+
+        Trace all function calls
+
+    - `TenantsManager.C.Verbose.ATTACHSCHEMA`
+
+        Trace the schemas attachement operations
+
     Defaults to `TenantsManager.C.Verbose.CONFIGURE`.
 
 - `withValidities`
