@@ -83,6 +83,6 @@ Entities.server.upsert = async function( entity, userId ){
         result.numberAffected = 1;
         entity._id = result.insertedId;
     }
-    console.debug( 'Entities result', result );
+    //console.debug( 'Entities result', result );
     return result;
 };

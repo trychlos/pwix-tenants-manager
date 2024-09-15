@@ -110,7 +110,7 @@ Records.server.upsert = async function( entity, userId ){
             });
         }
         promises.push( Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-            console.debug( 'upsert record', record, 'res', res );
+            //console.debug( 'upsert record', record, 'res', res );
             if( res.numberAffected > 0 ){
                 if( record._id ){
                     result.updated += 1;
@@ -132,7 +132,7 @@ Records.server.upsert = async function( entity, userId ){
     return Promise.allSettled( promises ).then(() => {
         return Records.collection.countDocuments({ entity: entity._id });
     }).then(() => {
-        console.debug( 'Records result', result );
+        //console.debug( 'Records result', result );
         return result;
     });
 };
