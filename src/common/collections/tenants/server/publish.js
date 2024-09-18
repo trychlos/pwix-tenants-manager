@@ -61,7 +61,6 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
-            //console.debug( 'adding entity', item._id );
             self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_entityTransform( item ));
         },
         changed: async function( newItem, oldItem ){
@@ -70,7 +69,6 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             }
         },
         removed: async function( oldItem ){
-            //console.debug( 'removing entity', oldItem._id );
             self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
         }
     });
