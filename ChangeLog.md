@@ -8,6 +8,7 @@
 
     - Accept aldeed:simple-schema v2.0.0, thus bumping minor candidate version number
     - Introduce ATTACHSCHEMA verbosity level
+    - Fix Tabbed names
 
 ### 1.1.0
 

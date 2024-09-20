@@ -50,7 +50,8 @@ Template.entity_validities_pane.helpers({
     parmsValidities(){
         return {
             ...this,
-            checker: Template.instance().TM.checker
+            checker: Template.instance().TM.checker,
+            name: 'tenants_manager_entity_validities'
         };
     }
 });

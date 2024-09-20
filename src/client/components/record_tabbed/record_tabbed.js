@@ -87,7 +87,7 @@ Template.record_tabbed.onCreated( function(){
                 }
             );
             self.TM.parmsRecord.set({
-                name: 'record_tabbed',
+                name: 'tenants_manager_record_tabbed',
                 tabs: tabs
             });
         } else {
