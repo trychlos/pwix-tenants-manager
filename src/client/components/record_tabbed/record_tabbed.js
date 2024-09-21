@@ -91,6 +91,7 @@ Template.record_tabbed.onCreated( function(){
                 tabs: tabs
             });
         } else {
+            console.warn( 'pwix:tenants-manager unexpected index', dataContext.index );
             self.TM.parmsRecord.set( null );
         }
     });
@@ -105,6 +106,7 @@ Template.record_tabbed.onCreated( function(){
             };
             self.TM.parmsValidity.set( parms );
         } else {
+            console.warn( 'pwix:tenants-manager unexpected index', dataContext.index );
             self.TM.parmsValidity.set( null );
         }
     });

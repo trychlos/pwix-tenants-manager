@@ -7,6 +7,7 @@
     Release date: 
 
     - Increase TenantNewButton left margin
+    - Have warnings for some unexpected conditions
 
 ### 1.2.0
 

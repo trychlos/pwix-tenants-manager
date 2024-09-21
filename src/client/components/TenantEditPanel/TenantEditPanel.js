@@ -95,7 +95,7 @@ Template.TenantEditPanel.onRendered( function(){
 
     // whether we are running inside of a Modal
     self.autorun(() => {
-        self.TM.isModal.set( self.$( '.TenantEditPanel' ).closest( '.modal-dialog' ).length > 0 );
+        self.TM.isModal.set( self.$( '.TenantEditPanel' ).parent().hasClass( '.modal-body' ));
     });
 
     // set the modal target+title
@@ -107,7 +107,8 @@ Template.TenantEditPanel.onRendered( function(){
         }
     });
 
-    // allocate a Checker for this (topmost parent) template
+    // allocate a Checker
+    //  note that this is only a topmost template when we are running inside of a modal - else have to wait for a parent checker
     self.autorun(() => {
         self.TM.checker.set( new Forms.Checker( self, {
             messager: self.TM.messager,
@@ -117,14 +118,6 @@ Template.TenantEditPanel.onRendered( function(){
                 }
             }
         }));
-    });
-
-    // track the Checker status and validity
-    self.autorun(() => {
-        const checker = self.TM.checker.get();
-        if( checker ){
-            //.console.debug( 'checker', checker.iCheckableId(), checker.status(), checker.validity());
-        }
     });
 });
 
