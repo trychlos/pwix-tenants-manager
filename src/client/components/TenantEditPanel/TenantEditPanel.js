@@ -169,7 +169,7 @@ Template.TenantEditPanel.helpers({
             }
         ];
         if( this.entityTabs ){
-            if( _.isArray( this.entityTabs ) && this.entityTabs.length ){
+            if( _.isArray( this.entityTabs )){
                 this.entityTabs.forEach(( tab ) => {
                     tab.paneData = paneData;
                     tabs.push( tab );
@@ -189,6 +189,16 @@ Template.TenantEditPanel.helpers({
                 }
             }
         );
+        if( this.entityTabsAfter ){
+            if( _.isArray( this.entityTabsAfter )){
+                this.entityTabsAfter.forEach(( tab ) => {
+                    tab.paneData = paneData;
+                    tabs.push( tab );
+                });
+            } else {
+                console.warn( 'expect tabs be an array, got', this.entityTabsAfter );
+            }
+        }
         return {
             name: 'tenants_manager_EditPanel',
             tabs: tabs

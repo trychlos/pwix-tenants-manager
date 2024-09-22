@@ -2,12 +2,13 @@
 
 ## ChangeLog
 
-### 1.2.1-rc
+### 1.3.0-rc
 
     Release date: 
 
     - Increase TenantNewButton left margin
     - Have warnings for some unexpected conditions
+    - Define 'entityTabsAfter' and 'recordTabsAfter' TenantsEditPanel component parameters, thus bumping minor candidate version number
 
 ### 1.2.0
 

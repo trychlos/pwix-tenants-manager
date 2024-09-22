@@ -86,6 +86,16 @@ Template.record_tabbed.onCreated( function(){
                     }
                 }
             );
+            if( dataContext.recordTabsAfter ){
+                if( _.isArray( dataContext.recordTabsAfter ) && dataContext.recordTabsAfter.length ){
+                    dataContext.recordTabsAfter.forEach(( tab ) => {
+                        tab.paneData = paneData;
+                        tabs.push( tab );
+                    });
+                } else {
+                    console.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
+                }
+            }
             self.TM.parmsRecord.set({
                 name: 'tenants_manager_record_tabbed',
                 tabs: tabs
