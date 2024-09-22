@@ -82,7 +82,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                     } catch( e ){
                         // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
                         self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
-                        console.debug( e, 'ignored' );
+                        //console.debug( e, 'ignored' );
                     }
                 } else {
                     console.warn( 'added: entity not found', item.entity );
