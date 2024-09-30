@@ -216,6 +216,10 @@ Known configuration options are:
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
 
+- `scopedManagerRole`
+
+    The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
+
 - `tenantButtons`
 
     Let the application extends the Tenants default tabular display by providing additional buttons as an array of template names, or as a function which returns such an array.

@@ -12,6 +12,7 @@
     - TenantsManager is a NodeJS EventEmitter on server side
     - Server-side functions are available in Tenants.s namespace
     - Open the new tenant dialog on first pane
+    - Define new 'scopedManagerRole' configuration parameter (todo #4)
 
 ### 1.2.0
 

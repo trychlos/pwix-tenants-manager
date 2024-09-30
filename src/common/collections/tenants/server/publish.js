@@ -32,7 +32,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             closest: null
         };
         let promises = [];
-        promises.push( Meteor.roleAssignment.find({ 'role._id': 'ORG_SCOPED_MANAGER', scope: item._id }).fetchAsync().then(( fetched ) => {
+        promises.push( Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: item._id }).fetchAsync().then(( fetched ) => {
             fetched.forEach(( it ) => {
                 Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
                     if( user ){

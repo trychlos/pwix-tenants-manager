@@ -13,7 +13,6 @@
 |    2 | 2024- 6-28 | have a scheduled job which deletes tenants_e entities which do not have any tenants_r records |
 |      |            | as a label - so a record - is supposed to be mandatory to save a tenant |
 |    3 | 2024- 6-28 | same than #2 for tenants_r which do not have any tenants_e |
-|    4 | 2024- 7-16 | do not hardcode ORD_SCOPED_MANAGER in tenantsAll publication |
 |    5 | 2024- 9-23 | Have an error on publish |
 |      |            | Error: Could not find element with id yW5sXgJv4Mt3o8BAh to change
 |      |            |   at SessionCollectionView.changed (packages/ddp-server/livedata_server.js:261:13)
@@ -33,6 +32,8 @@
 |      |            | should be able to get this configuration back instead of using hard coded values |
 |      |            | (and do not ask to configure the same thing here a second time) |
 |      | 2024- 7-17 | done |
+|    4 | 2024- 7-16 | do not hardcode ORD_SCOPED_MANAGER in tenantsAll publication |
+|      | 2024- 9-30 | done |
 
 ---
 P. Wieser

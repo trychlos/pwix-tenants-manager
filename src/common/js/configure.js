@@ -20,6 +20,7 @@ TenantsManager._defaults = {
     recordFields: null,
     tenantFields: null,
     tenantsCollection: 'tenants',
+    scopedManagerRole: 'SCOPED_TENANT_MANAGER',
     // runtime
     verbosity: TenantsManager.C.Verbose.CONFIGURE,
     withValidities: true
