@@ -14,14 +14,14 @@ import { Tenants } from '../index.js';
 import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
 
-Tenants.server = {};
+Tenants.s = {};
 
 /**
  * @summary Make sure all the fields of the fieldset are set in the item, even if undefined
  * @param {Object} item
  * @returns {Object} item
  */
-Tenants.server.addUndef = function( item ){
+Tenants.s.addUndef = function( item ){
     Tenants.fieldSet.get().names().forEach(( it ) => {
         if( !Object.keys( item ).includes( it )){
             item[it] = undefined;
@@ -35,7 +35,7 @@ Tenants.server.addUndef = function( item ){
  * @param {String} userId, may be null when called from common code on the server
  * @returns {Array} the list of known tenants as objects { _id: <entity_id>, label: <closest_label> }
  */
-Tenants.server.deleteTenant = async function( entity, userId ){
+Tenants.s.deleteTenant = async function( entity, userId ){
     check( entity, String );
     check( userId, Match.OneOf( null, String ));
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.delete_tenant', userId, entity )){
@@ -52,7 +52,7 @@ Tenants.server.deleteTenant = async function( entity, userId ){
  * @param {String} userId, may be null when called from common code on the server
  * @returns {Object} the result as an object { entities: Array, records: Array }
  */
-Tenants.server.getBy = async function( selector, userId ){
+Tenants.s.getBy = async function( selector, userId ){
     //check( userId, MatchOneOf( null, String ));
     let result = {};
     if( userId && !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_by', userId )){
@@ -67,7 +67,7 @@ Tenants.server.getBy = async function( selector, userId ){
  * @param {String} userId, may be null when called from common code on the server
  * @returns {Array} the list of known tenants as objects { _id: <entity_id>, label: <closest_label> }
  */
-Tenants.server.getScopes = async function( userId ){
+Tenants.s.getScopes = async function( userId ){
     //check( userId, MatchOneOf( null, String ));
     let result = [];
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_scopes', userId )){
@@ -86,7 +86,7 @@ Tenants.server.getScopes = async function( userId ){
  *  an object with a DYN.managers array
  * @param {String} userId
  */
-Tenants.server.setManagers = async function( entity, userId ){
+Tenants.s.setManagers = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.set_managers', userId, entity )){
@@ -101,13 +101,13 @@ Tenants.server.setManagers = async function( entity, userId ){
  * @param {String} userId
  * @returns {Object}
  */
-Tenants.server.upsert = async function( entity, userId ){
+Tenants.s.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.upsert', userId, entity )){
         return null;
     }
-    //console.debug( 'Tenants.server.upsert()', entity );
+    //console.debug( 'Tenants.s.upsert()', entity );
 
     // upsert the entity
     //  we get back not only a result but also the original entity

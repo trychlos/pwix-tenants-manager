@@ -9,6 +9,8 @@
     - Increase TenantNewButton left margin
     - Have warnings for some unexpected conditions
     - Define 'entityTabsAfter' and 'recordTabsAfter' TenantsEditPanel component parameters, thus bumping minor candidate version number
+    - TenantsManager is a NodeJS EventEmitter on server side
+    - Server-side functions are available in Tenants.s namespace
 
 ### 1.2.0
 

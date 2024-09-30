@@ -62,14 +62,17 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_entityTransform( item ));
+            TenantsManager.s.eventEmitter.emit( 'added', item._id, await f_entityTransform( item ));
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
                 self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_entityTransform( newItem ));
+                TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await f_entityTransform( newItem ));
             }
         },
         removed: async function( oldItem ){
             self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
+            TenantsManager.s.eventEmitter.emit( 'removed', oldItem._id );
         }
     });
 
@@ -79,9 +82,11 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                 if( entity ){
                     try {
                         self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await f_entityTransform( entity ));
                     } catch( e ){
                         // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
                         self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'added', entity._id, await f_entityTransform( entity ));
                         //console.debug( e, 'ignored' );
                     }
                 } else {
@@ -94,6 +99,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                 Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
                     if( entity ){
                         self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await f_entityTransform( entity ));
                     } else {
                         console.warn( 'changed: entity not found', newItem.entity );
                     }
@@ -105,18 +111,17 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             Entities.collection.findOneAsync({ _id: oldItem.entity }).then( async ( entity ) => {
                 if( entity ){
                     self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, await f_entityTransform( entity ));
+                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, await f_entityTransform( entity ));
                 }
             });
         }
     });
 
     initializing = false;
-
     self.onStop( function(){
         entitiesObserver.then(( handle ) => { handle.stop(); });
         recordsObserver.then(( handle ) => { handle.stop(); });
     });
-
     self.ready();
 });
 
@@ -271,7 +276,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             item.effectEnd = res.end;
         }));
         await Promise.allSettled( promises );
-        Tenants.server.addUndef( item );
+        Tenants.s.addUndef( item );
         return item;
     };
 
