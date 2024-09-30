@@ -95,7 +95,7 @@ Template.TenantEditPanel.onRendered( function(){
 
     // whether we are running inside of a Modal
     self.autorun(() => {
-        self.TM.isModal.set( self.$( '.TenantEditPanel' ).parent().hasClass( '.modal-body' ));
+        self.TM.isModal.set( self.$( '.TenantEditPanel' ).parent().hasClass( 'modal-body' ));
     });
 
     // set the modal target+title
@@ -151,6 +151,7 @@ Template.TenantEditPanel.helpers({
         const paneData = {
             ...this,
             item: TM.item,
+            isNew: TM.isNew.get(),
             checker: TM.checker
         };
         const notesField = Entities.fieldSet.get().byName( 'notes' );
@@ -201,7 +202,8 @@ Template.TenantEditPanel.helpers({
         }
         return {
             name: 'tenants_manager_EditPanel',
-            tabs: tabs
+            tabs: tabs,
+            activateTab: paneData.isNew ? 0 : undefined
         };
     }
 });
