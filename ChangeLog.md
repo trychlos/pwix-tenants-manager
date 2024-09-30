@@ -13,6 +13,7 @@
     - Server-side functions are available in Tenants.s namespace
     - Open the new tenant dialog on first pane
     - Define new 'scopedManagerRole' configuration parameter (todo #4)
+    - Fix the tabular's row management when the column is not displayed
 
 ### 1.2.0
 
