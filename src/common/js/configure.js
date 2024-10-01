@@ -35,7 +35,7 @@ TenantsManager._defaults = {
  */
 TenantsManager.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( _conf, TenantsManager._defaults, o );
+        _conf = _.merge( TenantsManager._defaults, _conf, o );
         TenantsManager._conf.set( _conf );
         // be verbose if asked for
         if( _conf.verbosity & TenantsManager.C.Verbose.CONFIGURE ){
@@ -47,5 +47,5 @@ TenantsManager.configure = function( o ){
     return TenantsManager._conf.get();
 }
 
-_.merge( _conf, TenantsManager._defaults );
+_conf = _.merge( {}, TenantsManager._defaults );
 TenantsManager._conf.set( _conf );

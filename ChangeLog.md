@@ -15,6 +15,7 @@
     - Define new 'scopedManagerRole' configuration parameter (todo #4)
     - Fix the tabular's row management when the column is not displayed
     - Define new 'tabularServerExtend' configuration parameter
+    - Fix configuration overrides
 
 ### 1.2.0
 
