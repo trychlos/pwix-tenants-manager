@@ -16,6 +16,7 @@
     - Fix the tabular's row management when the column is not displayed
     - Define new 'tabularServerExtend' configuration parameter
     - Fix configuration overrides
+    - Have TenantsManager.list.get() function
 
 ### 1.2.0
 

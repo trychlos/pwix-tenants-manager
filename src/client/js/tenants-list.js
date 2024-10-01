@@ -15,7 +15,7 @@ TenantsManager.list = {
 
     // returns the entity document and its DYN arrays
     byEntity( entity ){
-        const list = TenantsManager.list.array.get();
+        const list = TenantsManager.list.get();
         let found = null;
         list.every(( it ) => {
             if( it._id === entity ){
@@ -24,6 +24,11 @@ TenantsManager.list = {
             return found === null;
         });
         return found;
+    },
+
+    // returns the list content
+    get(){
+        return TenantsManager.list.array.get();
     }
 };
 
