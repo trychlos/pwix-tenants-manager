@@ -154,13 +154,13 @@ Tenants.checks.label = async function( value, data, opts ){
             });
         };
         const promise =
-            Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.server.getBy({ label: value });
+            Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.s.getBy({ label: value });
         return promise
             .then(( result ) => {
                 if( result.length ){
                     return result;
                 } else {
-                    return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.server.getBy({ label: value });
+                    return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.s.getBy({ label: value });
                 }
             })
             .then(( result ) => {

@@ -112,10 +112,10 @@ Tenants.s.upsert = async function( entity, userId ){
     // upsert the entity
     //  we get back not only a result but also the original entity
     //  when new, 'entity' has been updated with newly inserted id
-    let entitiesRes = await Entities.server.upsert( entity, userId );
+    let entitiesRes = await Entities.s.upsert( entity, userId );
 
     // and asks the Records to do the rest
-    let recordsRes = await Records.server.upsert( entity, userId );
+    let recordsRes = await Records.s.upsert( entity, userId );
 
     return {
         entities: entitiesRes,

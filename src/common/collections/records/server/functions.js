@@ -11,14 +11,14 @@ import { check } from 'meteor/check';
 
 import { Records } from '../index.js';
 
-Records.server = {};
+Records.s = {};
 
 /*
  * @param {Object} selector
  * @param {String} userId
  * @returns {Array} may be empty
  */
-Records.server.getBy = async function( selector, userId ){
+Records.s.getBy = async function( selector, userId ){
     check( selector, Object );
     if( userId ){
         check( userId, String );
@@ -40,16 +40,16 @@ Records.server.getBy = async function( selector, userId ){
  * @param {String} userId
  * @returns {Object} with following keys:
  */
-Records.server.upsert = async function( entity, userId ){
+Records.s.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.upsert', userId, entity )){
         return null;
     }
-    //console.debug( 'Records.server.upsert()', entity );
+    //console.debug( 'Records.s.upsert()', entity );
     // get the original item records to be able to detect modifications
     //  and build a hash of id -> record
-    const orig = await Records.server.getBy({ entity: entity._id }, userId );
+    const orig = await Records.s.getBy({ entity: entity._id }, userId );
     let origIds = {};
     orig.map(( it ) => { origIds[it._id] = it; });
     let leftIds = _.cloneDeep( origIds );

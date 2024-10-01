@@ -10,14 +10,14 @@ import { check } from 'meteor/check';
 
 import { Entities } from '../index.js';
 
-Entities.server = {};
+Entities.s = {};
 
 /**
  * @summary Make sure all the fields of the fieldset are set in the item, even if undefined
  * @param {Object} item
  * @returns {Object} item
  */
-Entities.server.addUndef = function( item ){
+Entities.s.addUndef = function( item ){
     Entities.fieldSet.get().names().forEach(( it ) => {
         if( !Object.keys( item ).includes( it )){
             item[it] = undefined;
@@ -31,7 +31,7 @@ Entities.server.addUndef = function( item ){
  * @param {String} userId
  * @returns {Array} may be empty, or null in case of an error
  */
-Entities.server.getBy = async function( selector, userId ){
+Entities.s.getBy = async function( selector, userId ){
     check( selector, Object );
     if( userId ){
         check( userId, String );
@@ -54,7 +54,7 @@ Entities.server.getBy = async function( selector, userId ){
  *  - insertedId, if the entity was just newly inserted
  *  - orig, the value before upsert
  */
-Entities.server.upsert = async function( entity, userId ){
+Entities.s.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.upsert', userId, entity )){

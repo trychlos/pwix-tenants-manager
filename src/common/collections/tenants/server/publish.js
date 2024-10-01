@@ -53,7 +53,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             // make sure that each defined field appears in the returned item
             // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
             // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
-            Entities.server.addUndef( item );
+            Entities.s.addUndef( item );
             //console.debug( 'list_all', item );
             return item;
         });
