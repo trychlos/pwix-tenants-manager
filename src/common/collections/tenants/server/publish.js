@@ -276,6 +276,11 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             item.effectEnd = res.end;
         }));
         await Promise.allSettled( promises );
+        // extend on option
+        const fn = TenantsManager.configure().tabularServerExtend;
+        if( fn ){
+            await fn( item );
+        }
         Tenants.s.addUndef( item );
         return item;
     };

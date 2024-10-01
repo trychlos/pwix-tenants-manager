@@ -220,6 +220,14 @@ Known configuration options are:
 
     The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
 
+- `tabularServerExtend`
+
+    A server-side function which comes to extend the content of the dataset published for the tabular display.
+
+    The function get the current entity item as its unique argument and is expected, and returns a Promise when finished with its job.
+
+    Defaults to `null`.
+
 - `tenantButtons`
 
     Let the application extends the Tenants default tabular display by providing additional buttons as an array of template names, or as a function which returns such an array.

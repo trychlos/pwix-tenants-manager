@@ -94,7 +94,7 @@ Tracker.autorun(() => {
             },
             destroy: true,
             order: {
-                name: 'entity',
+                name: 'label',
                 dir: 'asc'
             },
             // the publication takes care of providing the list of fields which have not the same value among all records
