@@ -18,6 +18,7 @@
     - Fix configuration overrides
     - Have TenantsManager.list.get() function
     - Extends and maintains TenantsManager.list on server side
+    - Fix default ordering by ascending email address
 
 ### 1.2.0
 

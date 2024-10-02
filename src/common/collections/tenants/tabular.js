@@ -93,10 +93,7 @@ Tracker.autorun(() => {
                 },
             },
             destroy: true,
-            order: {
-                name: 'label',
-                dir: 'asc'
-            },
+            order: [[ 0, 'asc' ]],
             // the publication takes care of providing the list of fields which have not the same value among all records
             createdRow( row, data, dataIndex, cells ){
                 //console.debug( columns, data );
