@@ -235,7 +235,7 @@ Template.TenantEditPanel.events({
                     Modal.close();
                 } else {
                     instance.$( '.c-record-properties-pane' ).trigger( 'iz-clear-panel' );
-                    instance.$( 'NotesEdit' ).trigger( 'iz-clear-panel' );
+                    instance.$( '.NotesEdit' ).trigger( 'iz-clear-panel' );
                 }
             })
             .catch(( e ) => {
