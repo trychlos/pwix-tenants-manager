@@ -25,9 +25,6 @@
 .TenantsList {
     height: 100%;
 
-    .dt-column-title {
-        font-size: 95%;
-    }
     .not-allowed {
         height: 100%;
         display: flex;
@@ -36,23 +33,26 @@
         align-items: center;
         font-size: 125%;
     }
-    .dt-different {
-        color: gray;
-        font-style: italic;
-    }
-    .dt-count-badge {
-        display: flex;
-        align-items: center;
-        .badge {
-            --bs-badge-padding-y: 0.5em;
-            background-color: var( --bs-info );
-        }
-        .badge:hover {
-            cursor: default;
-        }
-    }
 }
 
 .TenantNewButton {
     margin-left: 1em;
+}
+
+.dt-column-title {
+    font-size: 95%;
+}
+.dt-count-badge {
+    //padding: 0.25em 0.75em;
+    .count {
+        padding: 0.25em 0.75em;
+        color: white;
+    }
+    .count:hover {
+        cursor: default;
+    }
+}
+.dt-different {
+    color: gray;
+    font-style: italic;
 }

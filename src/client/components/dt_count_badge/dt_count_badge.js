@@ -24,6 +24,6 @@ Template.dt_count_badge.helpers({
     },
     // a title to be provided if visible
     title(){
-        return this.item.DYN.records.length === 1 ? '' : pwixI18n.label( I18N, 'buttons.count_badge_title', this.item.label, this.item.DYN.count );
+        return this.item.DYN.records.length === 1 ? '' : pwixI18n.label( I18N, 'buttons.count_badge_title', this.item.label, this.item.DYN.records.length );
     }
 });

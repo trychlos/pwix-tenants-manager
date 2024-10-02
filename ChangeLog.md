@@ -19,6 +19,7 @@
     - Have TenantsManager.list.get() function
     - Extends and maintains TenantsManager.list on server side
     - Fix default ordering by ascending email address
+    - Improve (and fix) the display of validity periods count
 
 ### 1.2.0
 
