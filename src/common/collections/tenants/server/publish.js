@@ -277,7 +277,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
         }));
         await Promise.allSettled( promises );
         // extend on option
-        const fn = TenantsManager.configure().tabularServerExtend;
+        const fn = TenantsManager.configure().serverTabularExtend;
         if( fn ){
             await fn( item );
         }
@@ -319,7 +319,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             }
         },
         removed: async function( oldItem ){
-            self.removed( collectionName, oldItem._id);
+            self.removed( collectionName, oldItem._id );
         }
     });
 

@@ -14,9 +14,10 @@
     - Open the new tenant dialog on first pane
     - Define new 'scopedManagerRole' configuration parameter (todo #4)
     - Fix the tabular's row management when the column is not displayed
-    - Define new 'tabularServerExtend' configuration parameter
+    - Define new 'serverTabularExtend' configuration parameter
     - Fix configuration overrides
     - Have TenantsManager.list.get() function
+    - Extends and maintains TenantsManager.list on server side
 
 ### 1.2.0
 

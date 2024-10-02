@@ -8,6 +8,4 @@ import '../components/dt_entity_notes/dt_entity_notes.js';
 //
 import '../../common/js/index.js';
 //
-import './tenants-list.js';
-//
 import '../stylesheets/tenants_manager.less';

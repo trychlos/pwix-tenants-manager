@@ -18,7 +18,7 @@ TenantsManager._defaults = {
     // collections
     entityFields: null,
     recordFields: null,
-    tabularServerExtend: null,
+    serverTabularExtend: null,
     tenantFields: null,
     tenantsCollection: 'tenants',
     scopedManagerRole: 'SCOPED_TENANT_MANAGER',

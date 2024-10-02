@@ -84,6 +84,20 @@ Each rendered line of the table displays an entity, and the closest values for e
 
 It takes the very same data context than below `TenantEditPanel`.
 
+## Events emitter
+
+On server side, `TenantsManager` is an event emitter though the `TenantsManager.s.eventEmitter` object.
+
+Following events are sent:
+
+- `added`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+
+- `changed`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+
+- `removed`, from the `tenantsAll` publication, with arguments as `id<String>`
+
+- `item-update`, from the `TenantsManager.list` object, with arguments as `object<Object>`.
+
 ## Permissions management
 
 This package can take advantage of `pwix:permissions` package to manage the user permissions.
@@ -220,11 +234,11 @@ Known configuration options are:
 
     The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
 
-- `tabularServerExtend`
+- `serverTabularExtend`
 
     A server-side function which comes to extend the content of the dataset published for the tabular display.
 
-    The function get the current entity item as its unique argument and is expected, and returns a Promise when finished with its job.
+    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
 
     Defaults to `null`.
 
