@@ -96,7 +96,11 @@ Following events are sent:
 
 - `removed`, from the `tenantsAll` publication, with arguments as `id<String>`
 
-- `item-update`, from the `TenantsManager.list` object, with arguments as `object<Object>`.
+- `item-update`, from the `TenantsManager.list` object, with arguments as `object<Object>`
+
+    This event is sent when the list has changed with each list item as argument.
+
+    So, if an item has been removed from the list, the event is sent on each remaining item, but not on the removed one.
 
 ## Permissions management
 
@@ -233,6 +237,14 @@ Known configuration options are:
 - `scopedManagerRole`
 
     The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
+
+- `serverAllExtend`
+
+    A server-side function which comes to extend the content of the 'tenantsAll' publication.
+
+    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
+
+    Defaults to `null`.
 
 - `serverTabularExtend`
 

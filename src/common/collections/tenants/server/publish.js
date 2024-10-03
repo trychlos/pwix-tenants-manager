@@ -49,14 +49,20 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             item.DYN.closest = Validity.closestByRecords( fetched ).record;
             return true;
         }));
-        return Promise.allSettled( promises ).then(() => {
-            // make sure that each defined field appears in the returned item
-            // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
-            // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
-            Entities.s.addUndef( item );
-            //console.debug( 'list_all', item );
-            return item;
-        });
+        return Promise.allSettled( promises )
+            .then(() => {
+                // extend on option
+                const fn = TenantsManager.configure().serverAllExtend;
+                return fn ? fn( item ) : item;
+            })
+            .then(() => {
+                // make sure that each defined field appears in the returned item
+                // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
+                // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
+                Entities.s.addUndef( item );
+                //console.debug( 'list_all', item );
+                return item;
+            });
     };
 
     const entitiesObserver = Entities.collection.find({}).observeAsync({

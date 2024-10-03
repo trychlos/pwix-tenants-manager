@@ -18,6 +18,7 @@ TenantsManager._defaults = {
     // collections
     entityFields: null,
     recordFields: null,
+    serverAllExtend: null,
     serverTabularExtend: null,
     tenantFields: null,
     tenantsCollection: 'tenants',
