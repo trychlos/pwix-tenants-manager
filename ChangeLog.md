@@ -21,6 +21,7 @@
     - Fix default ordering by ascending email address
     - Improve (and fix) the display of validity periods count
     - Define new 'serverAllExtend' configuration parameter
+    - Prevent infinite recursion when serializing Tabbed data context
 
 ### 1.2.0
 

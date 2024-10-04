@@ -57,6 +57,7 @@ import './TenantEditPanel.html';
 
 Template.TenantEditPanel.onCreated( function(){
     const self = this;
+    //console.debug( this );
 
     self.TM = {
         // the global Checker for this modal
@@ -154,6 +155,11 @@ Template.TenantEditPanel.helpers({
             isNew: TM.isNew.get(),
             checker: TM.checker
         };
+        // prevent infinite recursion
+        delete paneData.entityTabs;
+        delete paneData.entityTabsAfter;
+        delete paneData.recordTabs;
+        delete paneData.recordTabsAfter;
         const notesField = Entities.fieldSet.get().byName( 'notes' );
         let tabs = [
             {
