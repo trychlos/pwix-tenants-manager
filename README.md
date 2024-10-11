@@ -44,9 +44,31 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
-#### Blaze components
+#### Events emitter
 
-##### `TenantEditPanel`
+On server side, `TenantsManager` is an event emitter through the `TenantsManager.s.eventEmitter` object.
+
+Following events are sent:
+
+- `added`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+
+- `changed`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+
+- `removed`, from the `tenantsAll` publication, with arguments as `id<String>`
+
+- `tenant-upsert`, from the server function when an entity has been added or changed, with an object as argument with following keys:
+
+    - `entity`: the entity with its DYN sub-object
+    - `result`: the results of the operation in Entities and Records collections.
+
+- `tenant-delete`, from the server function when an entity (and all its records) has been deleted, with an object as argument with following keys:
+
+    - `id`: the entity identifier
+    - `result`: the results of the operation in Entities and Records collections.
+
+### Blaze components
+
+#### `TenantEditPanel`
 
 A tabbed editing panel to be run inside of a page or of a modal. This is a two-levels `Tabbed` component with:
 
@@ -68,7 +90,7 @@ The `TenantEditPanel` component accepts a data context as:
 
 - `recordTabsAfter`: a list of tabs to be inserted after the 'notes' tabs of the record, i.e. at the end
 
-##### `TenantNewButton`
+#### `TenantNewButton`
 
 A `PlusButton` component customized to create a new tenant.
 
@@ -76,31 +98,13 @@ It takes itself care of checking the permissions of the user, and, depending of 
 
 It takes the very same data context than below `TenantEditPanel`.
 
-##### `TenantsList`
+#### `TenantsList`
 
 The component list the defined tenants as a `pwix:tabular_ext` table, with standard 'Informations', 'Edit' and 'Delete' buttons.
 
 Each rendered line of the table displays an entity, and the closest values for each column.
 
 It takes the very same data context than below `TenantEditPanel`.
-
-## Events emitter
-
-On server side, `TenantsManager` is an event emitter though the `TenantsManager.s.eventEmitter` object.
-
-Following events are sent:
-
-- `added`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
-
-- `changed`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
-
-- `removed`, from the `tenantsAll` publication, with arguments as `id<String>`
-
-- `item-update`, from the `TenantsManager.list` object, with arguments as `object<Object>`
-
-    This event is sent when the list has changed with each list item as argument.
-
-    So, if an item has been removed from the list, the event is sent on each remaining item, but not on the removed one.
 
 ## Permissions management
 

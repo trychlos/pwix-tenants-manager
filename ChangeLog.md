@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Server-side global list no more waits for a client subscription to be initialized
 
 ### 1.3.0
 

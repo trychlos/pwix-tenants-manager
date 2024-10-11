@@ -24,56 +24,15 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     const self = this;
     let initializing = true;
 
-    // find ORG_SCOPED_MANAGER allowed users, and add to each entity the list of its records
-    const f_entityTransform = async function( item ){
-        item.DYN = {
-            managers: [],
-            records: [],
-            closest: null
-        };
-        let promises = [];
-        promises.push( Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: item._id }).fetchAsync().then(( fetched ) => {
-            fetched.forEach(( it ) => {
-                Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
-                    if( user ){
-                        item.DYN.managers.push( user );
-                    } else {
-                        console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
-                    }
-                });
-            });
-            return true;
-        }));
-        promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
-            item.DYN.records = fetched;
-            item.DYN.closest = Validity.closestByRecords( fetched ).record;
-            return true;
-        }));
-        return Promise.allSettled( promises )
-            .then(() => {
-                // extend on option
-                const fn = TenantsManager.configure().serverAllExtend;
-                return fn ? fn( item ) : item;
-            })
-            .then(() => {
-                // make sure that each defined field appears in the returned item
-                // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
-                // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
-                Entities.s.addUndef( item );
-                //console.debug( 'list_all', item );
-                return item;
-            });
-    };
-
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
-            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await f_entityTransform( item ));
-            TenantsManager.s.eventEmitter.emit( 'added', item._id, await f_entityTransform( item ));
+            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await Tenants.s.transformEntity( item ));
+            TenantsManager.s.eventEmitter.emit( 'added', item._id, await Tenants.s.transformEntity( item ));
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await f_entityTransform( newItem ));
-                TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await f_entityTransform( newItem ));
+                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await Tenants.s.transformEntity( newItem ));
+                TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await Tenants.s.transformEntity( newItem ));
             }
         },
         removed: async function( oldItem ){
@@ -87,12 +46,12 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
                 if( entity ){
                     try {
-                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await f_entityTransform( entity ));
+                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
                     } catch( e ){
                         // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
-                        self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'added', entity._id, await f_entityTransform( entity ));
+                        self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
                         //console.debug( e, 'ignored' );
                     }
                 } else {
@@ -104,8 +63,8 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             if( !initializing ){
                 Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
                     if( entity ){
-                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await f_entityTransform( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await f_entityTransform( entity ));
+                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
                     } else {
                         console.warn( 'changed: entity not found', newItem.entity );
                     }
@@ -116,8 +75,8 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         removed: async function( oldItem ){
             Entities.collection.findOneAsync({ _id: oldItem.entity }).then( async ( entity ) => {
                 if( entity ){
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, await f_entityTransform( entity ));
-                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, await f_entityTransform( entity ));
+                    self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, await Tenants.s.transformEntity( entity ));
+                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, await Tenants.s.transformEntity( entity ));
                 }
             });
         }

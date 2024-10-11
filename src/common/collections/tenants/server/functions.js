@@ -44,6 +44,7 @@ Tenants.s.deleteTenant = async function( entity, userId ){
     let result = {};
     result.entities = await Entities.collection.removeAsync({ _id: entity });
     result.records = await Records.collection.removeAsync({ entity: entity });
+    TenantsManager.s.eventEmitter.emit( 'tenant-delete', { id: entity, result: res });
     return result;
 };
 
@@ -61,6 +62,18 @@ Tenants.s.getBy = async function( selector, userId ){
     result.entities = await Entities.collection.find( selector ).fetchAsync();
     result.records = await Records.collection.find( selector ).fetchAsync();
     return result;
+};
+
+/*
+ * @returns {Array} the array of entities with their DYN sub-object
+ */
+Tenants.s.getRichEntities = async function(){
+    let array = [];
+    const fetched = await Entities.collection.find().fetchAsync();
+    await Promise.all( fetched.map( async ( it ) => {
+        array.push( await Tenants.s.transformEntity( it ));
+    }));
+    return array;
 };
 
 /*
@@ -95,6 +108,50 @@ Tenants.s.setManagers = async function( entity, userId ){
 };
 
 /*
+ * @param {Object} item the object read from the Entities collection
+ * @returns {Object} this same entity object with its DYN sub-object
+ */
+Tenants.s.transformEntity = async function( item ){
+    item.DYN = {
+        managers: [],
+        records: [],
+        closest: null
+    };
+    let promises = [];
+    promises.push( Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: item._id }).fetchAsync().then(( fetched ) => {
+        fetched.forEach(( it ) => {
+            Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
+                if( user ){
+                    item.DYN.managers.push( user );
+                } else {
+                    console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
+                }
+            });
+        });
+        return true;
+    }));
+    promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
+        item.DYN.records = fetched;
+        item.DYN.closest = Validity.closestByRecords( fetched ).record;
+        return true;
+    }));
+    return Promise.allSettled( promises )
+        .then(() => {
+            // extend on option
+            const fn = TenantsManager.configure().serverAllExtend;
+            return fn ? fn( item ) : item;
+        })
+        .then(() => {
+            // make sure that each defined field appears in the returned item
+            // happens that clearing notes on server side does not publish the field 'notes' and seems that the previously 'notes' on the client is kept
+            // while publishing 'notes' as undefined rightly override (and erase) the previous notes on the client
+            Entities.s.addUndef( item );
+            //console.debug( 'list_all', item );
+            return item;
+        });
+};
+
+/*
  * @summary Create/Update at once an entity and all its validity records
  * @param {Object} entity
  *  an object with a DYN.records array of validity records as ReactiveVar's
@@ -117,8 +174,10 @@ Tenants.s.upsert = async function( entity, userId ){
     // and asks the Records to do the rest
     let recordsRes = await Records.s.upsert( entity, userId );
 
-    return {
+    const res = {
         entities: entitiesRes,
         records: recordsRes
-    }
+    };
+    TenantsManager.s.eventEmitter.emit( 'tenant-upsert', { entity: entity, result: res });
+    return res;
 };

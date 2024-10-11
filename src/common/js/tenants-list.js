@@ -51,28 +51,3 @@ if( Meteor.isClient ){
         }
     });
 }
-
-// server-side: this very same publication is used to maintain the list (thanks to Mongo observers)
-if( Meteor.isServer ){
-    // when the list has been updated, make sure we have ClientsRegistrar and IdentitiesRegistrar
-    const _serverUpdate = function(){
-        self._array.set( Object.values( self._byIds ));
-        self.get().forEach(( it ) => {
-            if( TenantsManager.s?.eventEmitter ){
-                TenantsManager.s.eventEmitter.emit( 'item-update', it );
-            }
-        });
-    }
-    const _onAdded = function( id, organization ){
-        self._byIds[id] = organization;
-        _serverUpdate();
-    };
-    const _onChanged = _onAdded;
-    const _onRemoved = function( id, organization ){
-        delete self._byIds[id];
-        _serverUpdate();
-    };
-    TenantsManager.s.eventEmitter.on( 'added', _onAdded );
-    TenantsManager.s.eventEmitter.on( 'changed', _onChanged );
-    TenantsManager.s.eventEmitter.on( 'removed', _onRemoved );
-}
