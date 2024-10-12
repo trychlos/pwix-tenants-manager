@@ -3,20 +3,17 @@
  *
  * Maintain the list of the tenants as a ReactiveVar which contains:
  * - an array of entities,
- * - each entity having its DYN sub-object with DYN.managers and DYN.records arrays
+ * - each entity having its DYN sub-object with DYN.managers and DYN.records arrays (of ReactiveVar's on the client)
  * 
  * Client side maintains a tracker on a tenant_all publication, so both client and server sides have the tools to update this central registration.
+ * 
  * NB: 'central' here doesn't mean that the same instance is shared between client and server sides! That means that both instances are maintained equal.
  */
 
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Tracker } from 'meteor/tracker';
 
 TenantsManager.list = {
-    _handle: null,
     _array: new ReactiveVar( [] ),
-    _byIds: {},
-
 
     // returns the entity document and its DYN arrays
     byEntity( entity ){
@@ -36,18 +33,3 @@ TenantsManager.list = {
         return TenantsManager.list._array.get();
     }
 };
-
-const self = TenantsManager.list;
-
-// client-side: subscribe to the tenantsAll publication at initialization time
-if( Meteor.isClient ){
-    self._handle = Meteor.subscribe( TenantsManager.C.pub.tenantsAll.publish );
-    Tracker.autorun(() => {
-        if( self._handle.ready()){
-            TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ).find().fetchAsync().then(( fetched ) => {
-                self._array.set( fetched );
-                console.debug( 'tenants', fetched );
-            });
-        }
-    });
-}
