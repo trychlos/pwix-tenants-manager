@@ -100,7 +100,7 @@ Tracker.autorun(() => {
                 // set a different display when a value changes between validity records
                 data.DYN.analyze.diffs.forEach(( it ) => {
                     const def = columns[it]?.def;
-                    if( def && def.dt_tabular !== false && def.dt_visible !== false ){
+                    if( def && def.tabular !== false && def.dt_visible !== false ){
                         $( cells[columns[it].index] ).addClass( 'dt-different' );   
                     }
                 });
