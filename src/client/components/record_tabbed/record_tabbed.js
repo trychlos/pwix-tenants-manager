@@ -57,14 +57,26 @@ Template.record_tabbed.onCreated( function(){
                 index: dataContext.index,
                 checker: dataContext.checker
             };
-            let tabs = [
-                {
-                    name: 'tenant_record_properties_tab',
-                    navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                    paneTemplate: 'record_properties_pane',
-                    paneData: paneData
+            let tabs = [];
+            // tabs before the standard
+            if( dataContext.recordTabsBefore ){
+                if( _.isArray( dataContext.recordTabsBefore ) && dataContext.recordTabsBefore.length ){
+                    dataContext.recordTabsBefore.forEach(( tab ) => {
+                        tab.paneData = paneData;
+                        tabs.push( tab );
+                    });
+                } else {
+                    console.warn( 'expect tabs be an array, got', dataContext.recordTabsBefore );
                 }
-            ];
+            }
+            // the standard has one 'propeties' tab
+            tabs.push({
+                name: 'tenant_record_properties_tab',
+                navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                paneTemplate: 'record_properties_pane',
+                paneData: paneData
+            });
+            // tabs before 'notes'
             if( dataContext.recordTabs ){
                 if( _.isArray( dataContext.recordTabs ) && dataContext.recordTabs.length ){
                     dataContext.recordTabs.forEach(( tab ) => {
@@ -75,17 +87,17 @@ Template.record_tabbed.onCreated( function(){
                     console.warn( 'expect tabs be an array, got', dataContext.recordTabs );
                 }
             }
-            tabs.push(
-                {
-                    name: 'tenant_record_notes_tab',
-                    navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                    paneTemplate: 'NotesEdit',
-                    paneData: {
-                        item: dataContext.entity.get().DYN.records[dataContext.index].get(),
-                        field: notes
-                    }
+            // standard 'notes'
+            tabs.push({
+                name: 'tenant_record_notes_tab',
+                navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                paneTemplate: 'NotesEdit',
+                paneData: {
+                    item: dataContext.entity.get().DYN.records[dataContext.index].get(),
+                    field: notes
                 }
-            );
+            });
+            // tabs at the end
             if( dataContext.recordTabsAfter ){
                 if( _.isArray( dataContext.recordTabsAfter ) && dataContext.recordTabsAfter.length ){
                     dataContext.recordTabsAfter.forEach(( tab ) => {

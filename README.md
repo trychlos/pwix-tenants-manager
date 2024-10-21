@@ -82,9 +82,13 @@ The `TenantEditPanel` component accepts a data context as:
 
 - `item`: the item to be edited, or null (or unset)
 
+- `entityTabsBefore`: a list of tabs to be inserted at the very start of the tabs of the entity
+
 - `entityTabs`: a list of tabs to be inserted before the 'notes' tabs of the entity
 
 - `entityTabsAfter`: a list of tabs to be inserted after the 'notes' tabs of the entity, i.e. at the end
+
+- `recordTabsBefore`: a list of tabs to be inserted at the very start tabs of the record
 
 - `recordTabs`: a list of tabs to be inserted before the 'notes' tabs of the record
 

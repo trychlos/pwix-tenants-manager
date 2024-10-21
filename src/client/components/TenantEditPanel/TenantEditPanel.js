@@ -158,23 +158,37 @@ Template.TenantEditPanel.helpers({
         // prevent infinite recursion
         delete paneData.entityTabs;
         delete paneData.entityTabsAfter;
+        delete paneData.entityTabsBefore;
         delete paneData.recordTabs;
         delete paneData.recordTabsAfter;
+        delete paneData.recordTabsBefore;
         const notesField = Entities.fieldSet.get().byName( 'notes' );
-        let tabs = [
-            {
-                name: 'tenant_entity_validities_tab',
-                navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
-                paneTemplate: 'entity_validities_pane',
-                paneData: {
-                    ...this,
-                    entity: TM.item,
-                    checker: TM.checker,
-                    template: 'record_tabbed',
-                    withValidities: TenantsManager.configure().withValidities
-                }
+        let tabs = [];
+        // tabs before the standard
+        if( this.entityTabsBefore ){
+            if( _.isArray( this.entityTabsBefore ) && this.entityTabsBefore.length ){
+                this.entityTabsBefore.forEach(( tab ) => {
+                    tab.paneData = paneData;
+                    tabs.push( tab );
+                });
+            } else {
+                console.warn( 'expect tabs be an array, got', this.entityTabsBefore );
             }
-        ];
+        }
+        // the standard validities tab
+        tabs.push({
+            name: 'tenant_entity_validities_tab',
+            navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
+            paneTemplate: 'entity_validities_pane',
+            paneData: {
+                ...this,
+                entity: TM.item,
+                checker: TM.checker,
+                template: 'record_tabbed',
+                withValidities: TenantsManager.configure().withValidities
+            }
+        });
+        // tabs to be inserted before 'notes'
         if( this.entityTabs ){
             if( _.isArray( this.entityTabs )){
                 this.entityTabs.forEach(( tab ) => {
@@ -185,17 +199,16 @@ Template.TenantEditPanel.helpers({
                 console.warn( 'expect tabs be an array, got', this.entityTabs );
             }
         }
-        tabs.push(
-            {
-                name: 'tenant_entity_notes_tab',
-                navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
-                paneTemplate: 'NotesEdit',
-                paneData: {
-                    ...paneData,
-                    field: notesField
-                }
+        tabs.push({
+            name: 'tenant_entity_notes_tab',
+            navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
+            paneTemplate: 'NotesEdit',
+            paneData: {
+                ...paneData,
+                field: notesField
             }
-        );
+        });
+        // and tabs to be added at the end
         if( this.entityTabsAfter ){
             if( _.isArray( this.entityTabsAfter )){
                 this.entityTabsAfter.forEach(( tab ) => {
