@@ -54,6 +54,7 @@ TenantsManager.i18n = {
                     label_exists: 'The label is already used by another tenant',
                     label_unset: 'The label is not set',
                     legals_url_invalid: 'The Legals page URL is invalid',
+                    logo_url_invalid: 'The logo URL is invalid',
                     pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
                     support_email_invalid: 'The support email address is invalid',
                     support_url_invalid: 'The support page URL is invalid'
@@ -80,6 +81,9 @@ TenantsManager.i18n = {
                     legals_label: 'Legal Terms URL :',
                     legals_ph: 'https://www.example.com/legals',
                     legals_title: 'Legal Terms URL',
+                    logo_label: 'Logo URL :',
+                    logo_ph: 'https://www.example.com/logo',
+                    logo_title: 'Logo image URL',
                     pdmp_label: 'Personal Data Policy Management URL :',
                     pdmp_ph: 'https://www.example.com/gdpr',
                     pdmp_title: 'Personal Data Policy Management URL',

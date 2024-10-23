@@ -188,6 +188,27 @@ Tenants.checks.legalsUrl = async function( value, data, opts ){
     return null;
 };
 
+// logo url
+//  must be valid if set
+//  be reactive to let the ImageIncluder updates itself
+Tenants.checks.logoUrl = async function( value, data, opts ){
+    _assert_data_content( 'Tenants.checks.logoUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    if( opts.update !== false ){
+        item.logoUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'records.check.logo_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
 // personal data management policy page url
 //  must be valid if set
 Tenants.checks.pdmpUrl = async function( value, data, opts ){

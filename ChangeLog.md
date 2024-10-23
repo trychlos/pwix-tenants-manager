@@ -9,6 +9,7 @@
     - Server-side global list no more waits for a client subscription to be initialized
     - Introduce entityTabsBefore and record TabsBefore components parameters, thus bumping minor candidate version number
     - Let each record_properties_pane row be individually addressed
+    - Manage logoUrl
 
 ### 1.3.0
 

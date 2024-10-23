@@ -53,6 +53,7 @@ TenantsManager.i18n = {
                     label_exists: 'L\'intitulé est déjà utilisé par un autre tenant',
                     label_unset: 'L\'intitulé n\'est pas renseigné',
                     legals_url_invalid: 'L\'URL de la page des informations légales est invalide',
+                    logo_url_invalid: 'L\'URL du logo est invalide',
                     pdmp_url_invalid: 'L\'URL de la page de description de la Politique de Protection des Données Personnelles est invalide',
                     support_email_invalid: 'L\'adresse de support est invalide',
                     support_url_invalid: 'L\'URL de la page de support est invalide'
@@ -79,6 +80,9 @@ TenantsManager.i18n = {
                     legals_label: 'URL de la page des informations légales :',
                     legals_ph: 'https://www.example.com/legals',
                     legals_title: 'URL de la page des informations légales',
+                    logo_label: 'URL du logo :',
+                    logo_ph: 'https://www.example.com/logo',
+                    logo_title: 'URL du logo',
                     pdmp_label: 'URL de la page sur la Politique de Protection des Données Personnelles :',
                     pdmp_ph: 'https://www.example.com/gdpr',
                     pdmp_title: 'URL de la page sur la Politique de Protection des Données Personnelles',

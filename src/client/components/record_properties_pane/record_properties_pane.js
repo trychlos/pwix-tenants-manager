@@ -41,6 +41,9 @@ Template.record_properties_pane.onCreated( function(){
             homeUrl: {
                 js: '.js-home'
             },
+            logoUrl: {
+                js: '.js-logo'
+            },
             supportUrl: {
                 js: '.js-support-url'
             },
@@ -99,6 +102,13 @@ Template.record_properties_pane.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
+    },
+
+    // parms for ImageIncluder
+    parmsImage(){
+        return {
+            imageUrl: this.entity.get().DYN.records[this.index].get().logoUrl
+        };
     }
 });
 

@@ -77,17 +77,12 @@ const _defaultFieldSet = function( conf ){
             form_check: Tenants.checks.contactUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
-        // the organization logo (either an Url or an embedded image, or both)
+        // the organization logo
         {
             name: 'logoUrl',
             type: String,
             optional: true,
-            form_type: Forms.FieldType.C.OPTIONAL
-        },
-        {
-            name: 'logoImage',
-            type: String,
-            optional: true,
+            form_check: Tenants.checks.logoUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
         // support email address
