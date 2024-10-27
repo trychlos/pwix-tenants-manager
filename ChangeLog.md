@@ -10,6 +10,7 @@
     - Introduce entityTabsBefore and record TabsBefore components parameters, thus bumping minor candidate version number
     - Let each record_properties_pane row be individually addressed
     - Manage logoUrl
+    - Add missing Timestampable declaration
 
 ### 1.3.0
 

@@ -13,6 +13,7 @@
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Notes } from 'meteor/pwix:notes';
+import { Timestampable } from 'meteor/pwix:collection-timestampable';
 import { Tracker } from 'meteor/tracker';
 import { Validity } from 'meteor/pwix:validity';
 
