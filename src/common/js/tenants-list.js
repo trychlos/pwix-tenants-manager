@@ -14,6 +14,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 TenantsManager.list = {
     _array: new ReactiveVar( [] ),
+    _warned: {},
 
     // returns the entity document and its DYN arrays
     byEntity( entity ){
@@ -25,6 +26,10 @@ TenantsManager.list = {
             }
             return found === null;
         });
+        if( !found && !TenantsManager.list._warned[entity] ){
+            TenantsManager.list._warned[entity] = true,
+            console.warn( 'unable to find tenant by entity', entity );
+        }
         return found;
     },
 

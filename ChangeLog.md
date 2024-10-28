@@ -11,6 +11,7 @@
     - Let each record_properties_pane row be individually addressed
     - Manage logoUrl
     - Add missing Timestampable declaration
+    - Warns once when not finding by entity
 
 ### 1.3.0
 
