@@ -12,6 +12,7 @@
     - Manage logoUrl
     - Add missing Timestampable declaration
     - Warns once when not finding by entity
+    - Fix 'closests' publication (exhibits starting with Meteor 3.0.4)
 
 ### 1.3.0
 

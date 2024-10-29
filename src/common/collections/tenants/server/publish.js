@@ -126,11 +126,11 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
                 if( closest._id !== prev_closest ){
                     self.removed( TenantsManager.C.pub.closests.collection, prev_closest );
                     entities[entity_id] = closest._id;
-                    self.added( TenantsManager.C.pub.closests.collection, closest._id );
+                    self.added( TenantsManager.C.pub.closests.collection, closest._id, closest );
                 }
             } else if( closest ){
                 entities[entity_id] = closest._id;
-                self.added( TenantsManager.C.pub.closests.collection, closest._id );
+                self.added( TenantsManager.C.pub.closests.collection, closest._id, closest );
             }
         });
     };
