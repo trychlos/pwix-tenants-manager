@@ -128,7 +128,7 @@ Template.record_properties_pane.events({
                 self.item.get().DYN.managers = selected;
                 // get the form updated
                 instance.TM.form.get().setField( 'managers', self.item.get());
-                // advertize parents
+                // advertise parents
                 instance.$( '.c-organization-properties-pane' ).trigger( 'panel-data', {
                     emitter: 'managers',
                     id: self.vtpid,
