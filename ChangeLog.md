@@ -14,6 +14,7 @@
     - Warns once when not finding by entity
     - Fix 'closests' publication (exhibits starting with Meteor 3.0.4)
     - Minor spelling fixes
+    - Fix the added tabs re-use
 
 ### 1.3.0
 

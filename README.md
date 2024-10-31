@@ -100,7 +100,7 @@ A `PlusButton` component customized to create a new tenant.
 
 It takes itself care of checking the permissions of the user, and, depending of its runtime parameters, either is disabled, or doesn't display at all if the user is not allowed.
 
-It takes the very same data context than below `TenantEditPanel`.
+It takes the very same data context than above `TenantEditPanel`.
 
 #### `TenantsList`
 
@@ -108,7 +108,7 @@ The component list the defined tenants as a `pwix:tabular_ext` table, with stand
 
 Each rendered line of the table displays an entity, and the closest values for each column.
 
-It takes the very same data context than below `TenantEditPanel`.
+It takes the very same data context than above `TenantEditPanel`.
 
 ## Permissions management
 

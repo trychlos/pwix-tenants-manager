@@ -169,7 +169,7 @@ Template.TenantEditPanel.helpers({
             if( _.isArray( this.entityTabsBefore ) && this.entityTabsBefore.length ){
                 this.entityTabsBefore.forEach(( tab ) => {
                     tab.paneData = paneData;
-                    tabs.push( tab );
+                    tabs.push({ ...tab });
                 });
             } else {
                 console.warn( 'expect tabs be an array, got', this.entityTabsBefore );
@@ -193,7 +193,7 @@ Template.TenantEditPanel.helpers({
             if( _.isArray( this.entityTabs )){
                 this.entityTabs.forEach(( tab ) => {
                     tab.paneData = paneData;
-                    tabs.push( tab );
+                    tabs.push({ ...tab });
                 });
             } else {
                 console.warn( 'expect tabs be an array, got', this.entityTabs );
@@ -213,7 +213,7 @@ Template.TenantEditPanel.helpers({
             if( _.isArray( this.entityTabsAfter )){
                 this.entityTabsAfter.forEach(( tab ) => {
                     tab.paneData = paneData;
-                    tabs.push( tab );
+                    tabs.push({ ...tab });
                 });
             } else {
                 console.warn( 'expect tabs be an array, got', this.entityTabsAfter );

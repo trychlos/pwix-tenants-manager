@@ -63,7 +63,7 @@ Template.record_tabbed.onCreated( function(){
                 if( _.isArray( dataContext.recordTabsBefore ) && dataContext.recordTabsBefore.length ){
                     dataContext.recordTabsBefore.forEach(( tab ) => {
                         tab.paneData = paneData;
-                        tabs.push( tab );
+                        tabs.push({ ...tab });
                     });
                 } else {
                     console.warn( 'expect tabs be an array, got', dataContext.recordTabsBefore );
@@ -81,7 +81,7 @@ Template.record_tabbed.onCreated( function(){
                 if( _.isArray( dataContext.recordTabs ) && dataContext.recordTabs.length ){
                     dataContext.recordTabs.forEach(( tab ) => {
                         tab.paneData = paneData;
-                        tabs.push( tab );
+                        tabs.push({ ...tab });
                     });
                 } else {
                     console.warn( 'expect tabs be an array, got', dataContext.recordTabs );
@@ -102,7 +102,7 @@ Template.record_tabbed.onCreated( function(){
                 if( _.isArray( dataContext.recordTabsAfter ) && dataContext.recordTabsAfter.length ){
                     dataContext.recordTabsAfter.forEach(( tab ) => {
                         tab.paneData = paneData;
-                        tabs.push( tab );
+                        tabs.push({ ...tab });
                     });
                 } else {
                     console.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
