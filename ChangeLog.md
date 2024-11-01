@@ -15,6 +15,7 @@
     - Fix 'closests' publication (exhibits starting with Meteor 3.0.4)
     - Minor spelling fixes
     - Fix the added tabs re-use
+    - Use dtValidityCountBadge component instead of local dt_count_badge
 
 ### 1.3.0
 
