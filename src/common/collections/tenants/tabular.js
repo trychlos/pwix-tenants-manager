@@ -55,7 +55,7 @@ Tracker.autorun(() => {
                         {
                             where: Tabular.C.Where.BEFORE,
                             buttons: [
-                                'dtValidityCountBadge'
+                                'ValidityCountBadge'
                             ]
                         }
                     ];

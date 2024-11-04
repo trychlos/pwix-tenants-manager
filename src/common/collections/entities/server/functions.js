@@ -77,7 +77,7 @@ Entities.s.upsert = async function( entity, userId ){
         //  this is normal as long as we do not set any data in the document
         //  so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
         //item.updatedBy = userId;
-        result.numberAfftected = await Entities.collection.updateAsync( selector, { $set: item }, { filter: false });
+        result.numberAffected = await Entities.collection.updateAsync( selector, { $set: item }, { filter: false });
     } else {
         result.insertedId = await Entities.collection.insertAsync( item );
         result.numberAffected = 1;
