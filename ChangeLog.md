@@ -17,6 +17,7 @@
     - Fix the added tabs re-use
     - Use dtValidityCountBadge component instead of local dt_count_badge
     - Make the panels compatible with several validities
+    - Define the input fields as type=email or type=url
 
 ### 1.3.0
 
