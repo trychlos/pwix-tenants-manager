@@ -16,6 +16,7 @@
     - Minor spelling fixes
     - Fix the added tabs re-use
     - Use dtValidityCountBadge component instead of local dt_count_badge
+    - Make the panels compatible with several validities
 
 ### 1.3.0
 

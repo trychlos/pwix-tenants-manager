@@ -44,10 +44,26 @@ Template.record_tabbed.onCreated( function(){
         // the tabs for this record
         parmsRecord: new ReactiveVar( null ),
         // the ValidityFieldset parameters
-        parmsValidity: new ReactiveVar( null )
+        parmsValidity: new ReactiveVar( null ),
+        prevTabs: null,
+
+        // whether the new computed list of tabs is the same than the previous one ?
+        //  comparison must be deepn, but WITHOUT the data context
+        tabsEqual( tabs ){
+            let cmptabs = [];
+            tabs.forEach(( it ) => {
+                let o = { ...it };
+                delete o.paneData;
+                cmptabs.push( o );
+            });
+            const equals = _.isEqual( cmptabs, self.TM.prevTabs );
+            self.TM.prevTabs = cmptabs;
+            return equals;
+        }
     };
 
     // prepare the record tabbed parms
+    // MUST prevent a tabs redefinition when the data context changes
     self.autorun(() => {
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
@@ -108,10 +124,12 @@ Template.record_tabbed.onCreated( function(){
                     console.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
                 }
             }
-            self.TM.parmsRecord.set({
-                name: 'tenants_manager_record_tabbed_'+dataContext.index,
-                tabs: tabs
-            });
+            if( !self.TM.tabsEqual( tabs )){
+                self.TM.parmsRecord.set({
+                    name: 'tenants_manager_record_tabbed_'+dataContext.index,
+                    tabs: tabs
+                });
+            }
         } else {
             console.warn( 'pwix:tenants-manager unexpected index', dataContext.index );
             self.TM.parmsRecord.set( null );

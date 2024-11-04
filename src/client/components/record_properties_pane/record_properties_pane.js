@@ -104,6 +104,11 @@ Template.record_properties_pane.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
+    // for label
+    itFor( label ){
+        return 'record_properties_'+label+'_'+this.index;
+    },
+
     // parms for ImageIncluder
     parmsImage(){
         return {

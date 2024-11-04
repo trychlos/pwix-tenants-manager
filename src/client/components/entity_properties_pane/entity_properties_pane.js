@@ -57,6 +57,11 @@ Template.entity_properties_pane.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
+    // for label
+    itFor( label ){
+        return 'entity_properties_'+label;
+    },
+
     label(){
         return this.item.get().label || '';
     }

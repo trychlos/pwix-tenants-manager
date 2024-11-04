@@ -87,6 +87,7 @@ Template.TenantEditPanel.onCreated( function(){
             records.push( new ReactiveVar( it ));
         });
         dup.DYN.records = records;
+        //console.debug( 'deep-duplicating original item' );
         self.TM.item.set( dup );
     });
 });
