@@ -8,7 +8,7 @@
 
     - Server-side global list no more waits for a client subscription to be initialized
     - Introduce entityTabsBefore and record TabsBefore components parameters, thus bumping minor candidate version number
-    - Let each record_properties_pane row be individually addressed
+    - Let each tm_record_properties_pane row be individually addressed
     - Manage logoUrl
     - Add missing Timestampable declaration
     - Warns once when not finding by entity
@@ -18,6 +18,7 @@
     - Use dtValidityCountBadge component instead of local dt_count_badge
     - Make the panels compatible with several validities
     - Define the input fields as type=email or type=url
+    - Rename internal Blaze components to improve namespace usage
 
 ### 1.3.0
 

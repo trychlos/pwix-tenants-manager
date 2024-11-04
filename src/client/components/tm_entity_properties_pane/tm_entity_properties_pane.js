@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/client/components/entity_properties_pane/entity_properties_pane.js
+ * pwix:tenants-manager/src/client/components/tm_entity_properties_pane/tm_entity_properties_pane.js
  *
  * Edit the common part of the tenant's entity.
  *
@@ -16,9 +16,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-import './entity_properties_pane.html';
+import './tm_entity_properties_pane.html';
 
-Template.entity_properties_pane.onCreated( function(){
+Template.tm_entity_properties_pane.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -27,7 +27,7 @@ Template.entity_properties_pane.onCreated( function(){
     };
 });
 
-Template.entity_properties_pane.onRendered( function(){
+Template.tm_entity_properties_pane.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
@@ -51,7 +51,7 @@ Template.entity_properties_pane.onRendered( function(){
     });
 });
 
-Template.entity_properties_pane.helpers({
+Template.tm_entity_properties_pane.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
@@ -67,7 +67,7 @@ Template.entity_properties_pane.helpers({
     }
 });
 
-Template.entity_properties_pane.events({
+Template.tm_entity_properties_pane.events({
     // edit the managers
     'click .js-edit-managers'( event, instance ){
         const self = this;

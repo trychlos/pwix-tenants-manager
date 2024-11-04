@@ -70,7 +70,6 @@ Template.TenantsList.events({
         const label = data.item.label;
         Meteor.callAsync( 'pwix_tenants_manager_tenants_delete_tenant', data.item.entity )
             .then(( res ) => {
-                console.debug( res );
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
             })
             .catch(( e ) => {

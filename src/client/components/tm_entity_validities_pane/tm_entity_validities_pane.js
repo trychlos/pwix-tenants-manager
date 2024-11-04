@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/client/components/entity_validities_pane/entity_validities_pane.js
+ * pwix:tenants-manager/src/client/components/tm_entity_validities_pane/tm_entity_validities_pane.js
  *
  * Manages a ValidityTabbed tabbed pane, where each pane is a validity period.
  *
@@ -16,9 +16,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-import './entity_validities_pane.html';
+import './tm_entity_validities_pane.html';
 
-Template.entity_validities_pane.onCreated( function(){
+Template.tm_entity_validities_pane.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -27,7 +27,7 @@ Template.entity_validities_pane.onCreated( function(){
     };
 });
 
-Template.entity_validities_pane.onRendered( function(){
+Template.tm_entity_validities_pane.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
@@ -45,7 +45,7 @@ Template.entity_validities_pane.onRendered( function(){
     });
 });
 
-Template.entity_validities_pane.helpers({
+Template.tm_entity_validities_pane.helpers({
     // manage the ValidityTabbed panel
     parmsValidities(){
         return {
@@ -56,7 +56,7 @@ Template.entity_validities_pane.helpers({
     }
 });
 
-Template.entity_validities_pane.events({
+Template.tm_entity_validities_pane.events({
     // edit the managers
     'click .js-edit-managers'( event, instance ){
         const self = this;

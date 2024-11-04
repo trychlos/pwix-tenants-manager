@@ -9,19 +9,19 @@
  *     |
  *     +- Tabbed                                    manage both the entity tabs and the validities
  *     |   |
- *     |   +- entity_properties_pane                (unused)
+ *     |   +- tm_entity_properties_pane                (unused)
  *     |   |
  *     |   +- NotesEdit                             entity notes
  *     |   |
- *     |   +- entity_validities_pane
+ *     |   +- tm_entity_validities_pane
  *     |       |
  *     |       +- ValiditiesTabbed                      manage the validities with one pane per validity period
  *     |           |
- *     |           +- record_tabbed                         the record edition panel, as a tabbed component
+ *     |           +- tm_record_tabbed                         the record edition panel, as a tabbed component
  *     |           |   |
  *     |           |   +- Tabbed
  *     |           |       |
- *     |           |       +- record_properties_pane
+ *     |           |       +- tm_record_properties_pane
  *     |           |       +- NotesEdit                 record notes
  *     |           |
  *     |           +- ValidityFieldset
@@ -48,10 +48,10 @@ import { Validity } from 'meteor/pwix:validity';
 import { Entities } from '../../../common/collections/entities/index.js';
 
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
-//import '../entity_properties_pane/entity_properties_pane.js';
-import '../entity_validities_pane/entity_validities_pane.js';
-import '../record_properties_pane/record_properties_pane.js';
-import '../record_tabbed/record_tabbed.js';
+//import '../tm_entity_properties_pane/tm_entity_properties_pane.js';
+import '../tm_entity_validities_pane/tm_entity_validities_pane.js';
+import '../tm_record_properties_pane/tm_record_properties_pane.js';
+import '../tm_record_tabbed/tm_record_tabbed.js';
 
 import './TenantEditPanel.html';
 
@@ -147,7 +147,7 @@ Template.TenantEditPanel.helpers({
         };
     },
 
-    // parms to entity_properties_pane component
+    // parms to tm_entity_properties_pane component
     parmsTabbed(){
         TM = Template.instance().TM;
         const paneData = {
@@ -180,12 +180,12 @@ Template.TenantEditPanel.helpers({
         tabs.push({
             name: 'tenant_entity_validities_tab',
             navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
-            paneTemplate: 'entity_validities_pane',
+            paneTemplate: 'tm_entity_validities_pane',
             paneData: {
                 ...this,
                 entity: TM.item,
                 checker: TM.checker,
-                template: 'record_tabbed',
+                template: 'tm_record_tabbed',
                 withValidities: TenantsManager.configure().withValidities
             }
         });

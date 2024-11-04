@@ -3,7 +3,7 @@
  */
 
 // import here templates required to display fields in Tabular
-import '../components/dt_entity_notes/dt_entity_notes.js';
+import '../components/tm_entity_notes_dt/tm_entity_notes_dt.js';
 //
 import '../../common/js/index.js';
 //

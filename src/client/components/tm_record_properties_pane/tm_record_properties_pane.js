@@ -1,5 +1,5 @@
 /*
- * /imports/client/components/record_properties_pane/record_properties_pane.js
+ * /imports/client/components/tm_record_properties_pane/tm_record_properties_pane.js
  *
  * Organization properties pane.
  *
@@ -19,9 +19,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Records } from '../../../common/collections/records/index.js';
 
-import './record_properties_pane.html';
+import './tm_record_properties_pane.html';
 
-Template.record_properties_pane.onCreated( function(){
+Template.tm_record_properties_pane.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -76,7 +76,7 @@ Template.record_properties_pane.onCreated( function(){
     };
 });
 
-Template.record_properties_pane.onRendered( function(){
+Template.tm_record_properties_pane.onRendered( function(){
     const self = this;
     const dataContext = Template.currentData();
 
@@ -98,7 +98,7 @@ Template.record_properties_pane.onRendered( function(){
     });
 });
 
-Template.record_properties_pane.helpers({
+Template.tm_record_properties_pane.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
@@ -117,7 +117,7 @@ Template.record_properties_pane.helpers({
     }
 });
 
-Template.record_properties_pane.events({
+Template.tm_record_properties_pane.events({
     // edit the managers
     'click .js-edit-managers'( event, instance ){
         const self = this;

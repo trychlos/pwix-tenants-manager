@@ -26,7 +26,7 @@ const _defaultFieldSet = function( conf ){
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.entity_notes_th' ),
             dt_className: 'dt-center',
-            dt_template: Meteor.isClient && Template.dt_entity_notes
+            dt_template: Meteor.isClient && Template.tm_entity_notes_dt
         },
         // personal data management policy page
         {
