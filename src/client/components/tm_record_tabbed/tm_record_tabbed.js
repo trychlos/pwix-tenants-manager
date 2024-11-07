@@ -76,7 +76,7 @@ Template.tm_record_tabbed.onCreated( function(){
             let tabs = [];
             // tabs before the standard
             if( dataContext.recordTabsBefore ){
-                if( _.isArray( dataContext.recordTabsBefore ) && dataContext.recordTabsBefore.length ){
+                if( _.isArray( dataContext.recordTabsBefore )){
                     dataContext.recordTabsBefore.forEach(( tab ) => {
                         tab.paneData = paneData;
                         tabs.push({ ...tab });
@@ -94,7 +94,7 @@ Template.tm_record_tabbed.onCreated( function(){
             });
             // tabs before 'notes'
             if( dataContext.recordTabs ){
-                if( _.isArray( dataContext.recordTabs ) && dataContext.recordTabs.length ){
+                if( _.isArray( dataContext.recordTabs )){
                     dataContext.recordTabs.forEach(( tab ) => {
                         tab.paneData = paneData;
                         tabs.push({ ...tab });
@@ -115,7 +115,7 @@ Template.tm_record_tabbed.onCreated( function(){
             });
             // tabs at the end
             if( dataContext.recordTabsAfter ){
-                if( _.isArray( dataContext.recordTabsAfter ) && dataContext.recordTabsAfter.length ){
+                if( _.isArray( dataContext.recordTabsAfter )){
                     dataContext.recordTabsAfter.forEach(( tab ) => {
                         tab.paneData = paneData;
                         tabs.push({ ...tab });

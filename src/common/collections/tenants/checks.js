@@ -136,7 +136,6 @@ Tenants.checks.label = async function( value, data, opts ){
         item.label = value;
         data.entity.get().DYN.records[data.index].set( item );
     }
-    console.debug( 'value', value );
     if( !value ){
         return new TM.TypedMessage({
             level: TM.MessageLevel.C.ERROR,
