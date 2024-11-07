@@ -89,7 +89,7 @@ Template.tm_record_tabbed.onCreated( function(){
             tabs.push({
                 name: 'tenant_record_properties_tab',
                 navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                paneTemplate: 'tm_record_properties_pane',
+                paneTemplate: 'TenantRecordPropertiesPanel',
                 paneData: paneData
             });
             // tabs before 'notes'

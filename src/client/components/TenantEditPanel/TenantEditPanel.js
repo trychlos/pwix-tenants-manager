@@ -21,7 +21,7 @@
  *     |           |   |
  *     |           |   +- Tabbed
  *     |           |       |
- *     |           |       +- tm_record_properties_pane
+ *     |           |       +- TenantRecordPropertiesPanel
  *     |           |       +- NotesEdit                 record notes
  *     |           |
  *     |           +- ValidityFieldset
@@ -50,7 +50,7 @@ import { Entities } from '../../../common/collections/entities/index.js';
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
 //import '../tm_entity_properties_pane/tm_entity_properties_pane.js';
 import '../tm_entity_validities_pane/tm_entity_validities_pane.js';
-import '../tm_record_properties_pane/tm_record_properties_pane.js';
+import '../TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js';
 import '../tm_record_tabbed/tm_record_tabbed.js';
 
 import './TenantEditPanel.html';

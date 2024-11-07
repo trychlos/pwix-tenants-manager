@@ -8,6 +8,7 @@ import validator from 'email-validator';
 import validUrl from 'valid-url';
 
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { TM } from 'meteor/pwix:typed-message';
 
 import { Entities } from '../entities/index.js';
@@ -133,7 +134,9 @@ Tenants.checks.label = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.label = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
+    console.debug( 'value', value );
     if( !value ){
         return new TM.TypedMessage({
             level: TM.MessageLevel.C.ERROR,

@@ -1,21 +1,21 @@
-<template name="tm_record_properties_pane">
-    <div class="c-record-properties-pane">
+<template name="TenantRecordPropertiesPanel">
+    <div class="TenantRecordPropertiesPanel">
 
         <table class="form-table ui-w100">
-            <tr class="tr-home">
-                <td class="label"><label class="form-label" for="{{ itFor "home" }}">{{ i18n key="records.properties.home_label" }}</label></td>
-                <td class="ui-w60">
-                    <div class="ui-w100 js-home">
-                        <input class="form-control" type="url" id="{{ itFor "home" }}" placeholder="{{ i18n key="records.properties.home_ph" }}" title="{{ i18n key="records.properties.home_title" }}" />
-                    </div>
-                </td>
-                <td></td>
-            </tr>
             <tr class="tr-label">
                 <td class="label"><label class="form-label" for="{{ itFor "label" }}">{{ i18n key="records.properties.label_label" }}</label></td>
                 <td class="ui-w60">
                     <div class="ui-w100 js-label">
                         <input class="form-control" type="text" id="{{ itFor "label" }}" placeholder="{{ i18n key="records.properties.label_ph" }}" title="{{ i18n key="records.properties.label_title" }}" />
+                    </div>
+                </td>
+                <td class="ui-w30"></td>
+            </tr>
+            <tr class="tr-home">
+                <td class="label"><label class="form-label" for="{{ itFor "home" }}">{{ i18n key="records.properties.home_label" }}</label></td>
+                <td class="ui-w60">
+                    <div class="ui-w100 js-home">
+                        <input class="form-control" type="url" id="{{ itFor "home" }}" placeholder="{{ i18n key="records.properties.home_ph" }}" title="{{ i18n key="records.properties.home_title" }}" />
                     </div>
                 </td>
                 <td></td>
@@ -27,7 +27,7 @@
                         <input class="form-control" type="url" id="{{ itFor "pdmp" }}" placeholder="{{ i18n key="records.properties.pdmp_ph" }}" title="{{ i18n key="records.properties.pdmp_title" }}" />
                     </div>
                 </td>
-                <td rowspan="4">
+                <td rowspan="5">
                     {{> ImageIncluder (parmsImage) }}
                 </td>
             </tr>
@@ -62,7 +62,6 @@
                         <input class="form-control" type="url" id="{{ itFor "contact_url" }}" placeholder="{{ i18n key="records.properties.contact_url_ph" }}" title="{{ i18n key="records.properties.contact_url_title" }}" />
                     </div>
                 </td>
-                <td></td>
             </tr>
             <tr class="tr-contact-email">
                 <td class="label"><label class="form-label" for="{{ itFor "contact_email" }}">{{ i18n key="records.properties.contact_email_label" }}</label></td>

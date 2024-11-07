@@ -52,6 +52,7 @@ function configure( api ){
     api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
     api.use( 'tracker' );
     api.addFiles( 'src/client/components/TenantEditPanel/TenantEditPanel.js', 'client' );
+    api.addFiles( 'src/client/components/TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js', 'client' );
     api.addFiles( 'src/client/components/TenantNewButton/TenantNewButton.js', 'client' );
     api.addFiles( 'src/client/components/TenantsList/TenantsList.js', 'client' );
 }

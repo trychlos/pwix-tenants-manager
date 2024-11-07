@@ -1,5 +1,5 @@
 /*
- * /imports/client/components/tm_record_properties_pane/tm_record_properties_pane.js
+ * /imports/client/components/TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js
  *
  * Organization properties pane.
  *
@@ -7,21 +7,20 @@
  * - entity: the currently edited entity as a ReactiveVar
  * - index: the index of the edited record
  * - checker: the Forms.Checker which manages the parent component
- * - vtpid: the identifier of the validity tab period, to be used in 'panel-data' events
+ * - enableChecks: whether the checks should be enabled at startup, defaulting to true
  */
 
 import _ from 'lodash';
 
 import { Forms } from 'meteor/pwix:forms';
-import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Records } from '../../../common/collections/records/index.js';
 
-import './tm_record_properties_pane.html';
+import './TenantRecordPropertiesPanel.html';
 
-Template.tm_record_properties_pane.onCreated( function(){
+Template.TenantRecordPropertiesPanel.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -72,19 +71,27 @@ Template.tm_record_properties_pane.onCreated( function(){
             */
         },
         // the Checker instance
-        checker: new ReactiveVar( null )
+        checker: new ReactiveVar( null ),
+
+        // advertise of the checker status
+        advertise( checker ){
+            const status = checker.status();
+            const validity = checker.validity();
+            self.$( '.TenantRecordPropertiesPanel' ).trigger( 'iz-checker', { status: status, validity: validity });
+        }
     };
 });
 
-Template.tm_record_properties_pane.onRendered( function(){
+Template.TenantRecordPropertiesPanel.onRendered( function(){
     const self = this;
     const dataContext = Template.currentData();
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        const parentChecker = Template.currentData().checker.get();
+        const parentChecker = Template.currentData().checker?.get();
         const checker = self.TM.checker.get();
         if( parentChecker && !checker ){
+            const enabled = Template.currentData().enableChecks !== false;
             self.TM.checker.set( new Forms.Checker( self, {
                 parent: parentChecker,
                 panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
@@ -92,13 +99,22 @@ Template.tm_record_properties_pane.onRendered( function(){
                     entity: Template.currentData().entity,
                     index: Template.currentData().index
                 },
-                setForm: Template.currentData().entity.get().DYN.records[Template.currentData().index].get()
+                setForm: Template.currentData().entity.get().DYN.records[Template.currentData().index].get(),
+                enabled: enabled
             }));
+        }
+    });
+
+    // advertise the assistant of the status of this panel
+    self.autorun(() => {
+        const checker = self.TM.checker.get();
+        if( checker ){
+            self.TM.advertise( checker );
         }
     });
 });
 
-Template.tm_record_properties_pane.helpers({
+Template.TenantRecordPropertiesPanel.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
@@ -117,35 +133,20 @@ Template.tm_record_properties_pane.helpers({
     }
 });
 
-Template.tm_record_properties_pane.events({
-    // edit the managers
-    'click .js-edit-managers'( event, instance ){
-        const self = this;
-        Modal.run({
-            mdBody: 'accounts_select',
-            mdButtons: [{ id: Modal.C.Button.NEW, classes: 'btn-outline-primary me-auto' }, Modal.C.Button.CANCEL, { id: Modal.C.Button.OK, type: 'submit' }],
-            mdClasses: 'modal-lg',
-            mdClassesContent: Meteor.TM.Pages.current.page().get( 'theme' ),
-            mdTitle: pwixI18n.label( I18N, 'organizations.properties.managers_modal' ),
-            selected: self.item.get().DYN.managers || [],
-            update( selected ){
-                // get the item updated
-                self.item.get().DYN.managers = selected;
-                // get the form updated
-                instance.TM.form.get().setField( 'managers', self.item.get());
-                // advertise parents
-                instance.$( '.c-organization-properties-pane' ).trigger( 'panel-data', {
-                    emitter: 'managers',
-                    id: self.vtpid,
-                    ok: true,
-                    data: selected
-                });
-            }
-        });
-    },
-
+Template.TenantRecordPropertiesPanel.events({
     // ask for clear the panel
-    'iz-clear-panel .c-organization-properties-pane'( event, instance ){
-        instance.TM.form.get().clear();
+    'iz-clear-panel .TenantRecordPropertiesPanel'( event, instance ){
+        instance.TM.checker.get().clear();
+    },
+    // ask for enabling the checker (when this panel is used inside of an assistant)
+    'iz-enable-checks .TenantRecordPropertiesPanel'( event, instance, enabled ){
+        const checker = instance.TM.checker.get();
+        if( checker ){
+            checker.enabled( enabled );
+            if( enabled ){
+                checker.check({ update: false }).then(() => { instance.TM.advertise( checker ); });
+            }
+        }
+        return false;
     }
 });

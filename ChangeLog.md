@@ -8,7 +8,7 @@
 
     - Server-side global list no more waits for a client subscription to be initialized
     - Introduce entityTabsBefore and record TabsBefore components parameters, thus bumping minor candidate version number
-    - Let each tm_record_properties_pane row be individually addressed
+    - Let each TenantRecordPropertiesPanel row be individually addressed
     - Manage logoUrl
     - Add missing Timestampable declaration
     - Warns once when not finding by entity
@@ -19,6 +19,7 @@
     - Make the panels compatible with several validities
     - Define the input fields as type=email or type=url
     - Rename internal Blaze components to improve namespace usage
+    - Export the TenantRecordPropertiesPanel component, making it suitable for use inside of an Assistant
 
 ### 1.3.0
 
