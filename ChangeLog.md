@@ -20,6 +20,7 @@
     - Define the input fields as type=email or type=url
     - Rename internal Blaze components to improve namespace usage
     - Export the TenantRecordPropertiesPanel component, making it suitable for use inside of an Assistant
+    - Fix Tenants.s.deleteTenant() event emit
 
 ### 1.3.0
 

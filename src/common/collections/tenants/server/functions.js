@@ -44,7 +44,7 @@ Tenants.s.deleteTenant = async function( entity, userId ){
     let result = {};
     result.entities = await Entities.collection.removeAsync({ _id: entity });
     result.records = await Records.collection.removeAsync({ entity: entity });
-    TenantsManager.s.eventEmitter.emit( 'tenant-delete', { id: entity, result: res });
+    TenantsManager.s.eventEmitter.emit( 'tenant-delete', { id: entity, result: result });
     return result;
 };
 
