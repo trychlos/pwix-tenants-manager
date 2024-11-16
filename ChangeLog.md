@@ -21,6 +21,7 @@
     - Rename internal Blaze components to improve namespace usage
     - Export the TenantRecordPropertiesPanel component, making it suitable for use inside of an Assistant
     - Fix Tenants.s.deleteTenant() event emit
+    - Display tenant managers on the tabular display
 
 ### 1.3.0
 

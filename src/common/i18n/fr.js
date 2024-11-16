@@ -30,6 +30,7 @@ TenantsManager.i18n = {
                 entity_notes_th: 'Notes du tenant',
                 home_page_th: 'Site principal',
                 label_th: 'Label',
+                managers_th: 'Managers',
                 notes_th: 'Notes',
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des tenants.</p>'
                     +'<p>Merci de vous rapprocher de l\'administrateur de l\'application.<p>',

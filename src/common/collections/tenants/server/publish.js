@@ -52,7 +52,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                         // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
                         self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
                         TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
-                        //console.debug( e, 'ignored' );
+                        console.debug( e, 'ignored' );
                     }
                 } else {
                     console.warn( 'added: entity not found', item.entity );
@@ -220,6 +220,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
 
     // for tabular display we have to provide:
     // - entity_notes
+    // - the list of the managers
     // - a DYN object which contains:
     //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
     //   > entity: the entity document
@@ -259,6 +260,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             item.entity_notes = entity.notes;
             item.DYN.entity = entity;
         }
+        item.managers = await Tenants.s.getManagers( entity._id );
     };
 
     const entitiesObserver = Entities.collection.find().observeAsync({

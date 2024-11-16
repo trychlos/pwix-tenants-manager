@@ -65,6 +65,23 @@ Tenants.s.getBy = async function( selector, userId ){
 };
 
 /*
+ * @returns {Array} the array of the managers accounts
+ */
+Tenants.s.getManagers = async function( scope ){
+    let array = [];
+    const fetched = await Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: scope }).fetchAsync();
+    for( const it of fetched ){
+        const user = await Meteor.users.findOneAsync({ _id: it.user._id });
+        if( user ){
+            array.push( user );
+        } else {
+            console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
+        }
+    }
+    return array;
+};
+
+/*
  * @returns {Array} the array of entities with their DYN sub-object
  */
 Tenants.s.getRichEntities = async function(){
@@ -118,18 +135,7 @@ Tenants.s.transformEntity = async function( item ){
         closest: null
     };
     let promises = [];
-    promises.push( Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: item._id }).fetchAsync().then(( fetched ) => {
-        fetched.forEach(( it ) => {
-            Meteor.users.findOneAsync({ _id: it.user._id }).then(( user ) => {
-                if( user ){
-                    item.DYN.managers.push( user );
-                } else {
-                    console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
-                }
-            });
-        });
-        return true;
-    }));
+    promises.push( Tenants.s.getManagers( item._id ));
     promises.push( Records.collection.find({ entity: item._id }).fetchAsync().then(( fetched ) => {
         item.DYN.records = fetched;
         item.DYN.closest = Validity.closestByRecords( fetched ).record;

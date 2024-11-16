@@ -21,7 +21,7 @@
 |      |            |   at packages/pwix:tenants-manager/src/common/collections/tenants/server/publish.js:81:30
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
-|    6 |  |  |
+|    7 |  |  |
 
 ---
 ## Done
@@ -34,6 +34,8 @@
 |      | 2024- 7-17 | done |
 |    4 | 2024- 7-16 | do not hardcode ORD_SCOPED_MANAGER in tenantsAll publication |
 |      | 2024- 9-30 | done |
+|    6 | 2024-11-16 | have tenant manager |
+|      | 2024-11-16 | done |
 
 ---
 P. Wieser
