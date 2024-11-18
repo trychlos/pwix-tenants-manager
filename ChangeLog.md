@@ -22,6 +22,7 @@
     - Export the TenantRecordPropertiesPanel component, making it suitable for use inside of an Assistant
     - Fix Tenants.s.deleteTenant() event emit
     - Display tenant managers on the tabular display
+    - Bump pwix:roles version prerequisite to take advantage of new tm_entity_scoped_pane component
 
 ### 1.3.0
 

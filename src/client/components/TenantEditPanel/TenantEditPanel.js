@@ -9,20 +9,21 @@
  *     |
  *     +- Tabbed                                    manage both the entity tabs and the validities
  *     |   |
- *     |   +- tm_entity_properties_pane                (unused)
+ *     |   +- tm_entity_properties_pane             (unused)
+ *     |   +- tm_entity_scoped_pane                 the accounts which have a role for this tenant
  *     |   |
  *     |   +- NotesEdit                             entity notes
  *     |   |
  *     |   +- tm_entity_validities_pane
  *     |       |
- *     |       +- ValiditiesTabbed                      manage the validities with one pane per validity period
+ *     |       +- ValiditiesTabbed                  manage the validities with one pane per validity period
  *     |           |
- *     |           +- tm_record_tabbed                         the record edition panel, as a tabbed component
+ *     |           +- tm_record_tabbed              the record edition panel, as a tabbed component
  *     |           |   |
  *     |           |   +- Tabbed
  *     |           |       |
  *     |           |       +- TenantRecordPropertiesPanel
- *     |           |       +- NotesEdit                 record notes
+ *     |           |       +- NotesEdit             record notes
  *     |           |
  *     |           +- ValidityFieldset
  *     |
@@ -49,6 +50,7 @@ import { Entities } from '../../../common/collections/entities/index.js';
 
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
 //import '../tm_entity_properties_pane/tm_entity_properties_pane.js';
+import '../tm_entity_scoped_pane/tm_entity_scoped_pane.js';
 import '../tm_entity_validities_pane/tm_entity_validities_pane.js';
 import '../TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js';
 import '../tm_record_tabbed/tm_record_tabbed.js';
@@ -187,6 +189,15 @@ Template.TenantEditPanel.helpers({
                 checker: TM.checker,
                 template: 'tm_record_tabbed',
                 withValidities: TenantsManager.configure().withValidities
+            }
+        }, {
+            name: 'tenant_entity_scoped_tab',
+            navLabel: pwixI18n.label( I18N, 'tabs.entity_scoped_title' ),
+            paneTemplate: 'tm_entity_scoped_pane',
+            paneData: {
+                ...this,
+                entity: TM.item,
+                checker: TM.checker
             }
         });
         // tabs to be inserted before 'notes'

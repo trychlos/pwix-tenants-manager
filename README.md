@@ -119,6 +119,7 @@ It defines following tasks:
 - at the user interface level
     - `pwix.tenants_manager.feat.delete`, with args `item<Object>`: delete a tenant
     - `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
+    - `pwix.tenants_manager.feat.roles`, with args `scope<String>`: edit the scoped-role accounts of a tenant
     - `pwix.tenants_manager.feat.new`: create a new tenant
 
 - at the server level

@@ -44,7 +44,8 @@ TenantsManager.i18n = {
             },
             panel: {
                 create_btn: 'Create',
-                notes_tab: 'Notes'
+                notes_tab: 'Notes',
+                roles_preamble: 'Manage here the application user accounts which have a role dedicated to the current tenant.'
             },
             records: {
                 check: {
@@ -99,6 +100,7 @@ TenantsManager.i18n = {
             tabs: {
                 entity_properties_title: 'Common properties',
                 entity_notes_title: 'Common notes',
+                entity_scoped_title: 'Scoped roles',
                 entity_validities_title: 'By validity period(s)',
             },
             tenants: {

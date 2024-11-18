@@ -43,7 +43,8 @@ TenantsManager.i18n = {
             },
             panel: {
                 create_btn: 'Nouveau',
-                notes_tab: 'Notes'
+                notes_tab: 'Notes',
+                roles_preamble: 'Gérez ici les comptes utilisateur de l\'application qui ont un rôle sur le périmètre de ce tenant.'
             },
             records: {
                 check: {
@@ -98,6 +99,7 @@ TenantsManager.i18n = {
             tabs: {
                 entity_properties_title: 'Propriétés communes',
                 entity_notes_title: 'Notes communes',
+                entity_scoped_title: 'Rôles sur le périmètre',
                 entity_validities_title: 'Les enregistrements de validité',
             },
             tenants: {
