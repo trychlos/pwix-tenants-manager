@@ -87,9 +87,9 @@ Tenants.s.getManagers = async function( scope ){
 Tenants.s.getRichEntities = async function(){
     let array = [];
     const fetched = await Entities.collection.find().fetchAsync();
-    await Promise.all( fetched.map( async ( it ) => {
+    for await ( it of fetched ){
         array.push( await Tenants.s.transformEntity( it ));
-    }));
+    };
     return array;
 };
 
@@ -184,6 +184,10 @@ Tenants.s.upsert = async function( entity, userId ){
         entities: entitiesRes,
         records: recordsRes
     };
+
+    // make sure the emitted entity has been transformed
+    entity = await Tenants.s.transformEntity( entity );
     TenantsManager.s.eventEmitter.emit( 'tenant-upsert', { entity: entity, result: res });
+
     return res;
 };

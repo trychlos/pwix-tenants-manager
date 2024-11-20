@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Make sure the emitted entity has been transformed
 
 ### 1.4.0
 
