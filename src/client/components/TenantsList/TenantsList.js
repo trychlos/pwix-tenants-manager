@@ -42,7 +42,6 @@ Template.TenantsList.helpers({
     // whether the current user has the permission to see the list of tenants
     canList(){
         const res = TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_all' );
-        //console.debug( 'res', res );
         return res;
     },
 

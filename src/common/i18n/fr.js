@@ -33,7 +33,7 @@ TenantsManager.i18n = {
                 managers_th: 'Managers',
                 notes_th: 'Notes',
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des tenants.</p>'
-                    +'<p>Merci de vous rapprocher de l\'administrateur de l\'application.<p>',
+                    +'<p>Vous pouvez vous rapprocher de votre administrateur pour demander les habilitations nécessaires.<p>',
                 effect_start_th: 'Du',
             },
             new: {
