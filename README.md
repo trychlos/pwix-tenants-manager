@@ -134,6 +134,7 @@ It defines following tasks:
 
 - on publications
     - `pwix.tenants_manager.pub.list_all`: list all tenants and their contents
+    - `pwix.tenants_manager.pub.list_one`: whether this particular tenant can be displayed
     - `pwix.tenants_manager.pub.closests`: list the closest record of each tenant, a tabular display requisite
     - `pwix.tenants_manager.pub.tabular`: a tabular-aware publication
     - `pwix.tenants_manager.pub.known_scopes`: publishes a list of the known scopes to be used as a reference when editing scoped roles

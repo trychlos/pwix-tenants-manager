@@ -64,7 +64,8 @@ Tracker.autorun(() => {
                     return extend ? buttons.concat( extend ) : buttons;
                 },
                 async deleteButtonEnabled( it ){
-                    return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.delete', null, it );
+                    const res = await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.delete', null, it.DYN.entity );
+                    return res;
                 },
                 // display the organization label instead of the identifier in the button title
                 async deleteButtonTitle( it ){

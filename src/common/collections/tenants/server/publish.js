@@ -15,6 +15,7 @@ import { Tenants } from '../index.js';
  *  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
  *  - records: the list of validity records for this entity
  *  - closest: the closest record
+ * Only publish the tenants the user is allowed to
  */
 Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_all', this.userId )){
@@ -22,17 +23,22 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         return false;
     }
     const self = this;
+    const userId = this.userId;
     let initializing = true;
 
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
-            self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await Tenants.s.transformEntity( item ));
-            TenantsManager.s.eventEmitter.emit( 'added', item._id, await Tenants.s.transformEntity( item ));
+            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_one', userId, item._id )){
+                self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await Tenants.s.transformEntity( item ));
+                TenantsManager.s.eventEmitter.emit( 'added', item._id, await Tenants.s.transformEntity( item ));
+            }
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await Tenants.s.transformEntity( newItem ));
-                TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await Tenants.s.transformEntity( newItem ));
+                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_one', userId, newItem._id )){
+                    self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await Tenants.s.transformEntity( newItem ));
+                    TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await Tenants.s.transformEntity( newItem ));
+                }
             }
         },
         removed: async function( oldItem ){
@@ -43,32 +49,36 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 
     const recordsObserver = Records.collection.find({}).observeAsync({
         added: async function( item ){
-            Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
-                if( entity ){
-                    try {
-                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
-                    } catch( e ){
-                        // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
-                        self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
-                        //console.debug( e, 'ignored' );
+            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_one', userId, item.entity )){
+                Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
+                    if( entity ){
+                        try {
+                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
+                        } catch( e ){
+                            // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
+                            self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                            TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
+                            //console.debug( e, 'ignored' );
+                        }
+                    } else {
+                        console.warn( 'added: entity not found', item.entity );
                     }
-                } else {
-                    console.warn( 'added: entity not found', item.entity );
-                }
-            });
+                });
+            }
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
-                    if( entity ){
-                        self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                        TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
-                    } else {
-                        console.warn( 'changed: entity not found', newItem.entity );
-                    }
-                });
+                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_one', userId, newItem.entity )){
+                    Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
+                        if( entity ){
+                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
+                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
+                        } else {
+                            console.warn( 'changed: entity not found', newItem.entity );
+                        }
+                    });
+                }
             }
         },
         // remind that records are deleted after entity when deleting a tenant
@@ -102,6 +112,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     }
 
     const self = this;
+    const userId = this.userId;
     let initializing = true;
 
     // map the entities to their closest record and maintain that
@@ -119,20 +130,22 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
 
     // records are changed, added or removed for a given entity: have to recompute the closest
     const f_closestChanged = async function( entity_id ){
-        Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
-            const closest = Validity.closestByRecords( fetched ).record;
-            const prev_closest = entities[entity_id];
-            if( prev_closest ){
-                if( closest._id !== prev_closest ){
-                    self.removed( TenantsManager.C.pub.closests.collection, prev_closest );
+        if( await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list_one', userId, entity_id )){
+            Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
+                const closest = Validity.closestByRecords( fetched ).record;
+                const prev_closest = entities[entity_id];
+                if( prev_closest ){
+                    if( closest._id !== prev_closest ){
+                        self.removed( TenantsManager.C.pub.closests.collection, prev_closest );
+                        entities[entity_id] = closest._id;
+                        self.added( TenantsManager.C.pub.closests.collection, closest._id, closest );
+                    }
+                } else if( closest ){
                     entities[entity_id] = closest._id;
                     self.added( TenantsManager.C.pub.closests.collection, closest._id, closest );
                 }
-            } else if( closest ){
-                entities[entity_id] = closest._id;
-                self.added( TenantsManager.C.pub.closests.collection, closest._id, closest );
-            }
-        });
+            });
+        }
     };
 
     // observe the entities to maintain a list of existing entities and react to their changes

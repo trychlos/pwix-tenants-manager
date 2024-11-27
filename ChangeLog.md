@@ -8,6 +8,7 @@
 
     - Make sure the emitted entity has been transformed
     - Improve the message when user is not allowed
+    - Let the tenant manager have a partial list of its own tenant(s)
 
 ### 1.4.0
 
