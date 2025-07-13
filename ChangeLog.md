@@ -2,13 +2,14 @@
 
 ## ChangeLog
 
-### 1.4.1-rc
+### 1.5.0-rc
 
     Release date: 
 
     - Make sure the emitted entity has been transformed
     - Improve the message when user is not allowed
     - Let the tenant manager have a partial list of its own tenant(s)
+    - Review the permissions, only keeping user-level ones, thus bumping minor candidate version number
 
 ### 1.4.0
 

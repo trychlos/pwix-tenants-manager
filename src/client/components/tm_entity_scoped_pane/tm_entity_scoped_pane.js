@@ -55,9 +55,10 @@ Template.tm_entity_scoped_pane.helpers({
     },
 
     // parms for prAccountsPanel
+    // item can be null when defining a new tenant
     parmsAccountsPanel(){
         return {
-            scope: this.item._id
+            scope: this.item?._id || null
         };
     }
 });

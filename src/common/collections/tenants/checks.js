@@ -144,7 +144,7 @@ Tenants.checks.label = async function( value, data, opts ){
     } else {
         const fn = function( result ){
             let ok = true;
-            if( result.length ){
+            if( result?.length ){
                 // we have found an existing label
                 //  this is normal if the found entity is the same than ours
                 const found_entity = result[0].entity;
@@ -159,7 +159,7 @@ Tenants.checks.label = async function( value, data, opts ){
             Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { label: value }) : Entities.s.getBy({ label: value });
         return promise
             .then(( result ) => {
-                if( result.length ){
+                if( result?.length ){
                     return result;
                 } else {
                     return Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_records_getBy', { label: value }) : Records.s.getBy({ label: value });

@@ -116,28 +116,13 @@ This package can take advantage of `pwix:permissions` package to manage the user
 
 It defines following tasks:
 
-- at the user interface level
-    - `pwix.tenants_manager.feat.delete`, with args `item<Object>`: delete a tenant
-    - `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
-    - `pwix.tenants_manager.feat.roles`, with args `scope<String>`: edit the scoped-role accounts of a tenant
-    - `pwix.tenants_manager.feat.new`: create a new tenant
+- `pwix.tenants_manager.feat.create`: create a new tenant,
 
-- at the server level
-    - `pwix.tenants_manager.entities.fn.get_by`, with args `selector<Object>`: get entities from a Mongo selector
-    - `pwix.tenants_manager.entities.fn.upsert`, with args `item<Object>`: upsert an entity
-    - `pwix.tenants_manager.records.fn.get_by`, with args `selector<Object>`: get records from a Mongo selector
-    - `pwix.tenants_manager.records.fn.upsert`, with args `item<Object>`: upsert a record
-    - `pwix.tenants_manager.fn.delete_tenant`, with args `entity<String>`: delete a tenant
-    - `pwix.tenants_manager.fn.get_scopes`: provides a list of known scopes
-    - `pwix.tenants_manager.fn.set_managers`, with args `item<Object>`: set managers
-    - `pwix.tenants_manager.fn.upsert`, with args `item<Object>`: upsert a tenant
+- `pwix.tenants_manager.feat.delete`, with args `item<Object>`: delete a tenant
 
-- on publications
-    - `pwix.tenants_manager.pub.list_all`: list all tenants and their contents
-    - `pwix.tenants_manager.pub.list_one`: whether this particular tenant can be displayed
-    - `pwix.tenants_manager.pub.closests`: list the closest record of each tenant, a tabular display requisite
-    - `pwix.tenants_manager.pub.tabular`: a tabular-aware publication
-    - `pwix.tenants_manager.pub.known_scopes`: publishes a list of the known scopes to be used as a reference when editing scoped roles
+- `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
+
+- `pwix.tenants_manager.feat.list`.
 
 ## Configuration
 

@@ -19,7 +19,7 @@ import './TenantNewButton.html';
 Template.TenantNewButton.helpers({
     // whether the user is allowed to create a new tenant
     canCreate(){
-        return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.new' );
+        return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.create' );
     },
 
     // parms for new tenant (plusButton)
