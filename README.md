@@ -122,7 +122,7 @@ It defines following tasks:
 
 - `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
 
-- `pwix.tenants_manager.feat.list`.
+- `pwix.tenants_manager.feat.list` display the full list of tenants.
 
 ## Configuration
 
