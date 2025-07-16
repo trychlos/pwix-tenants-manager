@@ -22,9 +22,6 @@ Records.s.getBy = async function( selector, userId ){
     check( selector, Object );
     if( userId ){
         check( userId, String );
-        if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.get_by', userId, selector )){
-            return null;
-        }
     }
     const res = await Records.collection.find( selector ).fetchAsync();
     //console.debug( 'records', selector, res );

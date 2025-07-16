@@ -35,12 +35,8 @@ Entities.s.getBy = async function( selector, userId ){
     check( selector, Object );
     if( userId ){
         check( userId, String );
-        if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.entities.fn.get_by', userId, selector )){
-            return null;
-        }
     }
     const res = await Entities.collection.find( selector ).fetchAsync();
-    //console.debug( 'entitites', selector, res );
     return res;
 };
 
@@ -74,9 +70,9 @@ Entities.s.upsert = async function( entity, userId ){
         selector = { _id: entity._id };
         //console.debug( 'selector', selector );
         // Error: After filtering out keys not in the schema, your modifier is now empty
-        //  this is normal as long as we do not set any data in the document
-        //  so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
-        //item.updatedBy = userId;
+        // -> this is normal as long as we do not set any data in the document
+        //    so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
+        item.updatedAt = new Date();
         result.numberAffected = await Entities.collection.updateAsync( selector, { $set: item }, { filter: false });
     } else {
         result.insertedId = await Entities.collection.insertAsync( item );

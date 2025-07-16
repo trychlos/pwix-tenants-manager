@@ -17,9 +17,7 @@ TenantsManager.getScopes = async function(){
 // as of v1.5.0, permissions are simplified
 const _permissions = {
     'pwix.tenants_manager.feat.roles': 'pwix.tenants_manager.feat.list',
-    'pwix.tenants_manager.entities.fn.get_by': 'pwix.tenants_manager.feat.list',
     'pwix.tenants_manager.entities.fn.upsert': 'pwix.tenants_manager.feat.edit',
-    'pwix.tenants_manager.records.fn.get_by': 'pwix.tenants_manager.feat.list',
     'pwix.tenants_manager.records.fn.upsert': 'pwix.tenants_manager.feat.edit',
     'pwix.tenants_manager.fn.delete_tenant': 'pwix.tenants_manager.feat.delete',
     'pwix.tenants_manager.fn.get_scopes': 'pwix.tenants_manager.feat.list',

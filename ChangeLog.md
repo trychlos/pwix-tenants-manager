@@ -11,6 +11,7 @@
     - Let the tenant manager have a partial list of its own tenant(s)
     - Review the permissions, only keeping user-level ones, thus bumping minor candidate version number
     - Remove aldeed:simple-schema dependency as this same one is already brought up by aldeed:collection2
+    - Define 'pwix.tenants_manager.feat.access' permission for access a single tenant
 
 ### 1.4.0
 

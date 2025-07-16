@@ -116,13 +116,15 @@ This package can take advantage of `pwix:permissions` package to manage the user
 
 It defines following tasks:
 
-- `pwix.tenants_manager.feat.create`: create a new tenant,
+- `pwix.tenants_manager.feat.create`: whether the user is allowed to create a new tenant,
 
-- `pwix.tenants_manager.feat.delete`, with args `item<Object>`: delete a tenant
+- `pwix.tenants_manager.feat.delete`, with args `item<Object>`: whether the user is allowed to delete the tenant
 
-- `pwix.tenants_manager.feat.edit`, with args `item<Object>`: edit a tenant
+- `pwix.tenants_manager.feat.edit`, with args `item<Object>`: whether the user is allowed to edit the tenant
 
-- `pwix.tenants_manager.feat.list` display the full list of tenants.
+- `pwix.tenants_manager.feat.list`: whether the user is allowed to see a list of tenants (he is allowed to).
+
+- `pwix.tenants_manager.feat.access`, with args `itemId<String>`: whether the user is allowed to see the identfied tenant.
 
 ## Configuration
 
