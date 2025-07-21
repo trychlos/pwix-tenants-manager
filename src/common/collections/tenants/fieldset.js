@@ -59,7 +59,7 @@ const _defaultFieldSet = function( conf ){
             schema: false,
             dt_visible: false
         },
-        // a page which describes the organization
+        // a page which describes the tenant
         {
             name: 'homeUrl',
             schema: false,
@@ -77,7 +77,7 @@ const _defaultFieldSet = function( conf ){
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.contact_page_th' )
         },
-        // the organization logo (either an Url or an embedded image, or both)
+        // the tenant logo (either an Url or an embedded image, or both)
         {
             name: 'logoUrl',
             schema: false,

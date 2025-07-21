@@ -33,10 +33,10 @@ Template.tm_record_tabbed.onCreated( function(){
     self.TM = {
         fields: {
             effectStart: {
-                js: '.js-start input',
+                js: '.js-start .js-date-input',
             },
             effectEnd: {
-                js: '.js-end input',
+                js: '.js-end .js-date-input',
             }
         },
         // the Checker instance

@@ -54,7 +54,7 @@ const _defaultFieldSet = function( conf ){
             form_check: Tenants.checks.legalsUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
-        // a page which describes the organization
+        // a page which describes the tenant
         {
             name: 'homeUrl',
             type: String,
@@ -78,7 +78,7 @@ const _defaultFieldSet = function( conf ){
             form_check: Tenants.checks.contactUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },
-        // the organization logo
+        // the tenant logo
         {
             name: 'logoUrl',
             type: String,

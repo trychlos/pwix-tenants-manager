@@ -1,7 +1,7 @@
 /*
  * /imports/client/components/TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js
  *
- * Organization properties pane.
+ * Tenant properties pane.
  *
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar

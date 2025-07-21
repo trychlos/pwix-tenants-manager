@@ -12,6 +12,8 @@
     - Review the permissions, only keeping user-level ones, thus bumping minor candidate version number
     - Remove aldeed:simple-schema dependency as this same one is already brought up by aldeed:collection2
     - Define 'pwix.tenants_manager.feat.access' permission for access a single tenant
+    - Adapt to new pwix-date-input v1.3.0
+    - Oganizations are now named 'tenants'
 
 ### 1.4.0
 

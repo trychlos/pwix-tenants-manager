@@ -27,14 +27,14 @@ TenantsManager.i18n = {
                 contact_email_th: 'Contact',
                 contact_page_th: 'Page de contact',
                 effect_end_th: 'Au',
+                effect_start_th: 'Du',
                 entity_notes_th: 'Notes du tenant',
                 home_page_th: 'Site principal',
                 label_th: 'Label',
                 managers_th: 'Managers',
                 notes_th: 'Notes',
                 not_allowed: '<p>Vous n\'êtes malheureusement pas autorisé à consulter la liste des tenants.</p>'
-                    +'<p>Vous pouvez vous rapprocher de votre administrateur pour demander les habilitations nécessaires.<p>',
-                effect_start_th: 'Du',
+                    +'<p>Vous pouvez vous rapprocher de votre administrateur pour demander les habilitations nécessaires.<p>'
             },
             new: {
                 btn_plus_label: 'Nouveau tenant',
@@ -61,6 +61,7 @@ TenantsManager.i18n = {
                     support_url_invalid: 'L\'URL de la page de support est invalide'
                 },
                 panel: {
+                    notes_tab: 'Notes',
                     properties_tab: 'Propriétés'
                 },
                 properties: {
@@ -101,10 +102,6 @@ TenantsManager.i18n = {
                 entity_notes_title: 'Notes communes',
                 entity_scoped_title: 'Rôles sur le périmètre',
                 entity_validities_title: 'Les enregistrements de validité',
-            },
-            tenants: {
-                check: {
-                }
             }
         }
     }
