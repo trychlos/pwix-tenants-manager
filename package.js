@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:tenants-manager',
-    version: '1.5.0',
+    version: '1.5.1-rc.0',
     summary: 'A Meteor package to manage tenants with validity periods',
     git: 'https://github.com/trychlos/pwix-tenants-manager',
     documentation: 'README.md'
