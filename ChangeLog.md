@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.5.0-rc
+### 1.5.0
 
-    Release date: 
+    Release date: 2026- 2-10
 
     - Make sure the emitted entity has been transformed
     - Improve the message when user is not allowed
@@ -89,4 +89,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Nov. 19th
+- Last updated on 2026, Feb. 10th
