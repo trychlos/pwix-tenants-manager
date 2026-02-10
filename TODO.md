@@ -21,7 +21,8 @@
 |      |            |   at packages/pwix:tenants-manager/src/common/collections/tenants/server/publish.js:81:30
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
-|    7 |  |  |
+|    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
+|    8 |  |  |
 
 ---
 ## Done
