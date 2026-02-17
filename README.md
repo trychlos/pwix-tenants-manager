@@ -10,6 +10,15 @@ A try to mutualize and factorize the most common part of a multi-tenants managem
 
 Our tenants are defined in the common acceptance of the term as distinct organizations which are managed in a same software space. They can have validity periods. A tenant administrator can be defined as a scoped role.
 
+## Installation
+
+This Meteor package is installable with the usual command:
+
+```sh
+    meteor add pwix:tenants-manager
+    meteor npm install email-validator lodash valid-url --save
+```
+
 ### Storage considerations
 
 When an application makes use of this package to manage several tenants, two `tenants_e` and `tenants_r` collections are created which gathers defined tenants. That's all, and, in particular, this doesn't create for the application any assumption about the way the application tenants data will be themselves stored (in distinct databases, in distinct collections, or so).
