@@ -7,6 +7,7 @@
     Release date: 
 
     - configure() now warns for unmanaged keys
+    - Update to new pwix:tabular naming convention
 
 ### 1.5.0
 

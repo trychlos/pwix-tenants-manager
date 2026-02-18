@@ -47,7 +47,7 @@ Tracker.autorun(() => {
             collection: Records.collection,
             columns: Tenants.fieldSet.get().toTabular(),
             pub: 'pwix_tenants_manager_tenants_tabular',
-            tabular: {
+            pwix: {
                 // have a badge which displays the count of validity records if greater than 1
                 // let this array be extended by the calling application
                 async buttons(){

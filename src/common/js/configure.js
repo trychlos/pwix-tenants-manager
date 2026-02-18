@@ -19,6 +19,7 @@ TenantsManager._defaults = {
     recordFields: null,
     serverAllExtend: null,
     serverTabularExtend: null,
+    tenantButtons: null,
     tenantFields: null,
     tenantsCollection: 'tenants',
     scopedManagerRole: 'SCOPED_TENANT_MANAGER',
