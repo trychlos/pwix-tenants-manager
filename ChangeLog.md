@@ -8,6 +8,7 @@
 
     - configure() now warns for unmanaged keys
     - Update to new pwix:tabular naming convention
+    - 'pwix.tenants_manager.feat.access' permission is renamed 'pwix.tenants_manager.feat.read'
 
 ### 1.5.0
 

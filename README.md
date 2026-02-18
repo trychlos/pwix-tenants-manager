@@ -133,7 +133,7 @@ It defines following tasks:
 
 - `pwix.tenants_manager.feat.list`: whether the user is allowed to see a list of tenants (he is allowed to).
 
-- `pwix.tenants_manager.feat.access`, with args `itemId<String>`: whether the user is allowed to see the identfied tenant.
+- `pwix.tenants_manager.feat.read`, with args `itemId<String>`: whether the user is allowed to see the identfied tenant.
 
 ## Configuration
 
