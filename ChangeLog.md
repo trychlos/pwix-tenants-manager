@@ -9,6 +9,7 @@
     - configure() now warns for unmanaged keys
     - Update to new pwix:tabular naming convention
     - 'pwix.tenants_manager.feat.access' permission is renamed 'pwix.tenants_manager.feat.read'
+    - Update the record with the URL back from the image includer
 
 ### 1.5.0
 

@@ -135,9 +135,23 @@ Template.TenantRecordPropertiesPanel.helpers({
 
 Template.TenantRecordPropertiesPanel.events({
     // ask for clear the panel
+    'image-includer-url .TenantRecordPropertiesPanel'( event, instance, data ){
+        const recordRv = this.entity.get().DYN.records[this.index];
+        const record = recordRv.get();
+        record.logoUrl = data.url;
+        recordRv.set( record );
+        const checker = instance.TM.checker.get();
+        if( checker ){
+            checker.setForm( record );
+            checker.check({ update: false });
+        }
+    },
+
+    // ask for clear the panel
     'iz-clear-panel .TenantRecordPropertiesPanel'( event, instance ){
         instance.TM.checker.get().clear();
     },
+
     // ask for enabling the checker (when this panel is used inside of an assistant)
     'iz-enable-checks .TenantRecordPropertiesPanel'( event, instance, enabled ){
         const checker = instance.TM.checker.get();

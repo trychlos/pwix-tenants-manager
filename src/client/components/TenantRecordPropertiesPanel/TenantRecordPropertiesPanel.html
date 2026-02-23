@@ -27,9 +27,7 @@
                         <input class="form-control" type="url" id="{{ itFor "pdmp" }}" placeholder="{{ i18n key="records.properties.pdmp_ph" }}" title="{{ i18n key="records.properties.pdmp_title" }}" />
                     </div>
                 </td>
-                <td rowspan="5">
-                    {{> ImageIncluder (parmsImage) }}
-                </td>
+                <td></td>
             </tr>
             <tr class="tr-gtu">
                 <td class="label"><label class="form-label" for="{{ itFor "gtu" }}">{{ i18n key="records.properties.gtu_label" }}</label></td>
@@ -37,6 +35,9 @@
                     <div class="ui-w100 js-gtu">
                         <input class="form-control" type="url" id="{{ itFor "gtu" }}" placeholder="{{ i18n key="records.properties.gtu_ph" }}" title="{{ i18n key="records.properties.gtu_title" }}" />
                     </div>
+                </td>
+                <td rowspan="5" class="td-logo" style="height: 1px;">
+                    {{> ImageIncluder (parmsImage) }}
                 </td>
             </tr>
             <tr class="tr-legals">
@@ -70,7 +71,6 @@
                         <input class="form-control" type="email" id="{{ itFor "contact_email" }}" placeholder="{{ i18n key="records.properties.contact_email_ph" }}" title="{{ i18n key="records.properties.contact_email_title" }}" />
                     </div>
                 </td>
-                <td></td>
             </tr>
             <tr class="tr-support-url">
                 <td class="label"><label class="form-label" for="{{ itFor "support_url" }}">{{ i18n key="records.properties.support_url_label" }}</label></td>
