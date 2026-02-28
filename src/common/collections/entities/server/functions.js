@@ -7,8 +7,11 @@
 import _ from 'lodash';
 
 import { check } from 'meteor/check';
+import { Logger } from 'meteor/pwix:logger';
 
 import { Entities } from '../index.js';
+
+const logger = Logger.get();
 
 Entities.s = {};
 
@@ -63,12 +66,12 @@ Entities.s.upsert = async function( entity, userId ){
     let item = _.cloneDeep( entity );
     delete item.DYN;
     delete item._id;
-    //console.debug( 'item', item );
+    //logger.debug( 'item', item );
     // tries to work around "Error: Failed validation Upsert failed after 3 tries."
     if( entity._id ){
         result.orig = await Entities.collection.findOneAsync({ _id: entity._id });
         selector = { _id: entity._id };
-        //console.debug( 'selector', selector );
+        //logger.debug( 'selector', selector );
         // Error: After filtering out keys not in the schema, your modifier is now empty
         // -> this is normal as long as we do not set any data in the document
         //    so at least set updatedAt here (and even if this will be set another time by timestampable behaviour)
@@ -79,6 +82,6 @@ Entities.s.upsert = async function( entity, userId ){
         result.numberAffected = 1;
         entity._id = result.insertedId;
     }
-    //console.debug( 'Entities result', result );
+    //logger.debug( 'Entities result', result );
     return result;
 };

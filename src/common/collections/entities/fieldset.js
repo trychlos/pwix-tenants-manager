@@ -11,11 +11,14 @@
  */
 
 import { Field } from 'meteor/pwix:field';
+import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
 import { Timestampable } from 'meteor/pwix:collection-timestampable';
 import { Tracker } from 'meteor/tracker';
 
 import { Entities } from './index.js';
+
+const logger = Logger.get();
 
 const _defaultFieldSet = function( conf ){
     let columns = [
@@ -38,4 +41,8 @@ Tracker.autorun(() => {
         fieldset.extend( conf.entityFields );
     }
     Entities.fieldSet.set( fieldset );
+});
+
+Tracker.autorun(() => {
+    //logger.debug( 'Entities.fieldSet', Entities.fieldSet.get());
 });

@@ -2,14 +2,15 @@
 
 ## ChangeLog
 
-### 1.5.1-rc.0
+### 1.6.0-rc.0
 
     Release date: 
 
     - configure() now warns for unmanaged keys
     - Update to new pwix:tabular naming convention
-    - 'pwix.tenants_manager.feat.access' permission is renamed 'pwix.tenants_manager.feat.read'
+    - 'pwix.tenants_manager.feat.access' permission is renamed 'pwix.tenants_manager.feat.read', thus bumping minor candidate version number
     - Update the record with the URL back from the image includer
+    - Use pwix:logger universal logger
 
 ### 1.5.0
 

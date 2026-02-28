@@ -7,12 +7,15 @@
 import _ from 'lodash';
 
 import { check } from 'meteor/check';
+import { Logger } from 'meteor/pwix:logger';
 import { Validity } from 'meteor/pwix:validity';
 
 import { Tenants } from '../index.js';
 
 import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
+
+const logger = Logger.get();
 
 Tenants.s = {};
 
@@ -75,7 +78,7 @@ Tenants.s.getManagers = async function( scope ){
         if( user ){
             array.push( user );
         } else {
-            console.warn( 'user not found, but allowed by an assigned scoped role', it.user._id );
+            logger.warn( 'getManagers() user not found, but allowed by an assigned scoped role', it.user._id );
         }
     }
     return array;
@@ -169,7 +172,7 @@ Tenants.s.upsert = async function( entity, userId ){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.upsert', userId, entity )){
         return null;
     }
-    //console.debug( 'Tenants.s.upsert()', entity );
+    //logger.debug( 'upsert()', entity );
 
     // upsert the entity
     //  we get back not only a result but also the original entity

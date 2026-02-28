@@ -6,7 +6,10 @@
  * - each entity having its DYN sub-object with DYN.managers and DYN.records arrays
  */
 
+import { Logger } from 'meteor/pwix:logger';
 import { Tracker } from 'meteor/tracker';
+
+const logger = Logger.get();
 
 const self = TenantsManager.list;
 
@@ -17,7 +20,7 @@ Tracker.autorun(() => {
     if( _handle.ready()){
         TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ).find().fetchAsync().then(( fetched ) => {
             self._array.set( fetched );
-            console.debug( 'tenants', fetched );
+            logger.debug( 'tenants', fetched );
         });
     }
 });

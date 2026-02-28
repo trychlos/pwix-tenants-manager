@@ -40,6 +40,7 @@
 import _ from 'lodash';
 
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -57,9 +58,11 @@ import '../tm_record_tabbed/tm_record_tabbed.js';
 
 import './TenantEditPanel.html';
 
+const logger = Logger.get();
+
 Template.TenantEditPanel.onCreated( function(){
     const self = this;
-    //console.debug( this );
+    //logger.debug( this );
 
     self.TM = {
         // the global Checker for this modal
@@ -89,7 +92,7 @@ Template.TenantEditPanel.onCreated( function(){
             records.push( new ReactiveVar( it ));
         });
         dup.DYN.records = records;
-        //console.debug( 'deep-duplicating original item' );
+        //logger.debug( 'deep-duplicating original item' );
         self.TM.item.set( dup );
     });
 });
@@ -175,7 +178,7 @@ Template.TenantEditPanel.helpers({
                     tabs.push({ ...tab });
                 });
             } else {
-                console.warn( 'expect tabs be an array, got', this.entityTabsBefore );
+                logger.warn( 'expect tabs be an array, got', this.entityTabsBefore );
             }
         }
         // the standard validities tab
@@ -208,7 +211,7 @@ Template.TenantEditPanel.helpers({
                     tabs.push({ ...tab });
                 });
             } else {
-                console.warn( 'expect tabs be an array, got', this.entityTabs );
+                logger.warn( 'expect tabs be an array, got', this.entityTabs );
             }
         }
         tabs.push({
@@ -228,7 +231,7 @@ Template.TenantEditPanel.helpers({
                     tabs.push({ ...tab });
                 });
             } else {
-                console.warn( 'expect tabs be an array, got', this.entityTabsAfter );
+                logger.warn( 'expect tabs be an array, got', this.entityTabsAfter );
             }
         }
         return {
@@ -243,7 +246,7 @@ Template.TenantEditPanel.events({
     // submit
     //  event triggered in case of a modal
     'md-click .TenantEditPanel'( event, instance, data ){
-        //console.debug( event, data );
+        //logger.debug( event, data );
         if( data.button.id === Modal.C.Button.OK ){
             instance.$( event.currentTarget ).trigger( 'iz-submit' );
         }
@@ -251,13 +254,13 @@ Template.TenantEditPanel.events({
 
     // submit
     'iz-submit .TenantEditPanel'( event, instance ){
-        //console.debug( event, instance );
+        //logger.debug( event, instance );
         const item = instance.TM.item.get();
         const label = Validity.closest( item ).record.label || '';
-        //console.debug( 'item', item );
+        //logger.debug( 'item', item );
         Meteor.callAsync( 'pwix_tenants_manager_tenants_upsert', item )
             .then(( res ) => {
-                //console.debug( 'res', res );
+                //logger.debug( 'res', res );
                 return Meteor.callAsync( 'pwix_tenants_manager_tenants_set_managers', item )
             })
             .then(() => {
@@ -270,7 +273,7 @@ Template.TenantEditPanel.events({
                 }
             })
             .catch(( e ) => {
-                console.error( e );
+                logger.error( e );
                 Tolert.error( pwixI18n.label( I18N, 'edit.error' ));
             });
     }

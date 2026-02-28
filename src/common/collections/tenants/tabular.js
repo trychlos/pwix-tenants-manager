@@ -97,7 +97,6 @@ Tracker.autorun(() => {
             order: [[ 0, 'asc' ]],
             // the publication takes care of providing the list of fields which have not the same value among all records
             createdRow( row, data, dataIndex, cells ){
-                //console.debug( columns, data );
                 // set a different display when a value changes between validity records
                 data.DYN.analyze.diffs.forEach(( it ) => {
                     const def = columns[it]?.def;

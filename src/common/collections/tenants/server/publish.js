@@ -2,12 +2,15 @@
  * pwix:tenants-manager/src/common/collections/tenants/server/publish.js
  */
 
+import { Logger } from 'meteor/pwix:logger';
 import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
 
 import { Tenants } from '../index.js';
+
+const logger = Logger.get();
 
 /*
  * returns a cursor of all tenants as a full tenants list, published here as a 'tenants_all' pseudo collection
@@ -59,10 +62,10 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                             // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
                             self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
                             TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
-                            //console.debug( e, 'ignored' );
+                            //logger.debug( e, 'ignored' );
                         }
                     } else {
-                        console.warn( 'added: entity not found', item.entity );
+                        logger.warn( 'added: entity not found', item.entity );
                     }
                 });
             }
@@ -75,7 +78,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                             self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
                             TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
                         } else {
-                            console.warn( 'changed: entity not found', newItem.entity );
+                            logger.warn( 'changed: entity not found', newItem.entity );
                         }
                     });
                 }

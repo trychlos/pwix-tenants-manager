@@ -14,5 +14,3 @@ export { Tenants } from './collection.js';
 import './checks.js';
 import './fieldset.js';
 import './tabular.js';
-
-//console.debug( 'defined Tenants' );

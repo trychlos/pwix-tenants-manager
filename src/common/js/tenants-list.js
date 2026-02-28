@@ -10,7 +10,10 @@
  * NB: 'central' here doesn't mean that the same instance is shared between client and server sides! That means that both instances are maintained equal.
  */
 
+import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
+
+const logger = Logger.get();
 
 TenantsManager.list = {
     _array: new ReactiveVar( [] ),
@@ -28,7 +31,7 @@ TenantsManager.list = {
         });
         if( !found && !TenantsManager.list._warned[entity] ){
             TenantsManager.list._warned[entity] = true,
-            console.warn( 'unable to find tenant by entity', entity );
+            logger.warn( 'byEntity() unable to find tenant by entity', entity );
         }
         return found;
     },

@@ -19,6 +19,7 @@
 import _ from 'lodash';
 
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
@@ -26,9 +27,11 @@ import { Records } from '../../../common/collections/records/index.js';
 
 import './tm_record_tabbed.html';
 
+const logger = Logger.get();
+
 Template.tm_record_tabbed.onCreated( function(){
     const self = this;
-    //console.debug( this, Template.currentData());
+    //logger.debug( this, Template.currentData());
 
     self.TM = {
         fields: {
@@ -82,7 +85,7 @@ Template.tm_record_tabbed.onCreated( function(){
                         tabs.push({ ...tab });
                     });
                 } else {
-                    console.warn( 'expect tabs be an array, got', dataContext.recordTabsBefore );
+                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabsBefore );
                 }
             }
             // the standard has one 'propeties' tab
@@ -100,7 +103,7 @@ Template.tm_record_tabbed.onCreated( function(){
                         tabs.push({ ...tab });
                     });
                 } else {
-                    console.warn( 'expect tabs be an array, got', dataContext.recordTabs );
+                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabs );
                 }
             }
             // standard 'notes'
@@ -121,7 +124,7 @@ Template.tm_record_tabbed.onCreated( function(){
                         tabs.push({ ...tab });
                     });
                 } else {
-                    console.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
+                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
                 }
             }
             if( !self.TM.tabsEqual( tabs )){
@@ -131,7 +134,7 @@ Template.tm_record_tabbed.onCreated( function(){
                 });
             }
         } else {
-            console.warn( 'pwix:tenants-manager unexpected index', dataContext.index );
+            logger.warn( 'unexpected index', dataContext.index );
             self.TM.parmsRecord.set( null );
         }
     });
@@ -146,7 +149,7 @@ Template.tm_record_tabbed.onCreated( function(){
             };
             self.TM.parmsValidity.set( parms );
         } else {
-            console.warn( 'pwix:tenants-manager unexpected index', dataContext.index );
+            logger.warn( 'unexpected index', dataContext.index );
             self.TM.parmsValidity.set( null );
         }
     });

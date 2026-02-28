@@ -4,7 +4,10 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
+
+const logger = Logger.get();
 
 let _conf = {};
 TenantsManager._conf = new ReactiveVar( _conf );
@@ -42,17 +45,13 @@ TenantsManager.configure = function( o ){
             if( Object.keys( TenantsManager._defaults ).includes( it )){
                 built_conf[it] = o[it];
             } else {
-                console.warn( 'pwix:tenants-manager configure() ignore unmanaged key \''+it+'\'' );
+                logger.warn( 'configure() ignore unmanaged key \''+it+'\'' );
             }
         });
         if( Object.keys( built_conf ).length ){
             _conf = _.merge( TenantsManager._defaults, _conf, built_conf );
             TenantsManager._conf.set( _conf );
-            // be verbose if asked for
-            if( _conf.verbosity & TenantsManager.C.Verbose.CONFIGURE ){
-                //console.log( 'pwix:tenants-manager configure() with', o, 'building', TenantsList._conf );
-                console.log( 'pwix:tenants-manager configure() with', built_conf );
-            }
+            logger.verbose({ verbosity: _conf.verbosity, against: TenantsManager.C.Verbose.CONFIGURE }, 'configure() with', built_conf );
         }
     }
     // also acts as a getter

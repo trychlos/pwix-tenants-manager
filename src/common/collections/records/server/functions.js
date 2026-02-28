@@ -8,8 +8,11 @@ import _ from 'lodash';
 const assert = require( 'assert' ).strict;
 
 import { check } from 'meteor/check';
+import { Logger } from 'meteor/pwix:logger';
 
 import { Records } from '../index.js';
+
+const logger = Logger.get();
 
 Records.s = {};
 
@@ -24,7 +27,7 @@ Records.s.getBy = async function( selector, userId ){
         check( userId, String );
     }
     const res = await Records.collection.find( selector ).fetchAsync();
-    //console.debug( 'records', selector, res );
+    //logger.debug( 'records', selector, res );
     return res;
 };
 
@@ -43,7 +46,7 @@ Records.s.upsert = async function( entity, userId ){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.upsert', userId, entity )){
         return null;
     }
-    //console.debug( 'Records.s.upsert()', entity );
+    //logger.debug( 'Records.s.upsert()', entity );
     // get the original item records to be able to detect modifications
     //  and build a hash of id -> record
     const orig = await Records.s.getBy({ entity: entity._id }, userId );
@@ -78,8 +81,8 @@ Records.s.upsert = async function( entity, userId ){
             updatableIds[record._id] = record;
         }
     }
-    //console.debug( 'leftIds', leftIds );
-    //console.debug( 'updatableIds', updatableIds );
+    //logger.debug( 'leftIds', leftIds );
+    //logger.debug( 'updatableIds', updatableIds );
 
     // for each updatable, then... upsert!
     // as of 2024- 7-17 and matb33:collection-hooks v 2.0.0-rc.1 there is not yet any hook for async methods (though this work at creation)
@@ -94,7 +97,7 @@ Records.s.upsert = async function( entity, userId ){
         // the below code to be able to see SimpleSchema errors which are hidden by the promises.push()
         if( false ){
             Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-                console.debug( 'upsert record', record, 'res', res );
+                logger.debug( 'upsert record', record, 'res', res );
                 if( res.numberAffected > 0 ){
                     if( record._id ){
                         result.updated += 1;
@@ -107,7 +110,7 @@ Records.s.upsert = async function( entity, userId ){
             });
         }
         promises.push( Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-            //console.debug( 'upsert record', record, 'res', res );
+            //logger.debug( 'upsert record', record, 'res', res );
             if( res.numberAffected > 0 ){
                 if( record._id ){
                     result.updated += 1;
@@ -129,7 +132,7 @@ Records.s.upsert = async function( entity, userId ){
     return Promise.allSettled( promises ).then(() => {
         return Records.collection.countDocuments({ entity: entity._id });
     }).then(() => {
-        //console.debug( 'Records result', result );
+        //logger.debug( 'Records result', result );
         return result;
     });
 };

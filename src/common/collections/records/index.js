@@ -6,5 +6,3 @@ export { Records } from './collection.js';
 
 import './fieldset.js';
 import './schema.js';
-
-//console.debug( 'defined Records' );

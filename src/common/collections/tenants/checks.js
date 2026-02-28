@@ -7,6 +7,7 @@ const assert = require( 'assert' ).strict;
 import validator from 'email-validator';
 import validUrl from 'valid-url';
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { TM } from 'meteor/pwix:typed-message';
@@ -15,6 +16,8 @@ import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
 
 import { Tenants } from './index.js';
+
+const logger = Logger.get();
 
 Tenants.checks = {};
 
@@ -48,7 +51,7 @@ const _id2index = function( array, id ){
             return i;
         }
     }
-    console.warn( 'id='+id+' not found' );
+    logger.warn( 'id='+id+' not found' );
     return -1;
 }
 

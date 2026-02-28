@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:tenants-manager',
-    version: '1.5.1-rc.0',
+    version: '1.6.0-rc.0',
     summary: 'A Meteor package to manage tenants with validity periods',
     git: 'https://github.com/trychlos/pwix-tenants-manager',
     documentation: 'README.md'
@@ -35,6 +35,7 @@ function configure( api ){
     api.use( 'pwix:forms@1.0.0-rc' );
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:image-includer@1.0.0-rc' );
+    api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'pwix:modal@2.0.0' );
     api.use( 'pwix:notes@1.0.0-rc' );
     api.use( 'pwix:roles@1.7.0-rc' );
