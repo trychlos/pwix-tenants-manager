@@ -102,10 +102,10 @@ const _defaultFieldSet = function( conf ){
             form_check: Tenants.checks.contactEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
-        Notes.fieldDef(),
-        Validity.recordsFieldDef(),
-        Timestampable.fieldDef()
+        Notes.fieldDef()
     ];
+    columns = columns.concat( Validity.recordsFieldDef());
+    columns = columns.concat( Timestampable.fieldDef());
     return columns;
 };
 

@@ -101,13 +101,13 @@ const _defaultFieldSet = function( conf ){
             dt_title: pwixI18n.label( I18N, 'list.contact_email_th' )
         },
         Notes.fieldDef(),
-        Validity.recordsFieldDef(),
-        Timestampable.fieldDef(),
         {
             name: 'DYN',
             dt_visible: false
         }
     ];
+    columns = columns.concat( Validity.recordsFieldDef());
+    columns = columns.concat( Timestampable.fieldDef());
     return columns;
 };
 

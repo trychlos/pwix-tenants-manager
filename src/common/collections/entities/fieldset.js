@@ -23,12 +23,12 @@ const logger = Logger.get();
 const _defaultFieldSet = function( conf ){
     let columns = [
         // common notes
-        Notes.fieldDef(),
-        // timestampable behaviour
-        Timestampable.fieldDef(),
-        // validity fieldset,
-        Validity.entitiesFieldDef()
+        Notes.fieldDef()
     ];
+    // validity fieldset,
+    columns = columns.concat( Validity.entitiesFieldDef());
+    // timestampable behaviour
+    columns = columns.concat( Timestampable.fieldDef());
     return columns;
 };
 

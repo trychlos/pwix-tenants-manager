@@ -11,6 +11,7 @@
     - 'pwix.tenants_manager.feat.access' permission is renamed 'pwix.tenants_manager.feat.read', thus bumping minor candidate version number
     - Update the record with the URL back from the image includer
     - Use pwix:logger universal logger
+    - Fix array concatenation of Entities, Records and Tabular fieldsets
 
 ### 1.5.0
 
