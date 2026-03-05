@@ -12,6 +12,7 @@
     - Update the record with the URL back from the image includer
     - Use pwix:logger universal logger
     - Fix array concatenation of Entities, Records and Tabular fieldsets
+    - Fix stylesheet to be compatible with pwix:validity flex display
 
 ### 1.5.0
 
