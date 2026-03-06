@@ -70,7 +70,8 @@ Template.tm_record_tabbed.onCreated( function(){
     self.autorun(() => {
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
-            const notes = Records.fieldSet.get().byName( 'notes' );
+            const fieldSet = Records.fieldSet.get();
+            const notes = fieldSet.byName( 'notes' );
             const paneData = {
                 entity: dataContext.entity,
                 index: dataContext.index,
@@ -134,7 +135,7 @@ Template.tm_record_tabbed.onCreated( function(){
                 });
             }
         } else {
-            logger.warn( 'unexpected index', dataContext.index );
+            logger.info( 'unexpected index', dataContext.index );
             self.TM.parmsRecord.set( null );
         }
     });
@@ -144,12 +145,15 @@ Template.tm_record_tabbed.onCreated( function(){
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const parms = {
+                // this is a debug facility not needed in any case just to be able to display the curernt index in the component
+                index: dataContext.index,
                 startDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectStart,
                 endDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectEnd
             };
+            //logger.debug( 'index', dataContext.index, 'parmsValidity', parms );
             self.TM.parmsValidity.set( parms );
         } else {
-            logger.warn( 'unexpected index', dataContext.index );
+            logger.info( 'unexpected index', dataContext.index );
             self.TM.parmsValidity.set( null );
         }
     });
@@ -165,6 +169,7 @@ Template.tm_record_tabbed.onRendered( function(){
             const parentChecker = dataContext.checker.get();
             const checker = self.TM.checker.get();
             if( parentChecker && !checker ){
+                logger.debug( 'instanciating validity checker' );
                 self.TM.checker.set( new Forms.Checker( self, {
                     parent: parentChecker,
                     panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
@@ -183,11 +188,15 @@ Template.tm_record_tabbed.onRendered( function(){
 Template.tm_record_tabbed.helpers({
     // data context for the record tabbed panes
     parmsRecord(){
-        return Template.instance().TM.parmsRecord.get();
+        const parms = Template.instance().TM.parmsRecord.get();
+        //logger.debug( 'parmsRecord', parms );
+        return parms;
     },
 
     // data context for ValidityFieldset
     parmsValidity(){
-        return Template.instance().TM.parmsValidity.get();
+        const parms = Template.instance().TM.parmsValidity.get()
+        //logger.debug( 'parmsValidity', parms );
+        return parms;
     }
 });

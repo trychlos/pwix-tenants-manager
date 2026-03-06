@@ -10,8 +10,11 @@
  * We do not define here the tabular display. See Tenants/fieldset for that.
  */
 
+import _ from 'lodash';
+
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
 import { Timestampable } from 'meteor/pwix:collection-timestampable';
 import { Tracker } from 'meteor/tracker';
@@ -20,6 +23,8 @@ import { Validity } from 'meteor/pwix:validity';
 import { Tenants } from '../tenants/index.js';
 
 import { Records } from './index.js';
+
+const logger = Logger.get();
 
 const _defaultFieldSet = function( conf ){
     let columns = [

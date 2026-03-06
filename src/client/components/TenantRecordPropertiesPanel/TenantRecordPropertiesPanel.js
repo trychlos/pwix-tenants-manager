@@ -13,12 +13,15 @@
 import _ from 'lodash';
 
 import { Forms } from 'meteor/pwix:forms';
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Records } from '../../../common/collections/records/index.js';
 
 import './TenantRecordPropertiesPanel.html';
+
+const logger = Logger.get();
 
 Template.TenantRecordPropertiesPanel.onCreated( function(){
     const self = this;
@@ -88,20 +91,25 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
 
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
-        const parentChecker = Template.currentData().checker?.get();
-        const checker = self.TM.checker.get();
-        if( parentChecker && !checker ){
-            const enabled = Template.currentData().enableChecks !== false;
-            self.TM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
-                data: {
-                    entity: Template.currentData().entity,
-                    index: Template.currentData().index
-                },
-                setForm: Template.currentData().entity.get().DYN.records[Template.currentData().index].get(),
-                enabled: enabled
-            }));
+        const dataContext = Template.currentData();
+        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+            const parentChecker = dataContext.checker?.get();
+            const checker = self.TM.checker.get();
+            if( parentChecker && !checker ){
+                const enabled = dataContext.enableChecks !== false;
+                self.TM.checker.set( new Forms.Checker( self, {
+                    parent: parentChecker,
+                    panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                    data: {
+                        entity: dataContext.entity,
+                        index: dataContext.index
+                    },
+                    setForm: dataContext.entity.get().DYN.records[dataContext.index].get(),
+                    enabled: enabled
+                }));
+            }
+        } else {
+            self.TM.checker.set( null );
         }
     });
 
@@ -127,23 +135,30 @@ Template.TenantRecordPropertiesPanel.helpers({
 
     // parms for ImageIncluder
     parmsImage(){
-        return {
-            imageUrl: this.entity.get().DYN.records[this.index].get().logoUrl
-        };
+        const recordsArray = this.entity.get().DYN.records;
+        if( this.index < recordsArray.length ){
+            return {
+                imageUrl: recordsArray[this.index].get().logoUrl
+            }
+        }
+        return null;
     }
 });
 
 Template.TenantRecordPropertiesPanel.events({
     // ask for clear the panel
     'image-includer-url .TenantRecordPropertiesPanel'( event, instance, data ){
-        const recordRv = this.entity.get().DYN.records[this.index];
-        const record = recordRv.get();
-        record.logoUrl = data.url;
-        recordRv.set( record );
-        const checker = instance.TM.checker.get();
-        if( checker ){
-            checker.setForm( record );
-            checker.check({ update: false });
+        const recordsArray = this.entity.get().DYN.records;
+        if( this.index < recordsArray.length ){
+            const recordRv = recordsArray[this.index];
+            const record = recordRv.get();
+            record.logoUrl = data.url;
+            recordRv.set( record );
+            const checker = instance.TM.checker.get();
+            if( checker ){
+                checker.setForm( record );
+                checker.check({ update: false });
+            }
         }
     },
 
@@ -163,4 +178,8 @@ Template.TenantRecordPropertiesPanel.events({
         }
         return false;
     }
+});
+
+Template.TenantRecordPropertiesPanel.onDestroyed( function(){
+    logger.debug( 'onDestroyed()' );
 });

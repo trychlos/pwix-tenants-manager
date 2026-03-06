@@ -18,14 +18,18 @@
  *     |       |
  *     |       +- ValiditiesTabbed                  manage the validities with one pane per validity period
  *     |           |
- *     |           +- tm_record_tabbed              the record edition panel, as a tabbed component
+ *     |           +- Tabbed
  *     |           |   |
- *     |           |   +- Tabbed
- *     |           |       |
- *     |           |       +- TenantRecordPropertiesPanel
- *     |           |       +- NotesEdit             record notes
+ *     |           |   +- tm_record_tabbed              the record edition panel, as a tabbed component
+ *     |           |   |   |
+ *     |           |   |   +- Tabbed
+ *     |           |   |       |
+ *     |           |   |       +- TenantRecordPropertiesPanel
+ *     |           |   |       +- NotesEdit             record notes
+ *     |           |   |
+ *     |           |   +- ValidityFieldset
  *     |           |
- *     |           +- ValidityFieldset
+ *     |           +- validity_band
  *     |
  *     +- Forms.Messager                            the messages area
  *
@@ -77,16 +81,15 @@ Template.TenantEditPanel.onCreated( function(){
         isModal: new ReactiveVar( false )
     };
 
-    // keep the initial 'new' state
+    // provided item = entity+records
     self.autorun(() => {
-        self.TM.isNew.set( _.isNil( Template.currentData().item ));
-    });
-
-    // setup the item to be edited
-    //  we want a clone deep of the provided item, so that we are able to cancel the edition without keeping any sort of data
-    //  and we want ReactiveVar's both for every record and for the entity
-    self.autorun(() => {
-        const dup = _.cloneDeep( Template.currentData().item || { DYN: { managers: [], records: [{}] }});
+        const item = Template.currentData().item;
+        // keep the initial 'new' state
+        self.TM.isNew.set( _.isNil( item ));
+        // setup the item to be edited
+        //  we want a clone deep of the provided item, so that we are able to cancel the edition without keeping any sort of data
+        //  and we want ReactiveVar's both for every record and for the entity
+        const dup = _.cloneDeep( item || { DYN: { managers: [], records: [{}] }});
         let records = [];
         dup.DYN.records.forEach(( it ) => {
             records.push( new ReactiveVar( it ));
@@ -94,6 +97,11 @@ Template.TenantEditPanel.onCreated( function(){
         dup.DYN.records = records;
         //logger.debug( 'deep-duplicating original item' );
         self.TM.item.set( dup );
+    });
+
+    // track the edited item
+    self.autorun(() => {
+        //logger.debug( 'effectEnd', self.TM.item.get().DYN.records[0].get().effectEnd );
     });
 });
 
@@ -115,7 +123,7 @@ Template.TenantEditPanel.onRendered( function(){
     });
 
     // allocate a Checker
-    //  note that this is only a topmost template when we are running inside of a modal - else have to wait for a parent checker
+    //  note that this is a topmost template only when we are running inside of a modal - else have to wait for a parent checker
     self.autorun(() => {
         self.TM.checker.set( new Forms.Checker( self, {
             messager: self.TM.messager,
@@ -276,5 +284,19 @@ Template.TenantEditPanel.events({
                 logger.error( e );
                 Tolert.error( pwixI18n.label( I18N, 'edit.error' ));
             });
+    },
+
+    // validity periods management
+    'validity-period-created .TenantEditPanel'( event, instance, data ){
+        //logger.debug( event, data );
+    },
+    'validity-period-left-merged .TenantEditPanel'( event, instance, data ){
+        //logger.debug( event, data );
+    },
+    'validity-period-right-merged .TenantEditPanel'( event, instance, data ){
+        //logger.debug( event, data );
+    },
+    'validity-period-removed .TenantEditPanel'( event, instance, data ){
+        //logger.debug( event, data );
     }
 });
