@@ -14,6 +14,7 @@
     - Fix array concatenation of Entities, Records and Tabular fieldsets
     - Fix stylesheet to be compatible with pwix:validity flex display
     - Protect UI against consequences of removed validity period
+    - Make sure form data is updated on data context changes
 
 ### 1.5.0
 

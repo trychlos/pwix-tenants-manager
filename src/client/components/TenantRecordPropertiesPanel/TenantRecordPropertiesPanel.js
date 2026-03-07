@@ -104,12 +104,20 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
                         entity: dataContext.entity,
                         index: dataContext.index
                     },
-                    setForm: dataContext.entity.get().DYN.records[dataContext.index].get(),
                     enabled: enabled
                 }));
             }
         } else {
             self.TM.checker.set( null );
+        }
+    });
+
+    // setup the form with current data context
+    self.autorun(() => {
+        const dataContext = Template.currentData();
+        const checker = self.TM.checker.get();
+        if( checker && dataContext.index < dataContext.entity.get().DYN.records.length ){
+            checker.setForm( dataContext.entity.get().DYN.records[dataContext.index].get());
         }
     });
 
