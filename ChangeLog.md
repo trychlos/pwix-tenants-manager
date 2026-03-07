@@ -15,6 +15,7 @@
     - Fix stylesheet to be compatible with pwix:validity flex display
     - Protect UI against consequences of removed validity period
     - Make sure form data is updated on data context changes
+    - Rename internal Blaze components 'xxx_pane' becoming 'xxx_tab'
 
 ### 1.5.0
 
@@ -49,7 +50,7 @@
     - Export the TenantRecordPropertiesPanel component, making it suitable for use inside of an Assistant
     - Fix Tenants.s.deleteTenant() event emit
     - Display tenant managers on the tabular display
-    - Bump pwix:roles version prerequisite to take advantage of new tm_entity_scoped_pane component
+    - Bump pwix:roles version prerequisite to take advantage of new tm_entity_scoped_tab component
 
 ### 1.3.0
 

@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/client/components/tm_entity_validities_pane/tm_entity_validities_pane.js
+ * pwix:tenants-manager/src/client/components/tm_entity_validities_tab/tm_entity_validities_tab.js
  *
  * Manages a ValidityTabbed tabbed pane, where each pane is a validity period.
  *
@@ -13,9 +13,9 @@ import _ from 'lodash';
 import { Forms } from 'meteor/pwix:forms';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-import './tm_entity_validities_pane.html';
+import './tm_entity_validities_tab.html';
 
-Template.tm_entity_validities_pane.onCreated( function(){
+Template.tm_entity_validities_tab.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -24,7 +24,7 @@ Template.tm_entity_validities_pane.onCreated( function(){
     };
 });
 
-Template.tm_entity_validities_pane.onRendered( function(){
+Template.tm_entity_validities_tab.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
@@ -42,7 +42,7 @@ Template.tm_entity_validities_pane.onRendered( function(){
     });
 });
 
-Template.tm_entity_validities_pane.helpers({
+Template.tm_entity_validities_tab.helpers({
     // manage the ValidityTabbed panel
     parmsValidities(){
         return {
@@ -53,9 +53,9 @@ Template.tm_entity_validities_pane.helpers({
     }
 });
 
-Template.tm_entity_validities_pane.events({
+Template.tm_entity_validities_tab.events({
     // ask for clear the panel
-    'iz-clear-panel .tm-entity-validities-pane'( event, instance ){
+    'iz-clear-panel .tm-entity-validities-tab'( event, instance ){
         instance.TM.checker.get().clear();
     }
 });

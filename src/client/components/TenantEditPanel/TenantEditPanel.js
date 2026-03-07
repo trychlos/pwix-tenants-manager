@@ -7,29 +7,34 @@
  *
  *    TenantEditPanel                               this one: manage the events
  *     |
- *     +- Tabbed                                    manage both the entity tabs and the validities
+ *     +- Tabbed                                    manage both the entity-level tabs and the validity periods
  *     |   |
- *     |   +- tm_entity_properties_pane             (unused)
- *     |   +- tm_entity_scoped_pane                 the accounts which have a role for this tenant
- *     |   |
- *     |   +- NotesEdit                             entity notes
- *     |   |
- *     |   +- tm_entity_validities_pane
+ *     |   +- tm_entity_validities_tab              a pane which hosts all validity periods
  *     |       |
  *     |       +- ValiditiesTabbed                  manage the validities with one pane per validity period
  *     |           |
  *     |           +- Tabbed
  *     |           |   |
- *     |           |   +- tm_record_tabbed              the record edition panel, as a tabbed component
+ *     |           |   +- tm_record_tabbed          the record edition tab, as a tabbed component
  *     |           |   |   |
  *     |           |   |   +- Tabbed
  *     |           |   |       |
- *     |           |   |       +- TenantRecordPropertiesPanel
+ *     |           |   |       +- tm_record_properties_tab
+ *     |           |   |       |   |
+ *     |           |   |       |   +- TenantRecordPropertiesPanel
+ *     |           |   |       |
  *     |           |   |       +- NotesEdit             record notes
  *     |           |   |
  *     |           |   +- ValidityFieldset
  *     |           |
  *     |           +- validity_band
+ *     |   |
+ *     |   +- tm_entity_properties_tab             (unused)
+ *     |   |                                        is supposed to hosts properties of the entity itself
+ *     |   |
+ *     |   +- tm_entity_scoped_tab                 the accounts which have a role for this tenant
+ *     |   |
+ *     |   +- NotesEdit                             entity notes
  *     |
  *     +- Forms.Messager                            the messages area
  *
@@ -54,10 +59,10 @@ import { Validity } from 'meteor/pwix:validity';
 import { Entities } from '../../../common/collections/entities/index.js';
 
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
-//import '../tm_entity_properties_pane/tm_entity_properties_pane.js';
-import '../tm_entity_scoped_pane/tm_entity_scoped_pane.js';
-import '../tm_entity_validities_pane/tm_entity_validities_pane.js';
-import '../TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js';
+//import '../tm_entity_properties_tab/tm_entity_properties_tab.js';
+import '../tm_entity_scoped_tab/tm_entity_scoped_tab.js';
+import '../tm_entity_validities_tab/tm_entity_validities_tab.js';
+import '../tm_record_properties_tab/tm_record_properties_tab.js';
 import '../tm_record_tabbed/tm_record_tabbed.js';
 
 import './TenantEditPanel.html';
@@ -160,7 +165,7 @@ Template.TenantEditPanel.helpers({
         };
     },
 
-    // parms to tm_entity_properties_pane component
+    // parms to tm_entity_properties_tab component
     parmsTabbed(){
         TM = Template.instance().TM;
         const paneData = {
@@ -193,7 +198,7 @@ Template.TenantEditPanel.helpers({
         tabs.push({
             name: 'tenant_entity_validities_tab',
             navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
-            paneTemplate: 'tm_entity_validities_pane',
+            paneTemplate: 'tm_entity_validities_tab',
             paneData: {
                 ...this,
                 entity: TM.item,
@@ -204,7 +209,7 @@ Template.TenantEditPanel.helpers({
         }, {
             name: 'tenant_entity_scoped_tab',
             navLabel: pwixI18n.label( I18N, 'tabs.entity_scoped_title' ),
-            paneTemplate: 'tm_entity_scoped_pane',
+            paneTemplate: 'tm_entity_scoped_tab',
             paneData: {
                 ...this,
                 entity: TM.item,

@@ -1,5 +1,5 @@
 /*
- * pwix:tenants-manager/src/client/components/tm_entity_scoped_pane/tm_entity_scoped_pane.js
+ * pwix:tenants-manager/src/client/components/tm_entity_scoped_tab/tm_entity_scoped_tab.js
  *
  * Edit the scoped roles for this tenant.
  * This is only allowed to the scopedManagerRole role.
@@ -17,9 +17,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
-import './tm_entity_scoped_pane.html';
+import './tm_entity_scoped_tab.html';
 
-Template.tm_entity_scoped_pane.onCreated( function(){
+Template.tm_entity_scoped_tab.onCreated( function(){
     const self = this;
 
     self.TM = {
@@ -32,23 +32,23 @@ Template.tm_entity_scoped_pane.onCreated( function(){
     });
 });
 
-Template.tm_entity_scoped_pane.onRendered( function(){
+Template.tm_entity_scoped_tab.onRendered( function(){
     const self = this;
 
     // disable this tab (if any) if the user is not allowed
     self.autorun(() => {
         const allowed = self.TM.allowed.get();
-        const $pane = self.$( '.tm-entity-scoped-pane' ).closest( '.tab-pane' );
+        const $pane = self.$( '.tm-entity-scoped-tab' ).closest( '.tab-pane' );
         if( $pane && $pane.length ){
             const name = $pane.data( 'tabbed-tab-name' );
             if( name ){
-                self.$( '.tm-entity-scoped-pane' ).trigger( 'assistant-do-enable-tab', { name: name, enabled: allowed });
+                self.$( '.tm-entity-scoped-tab' ).trigger( 'assistant-do-enable-tab', { name: name, enabled: allowed });
             }
         }
     });
 });
 
-Template.tm_entity_scoped_pane.helpers({
+Template.tm_entity_scoped_tab.helpers({
     // string translation
     i18n( arg ){
         return pwixI18n.label( I18N, arg.hash.key );
