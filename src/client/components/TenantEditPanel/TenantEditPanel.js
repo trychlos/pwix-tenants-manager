@@ -10,24 +10,24 @@
  *     +- Tabbed                                    manage both the entity-level tabs and the validity periods
  *     |   |
  *     |   +- tm_entity_validities_tab              a pane which hosts all validity periods
- *     |       |
- *     |       +- ValiditiesTabbed                  manage the validities with one pane per validity period
- *     |           |
- *     |           +- Tabbed
- *     |           |   |
- *     |           |   +- tm_record_tabbed          the record edition tab, as a tabbed component
- *     |           |   |   |
- *     |           |   |   +- Tabbed
- *     |           |   |       |
- *     |           |   |       +- tm_record_properties_tab
- *     |           |   |       |   |
- *     |           |   |       |   +- TenantRecordPropertiesPanel
- *     |           |   |       |
- *     |           |   |       +- NotesEdit             record notes
- *     |           |   |
- *     |           |   +- ValidityFieldset
- *     |           |
- *     |           +- validity_band
+ *     |   |   |
+ *     |   |   +- ValiditiesTabbed                  manage the validities with one pane per validity period
+ *     |   |       |
+ *     |   |       +- Tabbed
+ *     |   |       |   |
+ *     |   |       |   +- tm_record_tabbed          the record edition tab, as a tabbed component
+ *     |   |       |   |   |
+ *     |   |       |   |   +- Tabbed
+ *     |   |       |   |       |
+ *     |   |       |   |       +- tm_record_properties_tab
+ *     |   |       |   |       |   |
+ *     |   |       |   |       |   +- TenantRecordPropertiesPanel
+ *     |   |       |   |       |
+ *     |   |       |   |       +- NotesEdit             record notes
+ *     |   |       |   |
+ *     |   |       |   +- ValidityFieldset
+ *     |   |       |
+ *     |   |       +- validity_band
  *     |   |
  *     |   +- tm_entity_properties_tab             (unused)
  *     |   |                                        is supposed to hosts properties of the entity itself

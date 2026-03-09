@@ -28,7 +28,9 @@ Template.tm_entity_scoped_tab.onCreated( function(){
 
     // check if the user is not allowed
     self.autorun(() => {
-        TenantsManager.isAllowed( 'pwix.tenants_manager.feat.roles', Meteor.userId(), Template.currentData().entity.get()._id ).then(( res ) => { self.TM.allowed.set( res ); });
+        TenantsManager.isAllowed( 'pwix.tenants_manager.feat.roles', Meteor.userId(), Template.currentData().entity.get()._id ).then(( res ) => {
+            self.TM.allowed.set( res );
+        });
     });
 });
 

@@ -169,7 +169,7 @@ Template.tm_record_tabbed.onRendered( function(){
             const parentChecker = dataContext.checker.get();
             const checker = self.TM.checker.get();
             if( parentChecker && !checker ){
-                logger.debug( 'instanciating validity checker' );
+                //logger.debug( 'instanciating validity checker' );
                 self.TM.checker.set( new Forms.Checker( self, {
                     parent: parentChecker,
                     panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),

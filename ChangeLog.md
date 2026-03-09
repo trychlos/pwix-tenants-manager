@@ -16,6 +16,7 @@
     - Protect UI against consequences of removed validity period
     - Make sure form data is updated on data context changes
     - Rename internal Blaze components 'xxx_pane' becoming 'xxx_tab'
+    - Fix stylesheet to better manage flex layout
 
 ### 1.5.0
 
