@@ -129,7 +129,7 @@ Template.TenantEditPanel.onRendered( function(){
     // set the modal target
     self.autorun(() => {
         if( self.TM.isModal.get()){
-            Modal.set({
+            Modal.topmost().set({
                 target: self.$( '.TenantEditPanel' )
             });
         }
@@ -143,9 +143,9 @@ Template.TenantEditPanel.onRendered( function(){
             Tracker.nonreactive(() => {
                 const modal = Modal.topmost();
                 const _setOKButton = function(){
-                    const $btn = Modal.buttonFind( Modal.C.Button.OK );
+                    const $btn = modal.buttonFind( Modal.C.Button.OK );
                     if( $btn && $btn.length ){
-                        Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
+                        modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
                     }
                 };
                 checker = new Forms.Checker( self );
@@ -168,16 +168,14 @@ Template.TenantEditPanel.onRendered( function(){
                         }
                         if( hasChanges !== self.TM.hasChanges ){
                             const modal = Modal.topmost();
-                            Modal.set({
+                            modal.set({
                                 buttons: buttons
                             });
                             self.TM.hasChanges = hasChanges;
                             await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
-                            const $btnok = Modal.buttonFind( Modal.C.Button.OK );
-                            logger.debug( 'onUpdateFn()', hasChanges, buttons, $btnok );
-                            if( $btnok && $btnok.length ){
-                                Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
-                            }
+                            // normally done by onValidityChangeRegisterFn() unless the two functions are triggered too closely 
+                            // (e.g. when we erase a mandatory field) and the button doesn't have time to appear before onValidityChangeRegisterFn() is triggered
+                            _setOKButton();
                         }
                     }
                 }).then(() => {
@@ -333,7 +331,7 @@ Template.TenantEditPanel.events({
             .then(() => {
                 Tolert.success( pwixI18n.label( I18N, instance.TM.isNew.get() ? 'edit.new_success' : 'edit.edit_success', label ));
                 if( instance.TM.isModal.get()){
-                    Modal.close();
+                    Modal.topmost().close();
                 } else {
                     instance.$( '.c-record-properties-pane' ).trigger( 'iz-clear-panel' );
                     instance.$( '.NotesEdit' ).trigger( 'iz-clear-panel' );

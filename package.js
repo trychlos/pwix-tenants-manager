@@ -36,7 +36,7 @@ function configure( api ){
     api.use( 'pwix:i18n@1.5.7' );
     api.use( 'pwix:image-includer@1.0.0-rc' );
     api.use( 'pwix:logger@1.0.0-rc' );
-    api.use( 'pwix:modal@2.0.0' );
+    api.use( 'pwix:modal@2.5.0-rc' );
     api.use( 'pwix:notes@1.0.0-rc' );
     api.use( 'pwix:roles@1.7.0-rc' );
     api.use( 'pwix:tabbed@1.0.0-rc' );

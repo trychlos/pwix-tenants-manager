@@ -18,6 +18,7 @@
     - Rename internal Blaze components 'xxx_pane' becoming 'xxx_tab'
     - Fix stylesheet to better manage flex layout
     - Update to pwix:forms v1.6
+    - Update to pwix:modal v2.5
 
 ### 1.5.0
 
