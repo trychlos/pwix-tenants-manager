@@ -12,10 +12,10 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { TM } from 'meteor/pwix:typed-message';
 
+import { Tenants } from './index.js';
+
 import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
-
-import { Tenants } from './index.js';
 
 const logger = Logger.get();
 
@@ -134,6 +134,7 @@ Tenants.checks.homeUrl = async function( value, data, opts ){
 // the label must be set, and must identify the entity
 Tenants.checks.label = async function( value, data, opts ){
     _assert_data_content( 'Tenants.checks.label()', data );
+    //logger.debug( 'checks.label()', value, data, opts );
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.label = value;

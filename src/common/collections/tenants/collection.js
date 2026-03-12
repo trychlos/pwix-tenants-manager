@@ -7,7 +7,8 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import '../../js/index.js';
 
 export const Tenants = {
-    fieldSet: new ReactiveVar( null )
+    fieldSet: new ReactiveVar( null ),
+    ready: new ReactiveVar( false )
 };
 
 TenantsManager.Tenants = Tenants;

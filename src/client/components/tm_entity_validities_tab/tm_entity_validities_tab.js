@@ -12,6 +12,7 @@ import _ from 'lodash';
 
 import { Forms } from 'meteor/pwix:forms';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker';
 
 import './tm_entity_validities_tab.html';
 
@@ -30,14 +31,19 @@ Template.tm_entity_validities_tab.onRendered( function(){
     // initialize the Checker for this panel as soon as we get the parent Checker
     self.autorun(() => {
         const parentChecker = Template.currentData().checker?.get();
-        const checker = self.TM.checker.get();
+        let checker = self.TM.checker.get();
         if( parentChecker && !checker ){
-            self.TM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                data: {
-                    item: Template.currentData().item
-                }
-            }));
+            Tracker.nonreactive(() => {
+                checker = new Forms.Checker( self);
+                checker.init({
+                    parent: parentChecker,
+                    data: {
+                        item: Template.currentData().item
+                    }
+                }).then(() => {
+                    self.TM.checker.set( checker );
+                });
+            });
         }
     });
 });
@@ -56,6 +62,6 @@ Template.tm_entity_validities_tab.helpers({
 Template.tm_entity_validities_tab.events({
     // ask for clear the panel
     'iz-clear-panel .tm-entity-validities-tab'( event, instance ){
-        instance.TM.checker.get().clear();
+        instance.TM.checker.get().clearForm();
     }
 });

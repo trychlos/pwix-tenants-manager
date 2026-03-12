@@ -11,11 +11,8 @@
 
 import _ from 'lodash';
 
-import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
-
-import { Entities } from '../../../common/collections/entities/index.js';
 
 import './tm_entity_scoped_tab.html';
 

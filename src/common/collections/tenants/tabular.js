@@ -13,10 +13,10 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
 
+import { Tenants } from './index.js';
+
 import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
-
-import { Tenants } from './index.js';
 
 const _entity = async function( data ){
     const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: data.entity }) : await Entities.s.getBy({ _id: data.entity }, Meteor.userId());

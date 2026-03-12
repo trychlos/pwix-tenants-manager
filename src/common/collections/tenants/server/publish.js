@@ -5,10 +5,10 @@
 import { Logger } from 'meteor/pwix:logger';
 import { Validity } from 'meteor/pwix:validity';
 
+import { Tenants } from '../index.js';
+
 import { Entities } from '../../entities/index.js';
 import { Records } from '../../records/index.js';
-
-import { Tenants } from '../index.js';
 
 const logger = Logger.get();
 
@@ -250,6 +250,8 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             const res = Validity.englobingPeriodByRecords( fetched );
             item.effectStart = res.start;
             item.effectEnd = res.end;
+            //logger.debug( 'pwix_tenants_manager_tenants_tabular, res', res );
+            return true;
         }));
         await Promise.allSettled( promises );
         // extend on option

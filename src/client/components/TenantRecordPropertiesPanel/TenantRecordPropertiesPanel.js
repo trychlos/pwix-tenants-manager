@@ -16,6 +16,7 @@ import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker';
 
 import { Records } from '../../../common/collections/records/index.js';
 
@@ -94,18 +95,23 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const parentChecker = dataContext.checker?.get();
-            const checker = self.TM.checker.get();
+            let checker = self.TM.checker.get();
             if( parentChecker && !checker ){
-                const enabled = dataContext.enableChecks !== false;
-                self.TM.checker.set( new Forms.Checker( self, {
-                    parent: parentChecker,
-                    panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
-                    data: {
-                        entity: dataContext.entity,
-                        index: dataContext.index
-                    },
-                    enabled: enabled
-                }));
+                Tracker.nonreactive(() => {
+                    const enabled = dataContext.enableChecks !== false;
+                    checker = new Forms.Checker( self );
+                    checker.init({
+                        parent: parentChecker,
+                        panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                        data: {
+                            entity: dataContext.entity,
+                            index: dataContext.index
+                        },
+                        enabled: enabled
+                    }).then(() => {
+                        self.TM.checker.set( checker );
+                    })
+                });
             }
         } else {
             self.TM.checker.set( null );
@@ -117,7 +123,7 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
         const dataContext = Template.currentData();
         const checker = self.TM.checker.get();
         if( checker && dataContext.index < dataContext.entity.get().DYN.records.length ){
-            checker.setForm( dataContext.entity.get().DYN.records[dataContext.index].get());
+            checker.panel().setForm( dataContext.entity.get().DYN.records[dataContext.index].get());
         }
     });
 
@@ -172,7 +178,7 @@ Template.TenantRecordPropertiesPanel.events({
 
     // ask for clear the panel
     'iz-clear-panel .TenantRecordPropertiesPanel'( event, instance ){
-        instance.TM.checker.get().clear();
+        instance.TM.checker.get().clearForm();
     },
 
     // ask for enabling the checker (when this panel is used inside of an assistant)

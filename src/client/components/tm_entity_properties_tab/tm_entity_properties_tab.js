@@ -13,6 +13,7 @@ import _ from 'lodash';
 import { Forms } from 'meteor/pwix:forms';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker';
 
 import { Entities } from '../../../common/collections/entities/index.js';
 
@@ -38,15 +39,20 @@ Template.tm_entity_properties_tab.onRendered( function(){
             }
         };
         const parentChecker = Template.currentData()?.checker.get();
-        const checker = self.TM.checker.get();
+        let checker = self.TM.checker.get();
         if( parentChecker && !checker ){
-            self.TM.checker.set( new Forms.Checker( self, {
-                parent: parentChecker,
-                panel: new Forms.Panel( fields, Entities.fieldSet.get()),
-                data: {
-                    item: Template.currentData().item
-                }
-            }));
+            Tracker.nonreactive(() => {
+                checker = new Forms.Checker( self );
+                checker.init({
+                    parent: parentChecker,
+                    panel: new Forms.Panel( fields, Entities.fieldSet.get()),
+                    data: {
+                        item: Template.currentData().item
+                    }
+                }).then(() => {
+                    self.TM.checker.set( checker );
+                });
+            });
         }
     });
 });

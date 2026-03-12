@@ -10,8 +10,6 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
 
-import { Tenants } from '../../../common/collections/tenants/index.js';
-
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';
@@ -84,7 +82,7 @@ Template.TenantsList.events({
         Modal.run({
             ...this,
             mdBody: 'TenantEditPanel',
-            mdButtons: [ Modal.C.Button.CANCEL, Modal.C.Button.OK ],
+            mdButtons: [ Modal.C.Button.CLOSE ],
             mdClasses: this.mdClasses || 'modal-xl',
             mdClassesContent: TenantsManager.configure().classes,
             mdTitle: pwixI18n.label( I18N, 'edit.modal_title', tenant.DYN.closest.label ),

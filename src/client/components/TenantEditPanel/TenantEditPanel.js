@@ -54,8 +54,11 @@ import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tolert } from 'meteor/pwix:tolert';
+import { Tracker } from 'meteor/tracker';
+import { UIUtils } from 'meteor/pwix:ui-utils';
 import { Validity } from 'meteor/pwix:validity';
 
+import { Tenants } from '../../../common/collections/tenants/index.js';
 import { Entities } from '../../../common/collections/entities/index.js';
 
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
@@ -80,10 +83,14 @@ Template.TenantEditPanel.onCreated( function(){
         messager: new Forms.Messager(),
         // whether the item is a new one ?
         isNew: new ReactiveVar( false ),
+        // the original (unchanged) item
+        orig: null,
         // the item to be edited (a deep copy of the original)
         item: new ReactiveVar( null ),
         // whether we are running inside of a Modal
-        isModal: new ReactiveVar( false )
+        isModal: new ReactiveVar( false ),
+        // whether we have some changes in the dialog
+        hasChanges: false
     };
 
     // provided item = entity+records
@@ -94,14 +101,15 @@ Template.TenantEditPanel.onCreated( function(){
         // setup the item to be edited
         //  we want a clone deep of the provided item, so that we are able to cancel the edition without keeping any sort of data
         //  and we want ReactiveVar's both for every record and for the entity
-        const dup = _.cloneDeep( item || { DYN: { managers: [], records: [{}] }});
+        const dup = _.cloneDeep( item || { DYN: { managers: [], closest: {}, records: [{}] }});
         let records = [];
         dup.DYN.records.forEach(( it ) => {
             records.push( new ReactiveVar( it ));
         });
         dup.DYN.records = records;
-        //logger.debug( 'deep-duplicating original item' );
         self.TM.item.set( dup );
+        // setup the kept original item as a comparable copy
+        self.TM.orig = Tenants.comparable( item );
     });
 
     // track the edited item
@@ -118,7 +126,7 @@ Template.TenantEditPanel.onRendered( function(){
         self.TM.isModal.set( self.$( '.TenantEditPanel' ).parent().hasClass( 'modal-body' ));
     });
 
-    // set the modal target+title
+    // set the modal target
     self.autorun(() => {
         if( self.TM.isModal.get()){
             Modal.set({
@@ -130,14 +138,60 @@ Template.TenantEditPanel.onRendered( function(){
     // allocate a Checker
     //  note that this is a topmost template only when we are running inside of a modal - else have to wait for a parent checker
     self.autorun(() => {
-        self.TM.checker.set( new Forms.Checker( self, {
-            messager: self.TM.messager,
-            okFn( valid ){
-                if( self.TM.isModal ){
-                    Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
-                }
-            }
-        }));
+        let checker = self.TM.checker.get();
+        if( !checker && self.TM.isModal.get()){
+            Tracker.nonreactive(() => {
+                const modal = Modal.topmost();
+                const _setOKButton = function(){
+                    const $btn = Modal.buttonFind( Modal.C.Button.OK );
+                    if( $btn && $btn.length ){
+                        Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
+                    }
+                };
+                checker = new Forms.Checker( self );
+                checker.init({
+                    name: 'TenantEditPanel',
+                    messager: self.TM.messager,
+                    async onValidityChangeRegisterFn( valid ){
+                        _setOKButton();
+                    },
+                    // update the modal buttons 'Close' while there is no modif, then 'Cancel' and 'OK'
+                    // when evaluating diffs, only consider entity/records relative data
+                    async onUpdateRegisterFn( data, opts ){
+                        let hasChanges = false;
+                        let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
+                        const item = Tenants.comparable( self.TM.item.get());
+                        if( !_.isEqual( item, self.TM.orig )){
+                            //Tenants.explainDifferences( self.TM.orig, item );
+                            hasChanges = true;
+                            buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CANCEL, Modal.C.Button.OK ];
+                        }
+                        if( hasChanges !== self.TM.hasChanges ){
+                            const modal = Modal.topmost();
+                            Modal.set({
+                                buttons: buttons
+                            });
+                            self.TM.hasChanges = hasChanges;
+                            await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
+                            const $btnok = Modal.buttonFind( Modal.C.Button.OK );
+                            logger.debug( 'onUpdateFn()', hasChanges, buttons, $btnok );
+                            if( $btnok && $btnok.length ){
+                                Modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
+                            }
+                        }
+                    }
+                }).then(() => {
+                    self.TM.checker.set( checker );
+                });
+            });
+        }
+    });
+
+    self.autorun(() => {
+        const checker = self.TM.checker.get();
+        if( checker ){
+            logger.debug( 'valid', checker.iStatusableValidity());
+        }
     });
 });
 

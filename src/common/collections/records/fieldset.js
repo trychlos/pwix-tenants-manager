@@ -115,12 +115,14 @@ const _defaultFieldSet = function( conf ){
 };
 
 Tracker.autorun(() => {
-    const conf = TenantsManager.configure();
-    let columns = _defaultFieldSet( conf );
-    let fieldset = new Field.Set( columns );
-    // add application-configured fieldset if any
-    if( conf.recordFields ){
-        fieldset.extend( conf.recordFields );
+    if( Tenants.ready.get()){
+        const conf = TenantsManager.configure();
+        let columns = _defaultFieldSet( conf );
+        let fieldset = new Field.Set( columns );
+        // add application-configured fieldset if any
+        if( conf.recordFields ){
+            fieldset.extend( conf.recordFields );
+        }
+        Records.fieldSet.set( fieldset );
     }
-    Records.fieldSet.set( fieldset );
 });

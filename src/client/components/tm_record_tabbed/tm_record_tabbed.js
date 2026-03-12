@@ -22,6 +22,7 @@ import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tracker } from 'meteor/tracker';
 
 import { Records } from '../../../common/collections/records/index.js';
 
@@ -35,11 +36,14 @@ Template.tm_record_tabbed.onCreated( function(){
 
     self.TM = {
         fields: {
+            // 'js' css selectors are chosen so that indicators are positionned inside of the fieldset
             effectStart: {
-                js: '.js-start .js-date-input',
+                js: '.js-start .date-container',
+                dom: '.js-start .js-date-input',
             },
             effectEnd: {
-                js: '.js-end .js-date-input',
+                js: '.js-end .date-container',
+                dom: '.js-end .js-date-input',
             }
         },
         // the Checker instance
@@ -167,17 +171,21 @@ Template.tm_record_tabbed.onRendered( function(){
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const parentChecker = dataContext.checker.get();
-            const checker = self.TM.checker.get();
+            let checker = self.TM.checker.get();
             if( parentChecker && !checker ){
-                //logger.debug( 'instanciating validity checker' );
-                self.TM.checker.set( new Forms.Checker( self, {
-                    parent: parentChecker,
-                    panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
-                    data: {
-                        entity: dataContext.entity,
-                        index: dataContext.index
-                    }
-                }));
+                Tracker.nonreactive(() => {
+                    checker = new Forms.Checker( self );
+                    checker.init({
+                        parent: parentChecker,
+                        panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                        data: {
+                            entity: dataContext.entity,
+                            index: dataContext.index
+                        }
+                    }).then(() => {
+                        self.TM.checker.set( checker );
+                    });
+                });
             }
         } else {
             self.TM.checker.set( null );
