@@ -137,9 +137,11 @@ Template.TenantEditPanel.onRendered( function(){
 
     // allocate a Checker
     //  note that this is a topmost template only when we are running inside of a modal - else have to wait for a parent checker
-    self.autorun(() => {
+    let running = false;
+    self.autorun(( comp ) => {
         let checker = self.TM.checker.get();
-        if( !checker && self.TM.isModal.get()){
+        if( !checker && self.TM.isModal.get() && !running ){
+            running = true;
             Tracker.nonreactive(() => {
                 const modal = Modal.topmost();
                 const _setOKButton = function(){
@@ -180,6 +182,7 @@ Template.TenantEditPanel.onRendered( function(){
                     }
                 }).then(() => {
                     self.TM.checker.set( checker );
+                    comp.stop();
                 });
             });
         }

@@ -167,12 +167,14 @@ Template.tm_record_tabbed.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
-    self.autorun(() => {
+    let running = false;
+    self.autorun(( comp ) => {
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const parentChecker = dataContext.checker.get();
             let checker = self.TM.checker.get();
-            if( parentChecker && !checker ){
+            if( parentChecker && !checker && !running ){
+                running = true;
                 Tracker.nonreactive(() => {
                     checker = new Forms.Checker( self );
                     checker.init({
@@ -184,6 +186,7 @@ Template.tm_record_tabbed.onRendered( function(){
                         }
                     }).then(() => {
                         self.TM.checker.set( checker );
+                        comp.stop();
                     });
                 });
             }

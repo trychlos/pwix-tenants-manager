@@ -23,6 +23,11 @@ Template.tm_entity_properties_tab.onCreated( function(){
     const self = this;
 
     self.TM = {
+        fields: {
+            label: {
+                js: '.js-label'
+            }
+        },
         // the Checker instance
         checker: new ReactiveVar( null )
     };
@@ -32,25 +37,24 @@ Template.tm_entity_properties_tab.onRendered( function(){
     const self = this;
 
     // initialize the Checker for this panel as soon as we get the parent Checker
-    self.autorun(() => {
-        const fields = {
-            label: {
-                js: '.js-label'
-            }
-        };
-        const parentChecker = Template.currentData()?.checker.get();
+    let running = false;
+    self.autorun(( comp ) => {
+        const dataContext = Template.currentData();
+        const parentChecker = dataContext.checker?.get();
         let checker = self.TM.checker.get();
-        if( parentChecker && !checker ){
+        if( parentChecker && !checker && !running ){
+            running = true;
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
                 checker.init({
                     parent: parentChecker,
                     panel: new Forms.Panel( fields, Entities.fieldSet.get()),
                     data: {
-                        item: Template.currentData().item
+                        item: dataContext.item
                     }
                 }).then(() => {
                     self.TM.checker.set( checker );
+                    comp.stop();
                 });
             });
         }
