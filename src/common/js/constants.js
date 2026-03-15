@@ -8,15 +8,19 @@ TenantsManager.C = {
     pub: {
         closests: {
             collection: 'pwix_tenants_manager_closests_ids',
-            publish: 'pwix_tenants_manager_tenants_closests_ids'
+            publish: 'pwix.TenantsManager.p.Tenants.closests'
+        },
+        getScopes: {
+            collection: 'pwix_tenants_manager_get_scopes',
+            publish: 'pwix.TenantsManager.p.Tenants.getScopes'
         },
         selecting: {
             collection: 'pwix_tenants_manager_selecting',
-            publish: 'pwix_tenants_manager_selecting'
+            publish: 'pwix.TenantsManager.p.Tenants.selecting'
         },
         tenantsAll: {
             collection: 'pwix_tenants_manager_tenants_all',
-            publish: 'pwix_tenants_manager_tenants_list_all'
+            publish: 'pwix.TenantsManager.p.Tenants.listAll'
         }
     },
 

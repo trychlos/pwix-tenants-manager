@@ -21,7 +21,7 @@ Template.tm_entity_notes_dt.onCreated( function(){
     self.autorun(() => {
         const item = Template.currentData().item;
         if( item ){
-            Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: item.entity }).then(( res ) => { res.length && self.TM.entity.set( res[0] ); });
+            Meteor.callAsync( 'pwix.TenantsManager.m.Entities.getBy', { _id: item.entity }).then(( res ) => { res.length && self.TM.entity.set( res[0] ); });
         }
     });
 });

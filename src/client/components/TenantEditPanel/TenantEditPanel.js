@@ -327,10 +327,10 @@ Template.TenantEditPanel.events({
         const item = instance.TM.item.get();
         const label = Validity.closest( item ).record.label || '';
         //logger.debug( 'item', item );
-        Meteor.callAsync( 'pwix_tenants_manager_tenants_upsert', item )
+        Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.upsert', item )
             .then(( res ) => {
                 //logger.debug( 'res', res );
-                return Meteor.callAsync( 'pwix_tenants_manager_tenants_set_managers', item )
+                return Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.setManagers', item )
             })
             .then(() => {
                 Tolert.success( pwixI18n.label( I18N, instance.TM.isNew.get() ? 'edit.new_success' : 'edit.edit_success', label ));

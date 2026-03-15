@@ -45,7 +45,7 @@ An async function which returns an array of known tenants identifier, and their 
 
 This function is not reactive.
 
-If reactivity is desired, the caller should prefer the `pwix_tenants_manager_tenants_get_scopes` publication.
+If reactivity is desired, the caller should prefer the `pwix.TenantsManager.m.Tenants.getScopes` publication.
 
 ##### `TenantsManager.i18n.namespace()`
 

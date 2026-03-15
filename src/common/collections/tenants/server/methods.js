@@ -5,21 +5,21 @@
 import { Tenants } from '../index.js';
 
 Meteor.methods({
-    async 'pwix_tenants_manager_tenants_delete_tenant'( entity ){
+    async 'pwix.TenantsManager.m.Tenants.delete'( entity ){
         return await Tenants.s.deleteTenant( entity, this.userId );
     },
 
     // update the managers of a tenant
-    async 'pwix_tenants_manager_tenants_get_scopes'(){
+    async 'pwix.TenantsManager.m.Tenants.getScopes'(){
         return await Tenants.s.getScopes( this.userId );
     },
 
-    async 'pwix_tenants_manager_tenants_set_managers'( item ){
+    async 'pwix.TenantsManager.m.Tenants.setManagers'( item ){
         return await Tenants.s.setManagers( item, this.userId );
     },
 
     // upsert a tenant
-    async 'pwix_tenants_manager_tenants_upsert'( item ){
+    async 'pwix.TenantsManager.m.Tenants.upsert'( item ){
         return await Tenants.s.upsert( item, this.userId );
     }
 });

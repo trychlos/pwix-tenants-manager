@@ -6,7 +6,7 @@ import { Records } from '../index.js';
 
 Meteor.methods({
     // search an entity by an attribute
-    async 'pwix_tenants_manager_records_getBy'( selector ){
+    async 'pwix.TenantsManager.m.Records.getBy'( selector ){
         return await Records.s.getBy( selector, this.userId );
     }
 });

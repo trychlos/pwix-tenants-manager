@@ -20,6 +20,7 @@
     - Update to pwix:forms v1.6
     - Update to pwix:modal v2.5
     - Make sure dynamic data are installed in DYN object
+    - Make sure methods and publications are prefixed with a full namespace
 
 ### 1.5.0
 
@@ -89,7 +90,7 @@
 
     Release date: 2024- 9-13
 
-    - Introduce 'pwix_tenants_manager_selecting' publication to let a user select a tenant and a validity period
+    - Introduce 'pwix.TenantsManager.p.Tenants.selecting' publication to let a user select a tenant and a validity period
     - Let both entity and record tabbed views be extended, thus bumping minor candidate version number
     - Let the edition modal size be provided by the caller, defaulting to 'modal-xl'
     - Let the caller extends the buttons displayed on the right side of each row

@@ -11,7 +11,7 @@ TenantsManager.getScopes = async function(){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_scopes' )){
         return [];
     }
-    return await ( Meteor.isClient ? Meteor.callAsync( 'pwix_tenants_manager_tenants_get_scopes' ) : TenantsManager.s.getScopes());
+    return await ( Meteor.isClient ? Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.getScopes' ) : TenantsManager.s.getScopes());
 };
 
 // as of v1.5.0, permissions are simplified

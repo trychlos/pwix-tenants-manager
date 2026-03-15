@@ -68,7 +68,7 @@ Template.TenantsList.events({
     // delete a tenant - this will delete all the validity records too
     'tabular-delete-event .TenantsList'( event, instance, data ){
         const label = data.item.label;
-        Meteor.callAsync( 'pwix_tenants_manager_tenants_delete_tenant', data.item.DYN.entity._id )
+        Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.delete', data.item.DYN.entity._id )
             .then(( res ) => {
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
             })

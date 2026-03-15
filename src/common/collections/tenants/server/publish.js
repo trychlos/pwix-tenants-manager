@@ -104,9 +104,9 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
 });
 
 /*
- * This publishes a list of the closest record ids for all entities
+ * This publishes a list of the closest record for all entities
  * A tabular requisite n° 1
- * Publishes the list of ids to be displayed as a list of { closest_id } objects
+ * Publishes the list of records to be displayed as a list of { closest } objects
  */
 Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     const self = this;
@@ -220,7 +220,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
  * These are the fields from the closest record, plus the entity_notes from the entity,
  *  and with effectStart and effectEnd being from the first and last records.
  */
-Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableName, ids, fields ){
+Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tableName, ids, fields ){
     const self = this;
     const collectionName = Records.collectionName;
     let initializing = true;
@@ -250,7 +250,7 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             const res = Validity.englobingPeriodByRecords( fetched );
             item.DYN.effectStart = res.start;
             item.DYN.effectEnd = res.end;
-            //logger.debug( 'pwix_tenants_manager_tenants_tabular, res', res );
+            //logger.debug( 'pwix.TenantsManager.p.Tenants.tabularLast, res', res );
             return true;
         }));
         await Promise.allSettled( promises );
@@ -316,14 +316,14 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
  * Publishes an array of { entity_id, closest_label } objects
  * NB: any connected user is allowed to subscribe to this publication in order to be able to have a scope label in front of its scoped roles
  */
-Meteor.publish( 'pwix_tenants_manager_tenants_get_scopes', async function(){
+Meteor.publish( TenantsManager.C.pub.getScopes.publish, async function(){
     const self = this;
     const userId = this.userId;
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.list', userId )){
         self.ready();
         return;
     }
-    const collectionName = 'pwix_tenants_manager_tenants_get_scopes';
+    const collectionName = TenantsManager.C.pub.getScopes.collection;
     let initializing = true;
     let entities = {};
 
@@ -385,14 +385,14 @@ Meteor.publish( 'pwix_tenants_manager_tenants_get_scopes', async function(){
 /*
  * This publishes a list of the allowed scopes and validity periods to be used as a reference when selecting a tenant as a run context
  */
-Meteor.publish( 'pwix_tenants_manager_selecting', async function(){
+Meteor.publish( TenantsManager.C.pub.selecting.publish, async function(){
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.selecting', this.userId )){
         this.ready();
         return false;
     }
 
     const self = this;
-    const collectionName = 'pwix_tenants_manager_selecting';
+    const collectionName = TenantsManager.C.pub.selecting.collection;
     let initializing = true;
     let entities = {};
 

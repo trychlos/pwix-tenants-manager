@@ -22,7 +22,7 @@ import { Records } from '../records/index.js';
 const logger = Logger.get();
 
 const _entity = async function( data ){
-    const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: data.entity }) : await Entities.s.getBy({ _id: data.entity }, Meteor.userId());
+    const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix.TenantsManager.m.Entities.getBy', { _id: data.entity }) : await Entities.s.getBy({ _id: data.entity }, Meteor.userId());
     return entity[0];
 };
 
@@ -49,7 +49,7 @@ Tracker.autorun(() => {
             name: 'Tenants',
             collection: Records.collection,
             columns: Tenants.fieldSet.get().toTabular(),
-            pub: 'pwix_tenants_manager_tenants_tabular',
+            pub: 'pwix.TenantsManager.p.Tenants.tabularLast',
             pwix: {
                 // have a badge which displays the count of validity records if greater than 1
                 // let this array be extended by the calling application
