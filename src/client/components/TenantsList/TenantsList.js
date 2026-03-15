@@ -5,6 +5,7 @@
  * - see README
  */
 
+import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -13,6 +14,8 @@ import { Tolert } from 'meteor/pwix:tolert';
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';
+
+const logger = Logger.get();
 
 Template.TenantsList.onCreated( function(){
     const self = this;
@@ -65,7 +68,7 @@ Template.TenantsList.events({
     // delete a tenant - this will delete all the validity records too
     'tabular-delete-event .TenantsList'( event, instance, data ){
         const label = data.item.label;
-        Meteor.callAsync( 'pwix_tenants_manager_tenants_delete_tenant', data.item.entity )
+        Meteor.callAsync( 'pwix_tenants_manager_tenants_delete_tenant', data.item.DYN.entity._id )
             .then(( res ) => {
                 Tolert.success( pwixI18n.label( I18N, 'delete.success', label ));
             })
@@ -78,7 +81,7 @@ Template.TenantsList.events({
     // edit a tenant
     //  the buttons from tabular provide the entity document
     'tabular-edit-event .TenantsList'( event, instance, data ){
-        const tenant = TenantsManager.list.byEntity( data.item._id );
+        const tenant = TenantsManager.list.byEntity( data.item.DYN.entity._id );
         Modal.run({
             ...this,
             mdBody: 'TenantEditPanel',

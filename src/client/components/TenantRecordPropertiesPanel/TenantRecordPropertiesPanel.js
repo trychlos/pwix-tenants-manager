@@ -196,5 +196,5 @@ Template.TenantRecordPropertiesPanel.events({
 });
 
 Template.TenantRecordPropertiesPanel.onDestroyed( function(){
-    logger.debug( 'onDestroyed()' );
+    //logger.debug( 'onDestroyed()' );
 });

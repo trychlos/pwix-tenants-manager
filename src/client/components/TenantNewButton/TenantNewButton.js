@@ -4,7 +4,7 @@
  * Let the accounts manager create a new account.
  *
  * Parms:
- *  - none, though all plusButton parameters will be passed through
+ *  - none, though all PlusButton parameters will be passed through
  */
 
 import _ from 'lodash';
@@ -22,7 +22,7 @@ Template.TenantNewButton.helpers({
         return TenantsManager.isAllowed( 'pwix.tenants_manager.feat.create' );
     },
 
-    // parms for new tenant (plusButton)
+    // parms for new tenant (PlusButton)
     parmsNewTenant(){
         const parms = { ...this };
         if( !parms.label ){
@@ -36,7 +36,7 @@ Template.TenantNewButton.helpers({
 });
 
 Template.TenantNewButton.events({
-    'click .plusButton'( event, instance ){
+    'click .PlusButton'( event, instance ){
         Modal.run({
             ...this,
             mdBody: 'TenantEditPanel',

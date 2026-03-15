@@ -188,10 +188,11 @@ Template.TenantEditPanel.onRendered( function(){
         }
     });
 
+    // track tenant validity status
     self.autorun(() => {
         const checker = self.TM.checker.get();
         if( checker ){
-            logger.debug( 'valid', checker.iStatusableValidity());
+            //logger.debug( 'valid', checker.iStatusableValidity());
         }
     });
 });

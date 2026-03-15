@@ -9,6 +9,7 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tracker } from 'meteor/tracker';
@@ -17,6 +18,8 @@ import { Tenants } from './index.js';
 
 import { Entities } from '../entities/index.js';
 import { Records } from '../records/index.js';
+
+const logger = Logger.get();
 
 const _entity = async function( data ){
     const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix_tenants_manager_entities_getBy', { _id: data.entity }) : await Entities.s.getBy({ _id: data.entity }, Meteor.userId());
@@ -104,9 +107,7 @@ Tracker.autorun(() => {
                         $( cells[columns[it].index] ).addClass( 'dt-different' );   
                     }
                 });
-                // display the englobing period as start and end effect dates
-                data.effectStart = data.DYN.start;
-                data.effectEnd = data.DYN.end;
+                //logger.debug( 'rowData', data );
             }
         });
     }

@@ -27,7 +27,7 @@ const _defaultFieldSet = function( conf ){
             dt_title: pwixI18n.label( I18N, 'list.managers_th' ),
             dt_render( data, type, rowData ){
                 let emails = [];
-                rowData.managers.forEach(( it ) => {
+                rowData.DYN.managers.forEach(( it ) => {
                     emails.push( it.emails[0].address );
                 });
                 return emails.join( ', ' );

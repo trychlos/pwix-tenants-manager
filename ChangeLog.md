@@ -19,6 +19,7 @@
     - Fix stylesheet to better manage flex layout
     - Update to pwix:forms v1.6
     - Update to pwix:modal v2.5
+    - Make sure dynamic data are installed in DYN object
 
 ### 1.5.0
 

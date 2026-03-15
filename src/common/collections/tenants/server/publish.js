@@ -248,8 +248,8 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             item.DYN.analyze = Validity.analyzeByRecords( fetched );
             item.DYN.records = fetched;
             const res = Validity.englobingPeriodByRecords( fetched );
-            item.effectStart = res.start;
-            item.effectEnd = res.end;
+            item.DYN.effectStart = res.start;
+            item.DYN.effectEnd = res.end;
             //logger.debug( 'pwix_tenants_manager_tenants_tabular, res', res );
             return true;
         }));
@@ -269,10 +269,9 @@ Meteor.publish( 'pwix_tenants_manager_tenants_tabular', async function( tableNam
             entity = await Entities.collection.findOneAsync({ _id: item.entity });
         }
         if( entity ){
-            item.entity_notes = entity.notes;
             item.DYN.entity = entity;
         }
-        item.managers = await Tenants.s.getManagers( entity._id );
+        item.DYN.managers = await Tenants.s.getManagers( entity._id );
     };
 
     const entitiesObserver = Entities.collection.find().observeAsync({
