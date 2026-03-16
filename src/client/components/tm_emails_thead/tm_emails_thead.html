@@ -1,0 +1,42 @@
+<template name="tm_emails_thead">
+
+    <tr class="tm-emails-thead">
+        <td></td>
+        <td>
+            <div class="preamble">
+                {{{ i18n key="records.properties.emails_preamble" }}}
+            </div>
+        </td>
+        <td></td>
+    </tr>
+    <tr class="tm-emails-thead">
+        <td></td>
+        <td>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="ui-w50">
+                            <p class="header">{{ i18n key="records.properties.emails_label_th" }}</p>
+                        </th>
+                        <th><p class="spacing"></p></th>
+                        <th class="ui-w50">
+                            <p class="header">{{ i18n key="records.properties.emails_email_th" }}</p>
+                        </th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary ui-ml025 js-plus" title="{{ i18n key="records.properties.emails_add_title" }}" {{ plusDisabled }}>
+                                <span class="fa-solid fa-fw fa-plus"></span>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each it in itemsList }}
+                        {{> tm_email_row (parmsRow it) }}
+                    {{/each}}
+                </tbody>
+            </table>
+        </td>
+        <td></td>
+    </tr>
+
+</template>

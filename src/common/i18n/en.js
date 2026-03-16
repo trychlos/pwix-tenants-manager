@@ -20,22 +20,28 @@ TenantsManager.i18n = {
             },
             edit: {
                 edit_success: 'The tenant "%s" has been successfully updated',
+                emails_dialog_title: 'All email addresses',
                 error: 'An unknown error unfortunately occurred. Please retry later',
                 modal_title: 'Editing the "%s" tenant',
-                new_success: 'The tenant "%s" has been successfully created'
+                new_success: 'The tenant "%s" has been successfully created',
+                urls_dialog_title: 'All URLs'
             },
             list: {
                 contact_email_th: 'Contact email',
                 contact_page_th: 'Contact page',
                 effect_end_th: 'Last ending',
                 effect_start_th: 'First starting',
+                emails_more_title: 'Display all email addresses',
+                emails_th: 'Emails',
                 entity_notes_th: 'Tenant notes',
                 home_page_th: 'Home page',
                 label_th: 'Label',
                 managers_th: 'Managers',
                 not_allowed: '<p>You are unfortunately not allowed to list the tenants.</p>'
                     +'<p>You can contact your application administrator to ask for the needed habilitations.</p>',
-                notes_th: 'Notes'
+                notes_th: 'Notes',
+                urls_more_title: 'Display all URLs',
+                urls_th: 'URLs'
             },
             new: {
                 btn_plus_label: 'New tenant',
@@ -51,6 +57,9 @@ TenantsManager.i18n = {
                 check: {
                     contact_email_invalid: 'The contact email address is invalid',
                     contact_url_invalid: 'The contact page URL is invalid',
+                    emails_email_invalid: 'The provided email address is invalid',
+                    emails_email_missing: 'The email address is missing',
+                    emails_label_missing: 'The label is missing',
                     gtu_url_invalid: 'The General Terms of Use page URL is invalid',
                     home_url_invalid: 'The home page URL is invalid',
                     label_exists: 'The label is already used by another tenant',
@@ -59,7 +68,10 @@ TenantsManager.i18n = {
                     logo_url_invalid: 'The logo URL is invalid',
                     pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
                     support_email_invalid: 'The support email address is invalid',
-                    support_url_invalid: 'The support page URL is invalid'
+                    support_url_invalid: 'The support page URL is invalid',
+                    urls_label_missing: 'The label is missing',
+                    urls_url_invalid: 'The provided URL is invalid',
+                    urls_url_missing: 'The URL is missing'
                 },
                 panel: {
                     notes_tab: 'Notes',
@@ -72,6 +84,15 @@ TenantsManager.i18n = {
                     contact_url_label: 'Contact URL :',
                     contact_url_ph: 'https://www.example.com/contact',
                     contact_url_title: 'Contact URL',
+                    emails_add_title: 'Add a new email address',
+                    emails_email_ph: 'me@example.com',
+                    emails_email_th: 'Email address',
+                    emails_label_ph: 'Contact or Support or MyOwnTarget',
+                    emails_label_th: 'Label',
+                    emails_preamble: '<p class="title">Emails</p><p class="content">'
+                        +'Define as many email addresses as you want, as soon as you label each of one.<br />'
+                        +'For convenience of all, we want that you define at least one email address to be used as a contact.</p>',
+                    emails_remove_title: 'Remove this email address from the list',
                     gtu_label: 'General Terms of Use URL :',
                     gtu_ph: 'https://www.example.com/gtu',
                     gtu_title: 'General Terms of Use URL',
@@ -95,7 +116,17 @@ TenantsManager.i18n = {
                     support_email_title: 'Support email address',
                     support_url_label: 'Support URL :',
                     support_url_ph: 'https://www.example.com/support',
-                    support_url_title: 'Support URL'
+                    support_url_title: 'Support URL',
+                    urls_add_title: 'Add a new URL',
+                    urls_label_ph: 'Home page',
+                    urls_label_th: 'Label',
+                    urls_url_ph: 'https://www.example.com',
+                    urls_url_th: 'URL',
+                    urls_preamble: '<p class="title">URLs</p><p class="content">'
+                        +'Define as many URLs as you want, as soon as you label each of one.<br />'
+                        +'These may be for example the home page of your organization, a contact page, an achievements page, or even a full list of pages of your websites.<br />'
+                        +'Really as many URLs as you want as we said!</p>',
+                    urls_remove_title: 'Remove this URL from the list'
                 }
             },
             tabs: {

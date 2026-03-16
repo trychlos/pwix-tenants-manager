@@ -107,6 +107,78 @@ const _defaultFieldSet = function( conf ){
             form_check: Tenants.checks.contactEmail,
             form_type: Forms.FieldType.C.OPTIONAL
         },
+        // as many urls as you want
+        // dt_data: 'any' prevents "MongoServerError: FieldPath field names may not start with '$'. Consider using $getField or $setField." exception
+        // dt_data: 'emails.0.address' gives server-side sort for the columns where we are using a Blaze template
+        {
+            name: 'urls',
+            type: Array,
+            optional: true,
+            dt_visible: false
+        },
+        {
+            name: 'urls.$',
+            type: Object,
+            optional: true,
+            tabular: false
+        },
+        {
+            name: 'urls.$._id',
+            type: String,
+            dt_data: false,
+            dt_visible: false
+        },
+        {
+            name: 'urls.$.label',
+            type: String,
+            optional: true,
+            dt_data: 'any',
+            form_check: Tenants.checks.url_label,
+            form_type: Forms.FieldType.C.OPTIONAL
+        },
+        {
+            name: 'urls.$.url',
+            type: String,
+            optional: true,
+            dt_data: 'any',
+            form_check: Tenants.checks.url_url,
+            form_type: Forms.FieldType.C.OPTIONAL
+        },
+        // as many email addresses as you want
+        {
+            name: 'emails',
+            type: Array,
+            optional: true,
+            dt_visible: false
+        },
+        {
+            name: 'emails.$',
+            type: Object,
+            optional: true,
+            tabular: false
+        },
+        {
+            name: 'emails.$._id',
+            type: String,
+            dt_data: false,
+            dt_visible: false
+        },
+        {
+            name: 'emails.$.label',
+            type: String,
+            optional: true,
+            dt_data: 'any',
+            form_check: Tenants.checks.email_label,
+            form_type: Forms.FieldType.C.OPTIONAL
+        },
+        {
+            name: 'emails.$.email',
+            type: String,
+            optional: true,
+            dt_data: 'any',
+            form_check: Tenants.checks.email_email,
+            form_type: Forms.FieldType.C.OPTIONAL
+        },
         Notes.fieldDef()
     ];
     columns = columns.concat( Validity.recordsFieldDef());

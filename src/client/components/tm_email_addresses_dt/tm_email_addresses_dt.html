@@ -1,0 +1,20 @@
+<template name="tm_email_addresses_dt">
+    <div class="tm-email-addresses-dt">
+
+        <div class="d-flex flex-column">
+            <!-- <p class="label">{{ label }}</p> -->
+            <p class="address">{{ address }}</p>
+        </div>
+
+        {{#if haveMore }}
+            <div class="ui-ml1"></div>
+        {{/if}}
+
+        <div class="">
+            <button class="btn btn-sm {{ colorBtnClass }} tm-more" data-tm-id="{{ _id }}" {{ disabled }} title="{{ i18n key="list.emails_more_title" }}">
+                <span class="fa-solid fa-fw fa-ellipsis"></span>
+            </button>
+        </div>
+
+    </div>
+</template>

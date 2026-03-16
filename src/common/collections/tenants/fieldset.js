@@ -63,6 +63,7 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'homeUrl',
             schema: false,
+            dt_visible: TenantsManager.configure().listHasHomeUrl,
             dt_title: pwixI18n.label( I18N, 'list.home_page_th' )
         },
         // a page to access the support
@@ -75,6 +76,7 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'contactUrl',
             schema: false,
+            dt_visible: TenantsManager.configure().listHasContactUrl,
             dt_title: pwixI18n.label( I18N, 'list.contact_page_th' )
         },
         // the tenant logo (either an Url or an embedded image, or both)
@@ -98,7 +100,24 @@ const _defaultFieldSet = function( conf ){
         {
             name: 'contactEmail',
             schema: false,
+            dt_visible: TenantsManager.configure().listHasContactEmail,
             dt_title: pwixI18n.label( I18N, 'list.contact_email_th' )
+        },
+        // generalized urls list
+        {
+            name: 'urls',
+            schema: false,
+            dt_visible: TenantsManager.configure().listHasGeneralizedUrls,
+            dt_title: pwixI18n.label( I18N, 'list.urls_th' ),
+            dt_template: Meteor.isClient && Template.tm_urls_dt
+        },
+        // generalized emails list
+        {
+            name: 'emails',
+            schema: false,
+            dt_visible: TenantsManager.configure().listHasGeneralizedEmails,
+            dt_title: pwixI18n.label( I18N, 'list.emails_th' ),
+            dt_template: Meteor.isClient && Template.tm_email_addresses_dt
         },
         Notes.fieldDef(),
         {

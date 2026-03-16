@@ -47,7 +47,7 @@ const _assert_data_content = function( caller, data ){
 // returns the index of the identified row in the array
 const _id2index = function( array, id ){
     for( let i=0 ; i<array.length ; ++i ){
-        if( array[i].id === id ){
+        if( array[i]._id === id ){
             return i;
         }
     }
@@ -89,6 +89,82 @@ Tenants.checks.contactUrl = async function( value, data, opts ){
                 message: pwixI18n.label( I18N, 'records.check.contact_url_invalid' )
             });
         }
+    }
+    return null;
+};
+
+// an email among others
+//  must be valid if set
+// wants at least one email address
+Tenants.checks.email_email = async function( value, data, opts ){
+    _assert_data_content( 'Tenants.checks.email_email()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'email_email() negative index', value, data, opts );
+        return null;
+    }
+    if( opts.update !== false ){
+        item.emails[index].email = value;
+    }
+    if( value ){
+        if( !validator.validate( value )){
+            return new TM.TypedMessage({
+                level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'records.check.emails_email_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// an email among others
+//  opts must have a rowId
+//  label is free but mandatory
+Tenants.checks.email_label = async function( value, data, opts ){
+    _assert_data_content( 'Tenants.checks.email_label()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'email_label() negative index', value, data, opts );
+        return null;
+    }
+    if( opts.update !== false ){
+        item.emails[index].label = value;
+    }
+    return value ? null : new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
+    });
+};
+
+// cross check an email row
+//  we want either both label+email, or none of them
+Tenants.checks.email_row = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.email_row()', data );
+    //logger.debug( 'email_row()', arguments );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'email_row() negative index', data, opts );
+        return null;
+    }
+    const row = item.emails[index];
+    //logger.debug( 'item', item, 'index', index, 'row', row );
+    if(( row.label && row.email ) || ( !row.label && !row.email )){
+        return null;
+    }
+    if( row.label && !row.email ){
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
+        });
+    }
+    if( !row.label && row.email ){
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
+        });
     }
     return null;
 };
@@ -266,6 +342,79 @@ Tenants.checks.supportUrl = async function( value, data, opts ){
             return new TM.TypedMessage({
                 level: TM.MessageLevel.C.ERROR,
                 message: pwixI18n.label( I18N, 'records.check.support_url_invalid' )
+            });
+        }
+    }
+    return null;
+};
+
+// an url among others
+//  opts must have a rowId
+//  label is free but mandatory
+Tenants.checks.url_label = async function( value, data, opts ){
+    _assert_data_content( 'Tenants.checks.url_label()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'url_label() negative index', value, data, opts );
+        return null;
+    }
+    if( opts.update !== false ){
+        item.urls[index].label = value;
+    }
+    return value ? null : new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+    });
+};
+
+// cross check an url row
+//  we want either both label+email, or none of them
+Tenants.checks.url_row = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.url_row()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.urls, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'url_row() negative index', data, opts );
+        return null;
+    }
+    const row = item.urls[index];
+    if(( row.label && row.url ) || ( !row.label && !row.url )){
+        return null;
+    }
+    if( row.label && !row.url ){
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
+        });
+    }
+    if( !row.label && row.url ){
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+        });
+    }
+    return null;
+};
+
+// an url among others
+//  must be valid if set
+Tenants.checks.url_url = async function( value, data, opts ){
+    _assert_data_content( 'Tenants.checks.supportUrl()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'url_url() negative index', value, data, opts );
+        return null;
+    }
+    if( opts.update !== false ){
+        item.urls[index].url = value;
+    }
+    if( value ){
+        if( !validUrl.isWebUri( value )){
+            return new TM.TypedMessage({
+                level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'records.check.urls_url_invalid' )
             });
         }
     }

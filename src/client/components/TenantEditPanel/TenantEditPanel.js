@@ -44,6 +44,7 @@
  * - item: the to-be-edited entity item, null when new
  *      including DYN.managers and DYN.records arrays
  *      this item will be left unchanged until panel submission
+ * - checker: a ReactiveVar which holds the parent Checker, may be null of none
  */
 
 import _ from 'lodash';
@@ -159,7 +160,7 @@ Template.TenantEditPanel.onRendered( function(){
                     },
                     // update the modal buttons 'Close' while there is no modif, then 'Cancel' and 'OK'
                     // when evaluating diffs, only consider entity/records relative data
-                    async onUpdateRegisterFn( data, opts ){
+                    async onFieldUpdateRegisterFn( data, opts ){
                         let hasChanges = false;
                         let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
                         const item = Tenants.comparable( self.TM.item.get());
@@ -192,7 +193,7 @@ Template.TenantEditPanel.onRendered( function(){
     self.autorun(() => {
         const checker = self.TM.checker.get();
         if( checker ){
-            //logger.debug( 'valid', checker.iStatusableValidity());
+            //logger.debug( 'valid', checker.validity());
         }
     });
 });

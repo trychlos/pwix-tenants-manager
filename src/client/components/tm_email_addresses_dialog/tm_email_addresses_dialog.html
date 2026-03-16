@@ -1,0 +1,26 @@
+<template name="tm_email_addresses_dialog">
+    <div class="tm-email-addresses-dialog">
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="ui-w50">
+                        <p class="header">{{ i18n key="records.properties.emails_label_th" }}</p>
+                    </th>
+                    <th><p class="spacing"></p></th>
+                    <th class="ui-w50">
+                        <p class="header">{{ i18n key="records.properties.emails_email_th" }}</p>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each it in itemsList }}
+                    {{> tm_email_row (parmsRow it) }}
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+</template>

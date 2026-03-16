@@ -1,0 +1,16 @@
+<template name="tm_url_row">
+
+    <tr class="tm-url-row" data-item-id="{{ this.it._id }}">
+        <td><input class="form-control js-label" type="text" {{ readonly }} placeholder="{{ i18n key="records.properties.urls_label_ph" }}" /></td>
+        <td></td>
+        <td><input class="form-control js-url" type="url" {{ readonly }} placeholder="{{ i18n key="records.properties.urls_url_ph" }}" /></td>
+        <td>
+            {{#if editing }}
+                <button class="btn btn-sm btn-outline-primary ui-ml025 js-minus" title="{{ i18n key="records.properties.urls_remove_title" }}" {{ minusEnabled }} >
+                    <span class="fa-solid fa-fw fa-minus"></span>
+                </button>
+            {{/if}}
+        </td>
+    </tr>
+
+</template>

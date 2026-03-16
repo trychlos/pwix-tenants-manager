@@ -178,8 +178,11 @@ Template.tm_record_tabbed.onRendered( function(){
                 Tracker.nonreactive(() => {
                     checker = new Forms.Checker( self );
                     checker.init({
-                        parent: parentChecker,
-                        panel: new Forms.Panel( self.TM.fields, Records.fieldSet.get()),
+                        parentChecker: parentChecker,
+                        panel: {
+                            fields: self.TM.fields,
+                            set: Records.fieldSet.get()
+                        },
                         data: {
                             entity: dataContext.entity,
                             index: dataContext.index

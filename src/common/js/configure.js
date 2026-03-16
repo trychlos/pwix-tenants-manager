@@ -2,7 +2,7 @@
  * pwix:tenants-manager/src/common/js/configure.js
  */
 
-import _ from 'lodash';
+import _, { truncate } from 'lodash';
 
 import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -20,6 +20,16 @@ TenantsManager._defaults = {
     // collections
     entityFields: null,
     recordFields: null,
+    // tabular list
+    listHasContactEmail: true,
+    listHasContactUrl: true,
+    listHasGeneralizedEmails: false,
+    listHasGeneralizedUrls: false,
+    listHasHomeUrl: true,
+    // properties
+    propertiesHaveGeneralizedUrls: false,
+    propertiesHaveGeneralizedEmails: false,
+    // server-side extensions
     serverAllExtend: null,
     serverTabularExtend: null,
     tenantButtons: null,

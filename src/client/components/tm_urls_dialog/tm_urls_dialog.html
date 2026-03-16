@@ -1,0 +1,26 @@
+<template name="tm_urls_dialog">
+    <div class="tm-urls-dialog">
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="ui-w50">
+                        <p class="header">{{ i18n key="records.properties.urls_label_th" }}</p>
+                    </th>
+                    <th><p class="spacing"></p></th>
+                    <th class="ui-w50">
+                        <p class="header">{{ i18n key="records.properties.urls_url_th" }}</p>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each it in itemsList }}
+                    {{> tm_url_row (parmsRow it) }}
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+</template>

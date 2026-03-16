@@ -47,8 +47,11 @@ Template.tm_entity_properties_tab.onRendered( function(){
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
                 checker.init({
-                    parent: parentChecker,
-                    panel: new Forms.Panel( fields, Entities.fieldSet.get()),
+                    parentChecker: parentChecker,
+                    panel: {
+                        fields: self.TM.fields,
+                        set: Entities.fieldSet.get()
+                    },
                     data: {
                         item: dataContext.item
                     }

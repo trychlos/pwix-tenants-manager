@@ -34,6 +34,31 @@
     }
 }
 
+.tm-emails-thead,
+.tm-urls-thead,
+.tm-email-addresses-dialog,
+.tm-urls-dialog {
+    .preamble {
+        margin-top: 1em;
+
+        p.title {
+            width: 100%;
+            font-weight: bolder;
+            padding-bottom: 0.25em;
+            border-bottom: 1px solid lightgray;
+            margin-bottom: 0.25em;
+        }
+    }
+    thead p.header {
+        // so that headers are aligned with the input field (width of the FormsStatusIndicator)
+        margin-left: 2.5em;
+    }
+    thead p.spacing {
+        // have a spacing between the two input columns
+        padding: 0 0.5em;
+    }
+}
+
 .TenantsList {
     height: 100%;
 
@@ -44,6 +69,18 @@
         justify-content: center;
         align-items: center;
         font-size: 125%;
+    }
+
+    .tm-email-addresses-dt,
+    .tm-urls-dt {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .btn.tm-more {
+            border-width: 0;
+        }
     }
 }
 

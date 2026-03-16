@@ -21,6 +21,7 @@
     - Update to pwix:modal v2.5
     - Make sure dynamic data are installed in DYN object
     - Make sure methods and publications are prefixed with a full namespace
+    - Extend default record fieldset to let the user have any URLs and any email addresses
 
 ### 1.5.0
 

@@ -119,6 +119,24 @@ Each rendered line of the table displays an entity, and the closest values for e
 
 It takes the very same data context than above `TenantEditPanel`.
 
+#### `TenantsRecordPropertiesPanel`
+
+A panel which let the user edit the record properties of the tenant.
+
+It accepts a data context as:
+
+- `entity`: the currently edited entity as a ReactiveVar
+
+- `index`: the index of the edited record
+
+- `checker`: the Forms.Checker which manages the parent component
+
+- `enableChecks`: whether the checks should be enabled at startup, defaulting to true
+
+- `withGeneralizedEmails`: whether we want edit the generalized email addresses, defaulting to the configured `propertiesHaveGeneralizedEmails` value
+
+- `withGeneralizedUrls`: whether we want edit the generalized URLs, defaulting to the configured `propertiesHaveGeneralizedUrls` value.
+
 ## Permissions management
 
 This package can take advantage of `pwix:permissions` package to manage the user permissions.
@@ -190,6 +208,40 @@ Known configuration options are:
     Whether to hide disabled actions instead of displaying the disabled state.
 
     Defaults to `true`: disabled actions are hidden.
+
+- `listHasContactEmail`
+
+    Whether to display the Contact email address in the tabular display.
+
+    Defaults to `true`.
+
+- `listHasContactUrl`
+
+    Whether to display the Contact page URL in the tabular display.
+
+    Defaults to `true`.
+
+- `listHasGeneralizedEmails`
+
+    Whether to display the first email address of the generalized list, with an 'see more' button, in the tabular display.
+
+    Defaults to `false`.
+
+- `listHasHomeUrl`
+
+    Whether to display the Home page URL in the tabular display.
+
+    Defaults to `true`.
+
+- `listHasGeneralizedUrls`
+
+    Whether to display the first URL of the generalized list, with an 'see more' button, in the tabular display.
+
+    Defaults to `false`.
+
+- `propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`
+
+- `propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
 
 - `recordFields`
 
