@@ -75,7 +75,6 @@ Template.tm_record_tabbed.onCreated( function(){
         const dataContext = Template.currentData();
         if( dataContext.index < dataContext.entity.get().DYN.records.length ){
             const fieldSet = Records.fieldSet.get();
-            const notes = fieldSet.byName( 'notes' );
             const paneData = {
                 entity: dataContext.entity,
                 index: dataContext.index,
@@ -115,10 +114,10 @@ Template.tm_record_tabbed.onCreated( function(){
             tabs.push({
                 name: 'tenant_record_notes_tab',
                 navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                paneTemplate: 'NotesEdit',
+                paneTemplate: 'tm_record_notes_tab',
                 paneData: {
-                    item: dataContext.entity.get().DYN.records[dataContext.index].get(),
-                    field: notes
+                    item: dataContext.entity.get().DYN.records[dataContext.index],
+                    checker: dataContext.checker
                 }
             });
             // tabs at the end

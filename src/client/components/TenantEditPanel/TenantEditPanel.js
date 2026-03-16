@@ -64,8 +64,11 @@ import { Entities } from '../../../common/collections/entities/index.js';
 
 // not used at the moment as we do not want manage any data at the entity level (estimating that notes is more than enough)
 //import '../tm_entity_properties_tab/tm_entity_properties_tab.js';
+
+import '../tm_entity_notes_tab/tm_entity_notes_tab.js';
 import '../tm_entity_scoped_tab/tm_entity_scoped_tab.js';
 import '../tm_entity_validities_tab/tm_entity_validities_tab.js';
+import '../tm_record_notes_tab/tm_record_notes_tab.js';
 import '../tm_record_properties_tab/tm_record_properties_tab.js';
 import '../tm_record_tabbed/tm_record_tabbed.js';
 
@@ -111,6 +114,7 @@ Template.TenantEditPanel.onCreated( function(){
         self.TM.item.set( dup );
         // setup the kept original item as a comparable copy
         self.TM.orig = Tenants.comparable( item );
+        //logger.debug( 'orig', self.TM.orig );
     });
 
     // track the edited item
@@ -164,6 +168,7 @@ Template.TenantEditPanel.onRendered( function(){
                         let hasChanges = false;
                         let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
                         const item = Tenants.comparable( self.TM.item.get());
+                        //logger.debug( 'item', item );
                         if( !_.isEqual( item, self.TM.orig )){
                             //Tenants.explainDifferences( self.TM.orig, item );
                             hasChanges = true;
@@ -238,7 +243,6 @@ Template.TenantEditPanel.helpers({
         delete paneData.recordTabs;
         delete paneData.recordTabsAfter;
         delete paneData.recordTabsBefore;
-        const notesField = Entities.fieldSet.get().byName( 'notes' );
         let tabs = [];
         // tabs before the standard
         if( this.entityTabsBefore ){
@@ -287,11 +291,8 @@ Template.TenantEditPanel.helpers({
         tabs.push({
             name: 'tenant_entity_notes_tab',
             navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
-            paneTemplate: 'NotesEdit',
-            paneData: {
-                ...paneData,
-                field: notesField
-            }
+            paneTemplate: 'tm_entity_notes_tab',
+            paneData: paneData,
         });
         // and tabs to be added at the end
         if( this.entityTabsAfter ){
