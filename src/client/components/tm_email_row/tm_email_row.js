@@ -44,6 +44,18 @@ Template.tm_email_row.onCreated( function(){
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
 
+        // count set rows
+        countSet( dataContext ){
+            const record = dataContext.entity.get().DYN.records[dataContext.index].get();
+            let count = 0;
+            for( const it of ( record.emails || [] )){
+                if( it.label && it.email ){
+                    count += 1;
+                }
+            }
+            return count;
+        },
+
         // reactively remove the item
         removeById( id ){
             const recordRv = Template.currentData().entity.get().DYN.records[Template.currentData().index];
@@ -120,7 +132,6 @@ Template.tm_email_row.onRendered( function(){
                 p.then(() => {
                         self.TM.checker.set( checker );
                         comp.stop();
-                        logger.debug( 'dataContext', dataContext );
                     });
             });
         }
@@ -151,10 +162,11 @@ Template.tm_email_row.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // note: weird things happen when inserting/deleting rows, unless we delete only last row
-    // but we accept to remove all rows
+    // but we accept to remove all rows until the minimum count is reached
     minusEnabled(){
-        return '';
+        const min = TenantsManager.configure().minGeneralizedEmails;
+        const count = Template.instance().TM.countSet( this );
+        return count > min ? '' : 'disabled';
     }
 });
 

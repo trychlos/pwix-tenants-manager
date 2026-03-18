@@ -60,6 +60,8 @@ TenantsManager.i18n = {
                     emails_email_invalid: 'The provided email address is invalid',
                     emails_email_missing: 'The email address is missing',
                     emails_label_missing: 'The label is missing',
+                    emails_max: 'The configured maximum count requires at most %s email addresses',
+                    emails_min: 'The configured minimum count requires at least %s email addresses',
                     gtu_url_invalid: 'The General Terms of Use page URL is invalid',
                     home_url_invalid: 'The home page URL is invalid',
                     label_exists: 'The label is already used by another tenant',

@@ -9,7 +9,7 @@
         </td>
         <td></td>
     </tr>
-    <tr class="tm-urls-tr">
+    <tr class="tm-urls-thead">
         <td></td>
         <td>
             <table>
@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     {{#each it in itemsList }}
-                        {{> tm_email_row (parmsRow it) }}
+                        {{> tm_url_row (parmsRow it) }}
                     {{/each}}
                 </tbody>
             </table>

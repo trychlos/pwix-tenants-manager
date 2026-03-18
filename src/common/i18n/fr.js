@@ -59,6 +59,8 @@ TenantsManager.i18n = {
                     emails_email_invalid: 'L\'adresse de messagerie spécifiée est invalide',
                     emails_email_missing: 'Une adresse de messagerie doit être spécifiée',
                     emails_label_missing: 'Un label doit être spécifié',
+                    emails_max: 'Le nombre maximum configuré requiert au plus %s adresses de messagerie',
+                    emails_min: 'Le nombre minimum configuré requiert au moins %s adresses de messagerie',
                     gtu_url_invalid: 'L\'URL de la page des Conditions Générales d\'Utilisation est invalide',
                     home_url_invalid: 'L\'URL de la page d\'accueil est invalide',
                     label_exists: 'L\'intitulé est déjà utilisé par un autre tenant',

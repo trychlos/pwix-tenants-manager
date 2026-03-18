@@ -23,7 +23,7 @@ import { Random } from 'meteor/random';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
 
-import '../tm_email_row/tm_email_row.js';
+import '../tm_url_row/tm_url_row.js';
 
 import './tm_urls_thead.html';
 
@@ -44,8 +44,8 @@ Template.tm_urls_thead.onCreated( function(){
         addOne( dataContext ){
             const recordRv = dataContext.entity.get().DYN.records[dataContext.index];
             const item = recordRv.get();
-            item.emails = item.emails || [];
-            item.emails.push({
+            item.urls = item.urls || [];
+            item.urls.push({
                 _id: Random.id()
             });
             recordRv.set( item );
@@ -106,7 +106,7 @@ Template.tm_urls_thead.onRendered( function(){
         }
     });
 
-    // if no email yet, and not configured to not to, have an empty row
+    // if no url yet, and not configured to not to, have an empty row
     self.autorun(() => {
         if( !self.TM.count.get()){
             const haveOne = Template.currentData().haveOne !== false;
@@ -123,7 +123,7 @@ Template.tm_urls_thead.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // emails list
+    // urls list
     itemsList(){
         const count = Template.instance().TM.count.get();
         const list = this.entity.get().DYN.records[this.index].get().urls || [];
@@ -150,7 +150,7 @@ Template.tm_urls_thead.helpers({
 Template.tm_urls_thead.events({
     // ask for enabling the checker (when this panel is used inside of an assistant)
     'iz-enable-checks .tm-urls-thead'( event, instance, enabled ){
-        logger.debug( event );
+        //logger.debug( event );
         const checker = instance.TM.checker.get();
         if( checker ){
             checker.enabled( enabled );
@@ -161,7 +161,7 @@ Template.tm_urls_thead.events({
         return false;
     },
     'click .tm-urls-thead .js-plus'( event, instance ){
-        logger.debug( event );
+        //logger.debug( event );
         instance.TM.addOne( this );
     }
 });

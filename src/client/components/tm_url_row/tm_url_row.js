@@ -24,6 +24,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { Tracker } from 'meteor/tracker';
 
 import { Records } from '../../../common/collections/records/index.js';
+import { Tenants } from '../../../common/collections/tenants/index.js';
 
 import './tm_url_row.html';
 
@@ -48,7 +49,7 @@ Template.tm_url_row.onCreated( function(){
         removeById( id ){
             const recordRv = Template.currentData().entity.get().DYN.records[Template.currentData().index];
             let item = recordRv.get();
-            let rows = item.contacts || [];
+            let rows = item.urls || [];
             let found = -1;
             for( let i=0 ; i<rows.length ; ++i ){
                 if( rows[i]._id === id ){
@@ -150,8 +151,7 @@ Template.tm_url_row.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
-    // note: weird things happen when inserting/deleting rows, unless we delete only last row
-    // but we accept to remove all rows
+    // we accept to remove all rows
     minusEnabled(){
         return '';
     },

@@ -31,8 +31,6 @@ Template.tm_emails_thead.onCreated( function(){
     const self = this;
 
     self.TM = {
-        // current count of emails
-        count: new ReactiveVar( 0 ),
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
         // whether we already have added one empty row at startup
@@ -67,20 +65,27 @@ Template.tm_emails_thead.onCreated( function(){
                 }
             }
             return count;
+        },
+
+        // count set rows
+        countSet( dataContext ){
+            const record = dataContext.entity.get().DYN.records[dataContext.index].get();
+            let count = 0;
+            for( const it of ( record.emails || [] )){
+                if( it.label && it.email ){
+                    count += 1;
+                }
+            }
+            return count;
         }
     };
 
-    // keep the count of rows up to date
-    self.autorun(() => {
-        const entity = Template.currentData().entity.get();
-        const index = Template.currentData().index;
-        self.TM.count.set(( entity.DYN.records[index].get().emails || [] ).length );
-    });
-
-    // track the count of rows
-    self.autorun(() => {
-        //logger.debug( 'rows count', self.TM.count.get());
-    });
+    // track the count of emails
+    //self.autorun(() => {
+    //    const dataContext = Template.currentData();
+    //    const record = dataContext.entity.get().DYN.records[dataContext.index].get();
+    //    logger.warning( 'emails count', record.emails.length );
+    //});
 });
 
 Template.tm_emails_thead.onRendered( function(){
@@ -110,10 +115,12 @@ Template.tm_emails_thead.onRendered( function(){
 
     // if no email yet, and not configured to not to, have an empty row
     self.autorun(() => {
-        if( !self.TM.count.get()){
-            const haveOne = Template.currentData().haveOne !== false;
-            if( haveOne && !self.TM.haveAddedOne ){
-                self.TM.addOne( Template.currentData());
+        const dataContext = Template.currentData();
+        const entity = dataContext.entity.get();
+        if( entity ){
+            const count = self.TM.countSet( dataContext );
+            if( !count && dataContext.haveOne !== false && !self.TM.haveAddedOne ){
+                self.TM.addOne( dataContext );
             }
         }
     });
@@ -128,7 +135,6 @@ Template.tm_emails_thead.helpers({
     // emails list
     itemsList(){
         const list = this.entity.get().DYN.records[this.index].get().emails || [];
-        logger.debug( 'itemsList()', list );
         return list;
     },
 
@@ -142,18 +148,21 @@ Template.tm_emails_thead.helpers({
 
     // whether the plus button is enabled
     //  we accept only one empty row
+    //  we must stay under the max configured count
     plusDisabled(){
         const checker = Template.instance().TM.checker.get();
         const valid = checker ? checker.validity() : false;
         const emptyCount = Template.instance().TM.countEmpty( this );
-        return valid && emptyCount === 0 ? '' : 'disabled';
+        const setCount = Template.instance().TM.countSet( this );
+        const max = TenantsManager.configure().maxGeneralizedEmails;
+        return ( valid && emptyCount === 0 ) || ( setCount < max || max === -1 ) ? '' : 'disabled';
     }
 });
 
 Template.tm_emails_thead.events({
     // ask for enabling the checker (when this panel is used inside of an assistant)
     'iz-enable-checks .tm-emails-thead'( event, instance, enabled ){
-        logger.debug( event );
+        //logger.debug( event );
         const checker = instance.TM.checker.get();
         if( checker ){
             checker.enabled( enabled );
@@ -164,7 +173,7 @@ Template.tm_emails_thead.events({
         return false;
     },
     'click .tm-emails-thead .js-plus'( event, instance ){
-        logger.debug( event );
+        //logger.debug( event );
         instance.TM.addOne( this );
     }
 });

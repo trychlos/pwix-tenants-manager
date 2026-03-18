@@ -93,6 +93,29 @@ Tenants.checks.contactUrl = async function( value, data, opts ){
     return null;
 };
 
+// check that the count of email addresses is correct relatively to configured min and max
+// this is neither a field check nor a cross check which explain the different prototype
+// we count the rows, which may or may not be valid but all are counted
+// returns null or a TypedMessage
+Tenants.checks.email_count = async function( emails ){
+    const min = TenantsManager.configure().minGeneralizedEmails;
+    const max = TenantsManager.configure().maxGeneralizedEmails;
+    const count = emails.length;
+    if( count < min ){
+        return new TM.TypedMessage({
+            level: TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_min', min )
+        });
+    }
+    if( max !== -1 && max > count ){
+        return new TM.TypedMessage({
+            level: TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_max', max )
+        });
+    }
+    return null;
+};
+
 // an email among others
 //  must be valid if set
 // wants at least one email address
@@ -107,10 +130,11 @@ Tenants.checks.email_email = async function( value, data, opts ){
     if( opts.update !== false ){
         item.emails[index].email = value;
     }
+    const tmCount = Tenants.checks.email_count( item.emails );
     if( value ){
         if( !validator.validate( value )){
             return new TM.TypedMessage({
-                level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+                level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
                 message: pwixI18n.label( I18N, 'records.check.emails_email_invalid' )
             });
         }
@@ -132,14 +156,19 @@ Tenants.checks.email_label = async function( value, data, opts ){
     if( opts.update !== false ){
         item.emails[index].label = value;
     }
-    return value ? null : new TM.TypedMessage({
-        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+    const tmCount = Tenants.checks.email_count( item.emails );
+    if( value ){
+        return null;
+    }
+    return new TM.TypedMessage({
+        level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
         message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
 };
 
 // cross check an email row
 //  we want either both label+email, or none of them
+//  we also make sure the count of email addresses is correct relatively to configured min and max
 Tenants.checks.email_row = async function( data, opts ){
     _assert_data_content( 'Tenants.checks.email_row()', data );
     //logger.debug( 'email_row()', arguments );
@@ -150,19 +179,20 @@ Tenants.checks.email_row = async function( data, opts ){
         return null;
     }
     const row = item.emails[index];
+    const tmCount = Tenants.checks.email_count( item.emails );
     //logger.debug( 'item', item, 'index', index, 'row', row );
     if(( row.label && row.email ) || ( !row.label && !row.email )){
-        return null;
+        return tmCount;
     }
     if( row.label && !row.email ){
         return new TM.TypedMessage({
-            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
             message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
         });
     }
     if( !row.label && row.email ){
         return new TM.TypedMessage({
-            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
             message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
         });
     }
@@ -354,7 +384,7 @@ Tenants.checks.supportUrl = async function( value, data, opts ){
 Tenants.checks.url_label = async function( value, data, opts ){
     _assert_data_content( 'Tenants.checks.url_label()', data );
     let item = data.entity.get().DYN.records[data.index].get();
-    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    let index = opts.rowId ? _id2index( item.urls, opts.rowId ) : -1;
     if( index < 0 ){
         logger.error( 'url_label() negative index', value, data, opts );
         return null;
@@ -402,7 +432,7 @@ Tenants.checks.url_row = async function( data, opts ){
 Tenants.checks.url_url = async function( value, data, opts ){
     _assert_data_content( 'Tenants.checks.supportUrl()', data );
     let item = data.entity.get().DYN.records[data.index].get();
-    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    let index = opts.rowId ? _id2index( item.urls, opts.rowId ) : -1;
     if( index < 0 ){
         logger.error( 'url_url() negative index', value, data, opts );
         return null;

@@ -22,7 +22,7 @@
     - Make sure dynamic data are installed in DYN object
     - Make sure methods and publications are prefixed with a full namespace
     - Extend default record fieldset to let the user have any URLs and any email addresses
-    - Entity notes and record notes trigger the Checker.setUpdated() method
+    - Entity notes and record notes trigger the Checker.onUpdate() method
     - configure min and max email addresses when using generalized emails
 
 ### 1.5.0

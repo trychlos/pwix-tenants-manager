@@ -27,6 +27,8 @@ TenantsManager._defaults = {
     listHasGeneralizedUrls: false,
     listHasHomeUrl: true,
     // properties
+    maxGeneralizedEmails: -1,
+    minGeneralizedEmails: 1,
     propertiesHaveGeneralizedUrls: false,
     propertiesHaveGeneralizedEmails: false,
     // server-side extensions

@@ -239,7 +239,13 @@ Known configuration options are:
 
     Defaults to `false`.
 
-- `propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`
+- `maxGeneralizedEmails`: when using the generalized emails structure, the maximum count of required emails, defaulting to -1 which means unlimited.
+
+    Take care that setting this max to zero will actually prevent any email address to be entered.
+
+- `minGeneralizedEmails`: when using the generalized emails structure, the minimum count of required emails, defaulting to 1.
+
+- `propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`.
 
 - `propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
 
