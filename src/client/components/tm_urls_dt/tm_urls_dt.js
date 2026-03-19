@@ -43,6 +43,13 @@ Template.tm_urls_dt.helpers({
         return ( this.item.urls || [] ).length ? this.item.urls[0].label : '';
     },
 
+    // whether we want display the 'more' button
+    showMore(){
+        const showIfEmpty = TenantsManager.configure().showEmptyGeneralizedUrls;
+        const haveItems = Boolean(( this.item.urls || [] ).length > 0 );
+        return haveItems || showIfEmpty;
+    },
+
     // list the first url if any
     url(){
         return ( this.item.urls || [] ).length ? this.item.urls[0].url : '';

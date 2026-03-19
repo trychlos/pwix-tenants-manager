@@ -306,6 +306,18 @@ Known configuration options are:
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
 
+- `showEmptyGeneralizedEmails`
+
+    Whether we should show a '...' disabled button in the tabular display when there is no email to be displayed.
+
+    Defaults to `false`.
+
+- `showEmptyGeneralizedUrls`
+
+    Whether we should show a '...' disabled button in the tabular display when there is no URL to be displayed.
+
+    Defaults to `false`.
+
 - `scopedManagerRole`
 
     The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.

@@ -18,6 +18,8 @@ TenantsManager._defaults = {
     classes: '',
     hideDisabled: true,
     modifiedOnUpdate: false,
+    showEmptyGeneralizedEmails: false,
+    showEmptyGeneralizedUrls: false,
     // collections
     entityFields: null,
     recordFields: null,

@@ -43,6 +43,13 @@ Template.tm_email_addresses_dt.helpers({
         return pwixI18n.label( I18N, arg.hash.key );
     },
 
+    // whether we want display the 'more' button
+    showMore(){
+        const showIfEmpty = TenantsManager.configure().showEmptyGeneralizedUrls;
+        const haveItems = Boolean(( this.item.urls || [] ).length > 0 );
+        return haveItems || showIfEmpty;
+    },
+
     // list the first email address if any
     label(){
         return ( this.item.emails || [] ).length ? this.item.emails[0].label : '';
