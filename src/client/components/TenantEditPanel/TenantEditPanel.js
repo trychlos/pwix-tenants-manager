@@ -165,25 +165,27 @@ Template.TenantEditPanel.onRendered( function(){
                     // update the modal buttons 'Close' while there is no modif, then 'Cancel' and 'OK'
                     // when evaluating diffs, only consider entity/records relative data
                     async onFieldUpdateRegisterFn( data, opts ){
-                        let hasChanges = false;
-                        let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
-                        const item = Tenants.comparable( self.TM.item.get());
-                        //logger.debug( 'item', item );
-                        if( !_.isEqual( item, self.TM.orig )){
-                            //Tenants.explainDifferences( self.TM.orig, item );
-                            hasChanges = true;
-                            buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CANCEL, Modal.C.Button.OK ];
-                        }
-                        if( hasChanges !== self.TM.hasChanges ){
-                            const modal = Modal.topmost();
-                            modal.set({
-                                buttons: buttons
-                            });
-                            self.TM.hasChanges = hasChanges;
-                            await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
-                            // normally done by onValidityChangeRegisterFn() unless the two functions are triggered too closely 
-                            // (e.g. when we erase a mandatory field) and the button doesn't have time to appear before onValidityChangeRegisterFn() is triggered
-                            _setOKButton();
+                        if( TenantsManager.configure().modifiedOnUpdate ){
+                            let hasChanges = false;
+                            let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
+                            const item = Tenants.comparable( self.TM.item.get());
+                            //logger.debug( 'item', item );
+                            if( !_.isEqual( item, self.TM.orig )){
+                                //Tenants.explainDifferences( self.TM.orig, item );
+                                hasChanges = true;
+                                buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CANCEL, Modal.C.Button.OK ];
+                            }
+                            if( hasChanges !== self.TM.hasChanges ){
+                                const modal = Modal.topmost();
+                                modal.set({
+                                    buttons: buttons
+                                });
+                                self.TM.hasChanges = hasChanges;
+                                await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
+                                // normally done by onValidityChangeRegisterFn() unless the two functions are triggered too closely 
+                                // (e.g. when we erase a mandatory field) and the button doesn't have time to appear before onValidityChangeRegisterFn() is triggered
+                                _setOKButton();
+                            }
                         }
                     }
                 }).then(() => {

@@ -17,6 +17,7 @@ TenantsManager._defaults = {
     // user interface
     classes: '',
     hideDisabled: true,
+    modifiedOnUpdate: false,
     // collections
     entityFields: null,
     recordFields: null,

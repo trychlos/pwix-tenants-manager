@@ -24,6 +24,7 @@
     - Extend default record fieldset to let the user have any URLs and any email addresses
     - Entity notes and record notes trigger the Checker.onUpdate() method
     - configure min and max email addresses when using generalized emails
+    - Define and honor new 'modifiedOnUpdate' configuration parameter
 
 ### 1.5.0
 

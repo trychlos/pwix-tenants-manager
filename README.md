@@ -245,6 +245,14 @@ Known configuration options are:
 
 - `minGeneralizedEmails`: when using the generalized emails structure, the minimum count of required emails, defaulting to 1.
 
+- `modifiedOnUpdate`:
+
+    Whether the user interface begins with only a 'Close' button, only proposing 'Cancel' and 'OK' buttons when the tenant has been detected as modified.
+
+    If the application has extended the Tenant properties, then it has too to detect itself whether its own properties have been modified.
+
+    Defauls to `false`.
+
 - `propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`.
 
 - `propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
