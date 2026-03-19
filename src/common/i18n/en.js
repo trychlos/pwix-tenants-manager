@@ -68,6 +68,8 @@ TenantsManager.i18n = {
                     label_unset: 'The label is not set',
                     legals_url_invalid: 'The Legals page URL is invalid',
                     logo_url_invalid: 'The logo URL is invalid',
+                    name_done: 'Checking \'%s\' done',
+                    name_item_done: 'Checking \'%s\' (%s) done',
                     pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
                     support_email_invalid: 'The support email address is invalid',
                     support_url_invalid: 'The support page URL is invalid',

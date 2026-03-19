@@ -32,8 +32,8 @@ TenantsManager._defaults = {
     // properties
     maxGeneralizedEmails: -1,
     minGeneralizedEmails: 1,
-    propertiesHaveGeneralizedUrls: false,
     propertiesHaveGeneralizedEmails: false,
+    propertiesHaveGeneralizedUrls: false,
     // server-side extensions
     serverAllExtend: null,
     serverTabularExtend: null,

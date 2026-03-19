@@ -26,6 +26,7 @@
     - configure min and max email addresses when using generalized emails
     - Define and honor new 'modifiedOnUpdate' configuration parameter
     - Define and honor new 'showEmptyGeneralizedEmails' and 'showEmptyGeneralizedUrls' configuration parameters
+    - Define new 'checkByTenant()' common function
 
 ### 1.5.0
 

@@ -67,6 +67,8 @@ TenantsManager.i18n = {
                     label_unset: 'L\'intitulé n\'est pas renseigné',
                     legals_url_invalid: 'L\'URL de la page des informations légales est invalide',
                     logo_url_invalid: 'L\'URL du logo est invalide',
+                    name_done: 'Contrôle de \'%s\' OK',
+                    name_item_done: 'Contrôle de \'%s\' (%s) OK',
                     pdmp_url_invalid: 'L\'URL de la page de description de la Politique de Protection des Données Personnelles est invalide',
                     support_email_invalid: 'L\'adresse de support est invalide',
                     support_url_invalid: 'L\'URL de la page de support est invalide',
