@@ -94,6 +94,7 @@ Records.s.upsert = async function( entity, userId ){
             record.updatedAt = new Date();
         }
         record.entity = entity._id;
+        //logger.debug( 'record', record );
         const res = await Records.collection.upsertAsync({ _id: record._id }, { $set: record });
         //logger.debug( 'upsert record', record, 'res', res );
         if( res.numberAffected > 0 ){

@@ -127,7 +127,7 @@ Template.tm_url_row.onRendered( function(){
     });
 
     // set up the form on data context changes
-    self.autorun(() => {
+    self.autorun(( comp ) => {
         const dataContext = Template.currentData();
         const checker = self.TM.checker.get();
         if( checker ){
@@ -136,6 +136,7 @@ Template.tm_url_row.onRendered( function(){
                 opts.check = false;
             }
             checker.setForm( dataContext.it, opts );
+            comp.stop();
         }
     });
 });

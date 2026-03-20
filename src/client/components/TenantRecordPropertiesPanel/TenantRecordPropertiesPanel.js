@@ -164,11 +164,12 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
     });
 
     // setup the form with current data context
-    self.autorun(() => {
+    self.autorun(( comp ) => {
         const dataContext = Template.currentData();
         const checker = self.TM.checker.get();
         if( checker && dataContext.index < dataContext.entity.get().DYN.records.length ){
             checker.setForm( dataContext.entity.get().DYN.records[dataContext.index].get());
+            comp.stop();
         }
     });
 
