@@ -27,6 +27,7 @@
     - Define and honor new 'modifiedOnUpdate' configuration parameter
     - Define and honor new 'showEmptyGeneralizedEmails' and 'showEmptyGeneralizedUrls' configuration parameters
     - Define new 'checkByTenant()' common function
+    - Review async code from Records.s.upsert() using await instead of Promises
 
 ### 1.5.0
 

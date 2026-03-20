@@ -87,52 +87,29 @@ Records.s.upsert = async function( entity, userId ){
     // for each updatable, then... upsert!
     // as of 2024- 7-17 and matb33:collection-hooks v 2.0.0-rc.1 there is not yet any hook for async methods (though this work at creation)
     let promises = [];
-    Object.keys( updatableIds ).forEach(( id ) => {
+    for( const id of Object.keys( updatableIds )){
         const record = updatableIds[id];
         if( record._id ){
             record.updatedBy = userId;
             record.updatedAt = new Date();
         }
         record.entity = entity._id;
-        // the below code to be able to see SimpleSchema errors which are hidden by the promises.push()
-        if( false ){
-            Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-                logger.debug( 'upsert record', record, 'res', res );
-                if( res.numberAffected > 0 ){
-                    if( record._id ){
-                        result.updated += 1;
-                    } else if( res.insertedId ){
-                        result.inserted += 1;
-                    }
-                    result.written.push( record );
-                }
-                return res;
-            });
-        }
-        promises.push( Records.collection.upsertAsync({ _id: record._id }, { $set: record }).then(( res ) => {
-            //logger.debug( 'upsert record', record, 'res', res );
-            if( res.numberAffected > 0 ){
-                if( record._id ){
-                    result.updated += 1;
-                } else if( res.insertedId ){
-                    result.inserted += 1;
-                }
-                result.written.push( record );
+        const res = await Records.collection.upsertAsync({ _id: record._id }, { $set: record });
+        //logger.debug( 'upsert record', record, 'res', res );
+        if( res.numberAffected > 0 ){
+            if( record._id ){
+                result.updated += 1;
+            } else if( res.insertedId ){
+                result.inserted += 1;
             }
-            return res;
-        }));
-    });
+            result.written.push( record );
+        }
+    }
     // and remove the left items (removed validity periods)
-    Object.keys( leftIds ).forEach(( id ) => {
-        promises.push( Records.collection.removeAsync({ _id: id }).then(( res ) => {
-            result.removed += res || 0;
-            return res;
-        }));
-    });
-    return Promise.allSettled( promises ).then(() => {
-        return Records.collection.countDocuments({ entity: entity._id });
-    }).then(() => {
-        //logger.debug( 'Records result', result );
-        return result;
-    });
+    for( const id of Object.keys( leftIds )){
+        const res = Records.collection.removeAsync({ _id: id });
+        result.removed += res || 0;
+    }
+    result.count = await Records.collection.countDocuments({ entity: entity._id });
+    return result;
 };

@@ -41,7 +41,7 @@ Template.tm_entity_validities_tab.onRendered( function(){
                 checker.init({
                     parentChecker: parentChecker,
                     data: {
-                        item: Template.currentData().item
+                        item: dataContext.item
                     }
                 }).then(() => {
                     self.TM.checker.set( checker );
