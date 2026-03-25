@@ -29,6 +29,7 @@
     - Define new 'checkByTenant()' common function
     - Review async code from Records.s.upsert() using await instead of Promises
     - Prevent too many autorun's when calling setForm()
+    - Replace aldeed:simple-schema dependency with npm simpl-schema
 
 ### 1.5.0
 

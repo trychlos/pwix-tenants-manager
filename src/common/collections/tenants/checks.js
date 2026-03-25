@@ -156,6 +156,8 @@ Tenants.checks.email_label = async function( value, data, opts ){
     if( opts.update !== false ){
         item.emails[index].label = value;
     }
+    return null;
+    /*
     const tmCount = Tenants.checks.email_count( item.emails );
     if( value ){
         return null;
@@ -164,6 +166,7 @@ Tenants.checks.email_label = async function( value, data, opts ){
         level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
         message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
+    */
 };
 
 // cross check an email row
@@ -392,10 +395,11 @@ Tenants.checks.url_label = async function( value, data, opts ){
     if( opts.update !== false ){
         item.urls[index].label = value;
     }
-    return value ? null : new TM.TypedMessage({
-        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
-    });
+    return null;
+    //return value ? null : new TM.TypedMessage({
+    //    level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+    //    message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+    //});
 };
 
 // cross check an url row
