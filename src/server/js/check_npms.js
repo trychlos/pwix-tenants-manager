@@ -11,7 +11,6 @@ if( false ){
 checkNpmVersions({
     'email-validator': '^2.0.4',
     'lodash': '^4.17.0',
-    'simpl-schema': '^3.4.7',
     'valid-url': '^1.0.9'
 },
     'pwix:tenants-manager'

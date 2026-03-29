@@ -2,7 +2,7 @@
  * pwix:tenants-manager/src/common/collections/entities/schema.js
  */
 
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 import { Logger } from 'meteor/pwix:logger';
 import { Tracker } from 'meteor/tracker';
