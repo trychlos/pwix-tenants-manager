@@ -16,7 +16,6 @@
  */
 
 import _ from 'lodash';
-import { strict as assert } from 'node:assert';
 
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
@@ -44,6 +43,8 @@ Template.tm_url_row.onCreated( function(){
         },
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
+        // a status indicator for the whole row
+        statusIndicator: new ReactiveVar( Forms.C.ShowStatus.TRANSPARENT ),
 
         // reactively remove the item
         removeById( id ){
@@ -139,6 +140,14 @@ Template.tm_url_row.onRendered( function(){
             comp.stop();
         }
     });
+
+    // we have a dedicated status indicator for the whole row
+    self.autorun(() => {
+        const checker = self.TM.checker.get();
+        if( checker ){
+            self.TM.statusIndicator.set( checker.statusByFields([ 'urls.$.label', 'urls.$.url' ]));
+        }
+    });
 });
 
 Template.tm_url_row.helpers({
@@ -155,6 +164,13 @@ Template.tm_url_row.helpers({
     // we accept to remove all rows
     minusEnabled(){
         return '';
+    },
+
+    // parameters for row StatusIndicator
+    parmsStatusIndicator(){
+        return {
+            statusRv: Template.instance().TM.statusIndicator
+        };
     },
 
     // whether we are readonly

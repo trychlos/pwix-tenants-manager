@@ -138,6 +138,11 @@ Tenants.checks.email_email = async function( value, data, opts ){
                 message: pwixI18n.label( I18N, 'records.check.emails_email_invalid' )
             });
         }
+    } else {
+        return new TM.TypedMessage({
+            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
+            message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
+        });
     }
     return null;
 };
@@ -156,21 +161,18 @@ Tenants.checks.email_label = async function( value, data, opts ){
     if( opts.update !== false ){
         item.emails[index].label = value;
     }
-    return null;
-    /*
-    const tmCount = Tenants.checks.email_count( item.emails );
     if( value ){
         return null;
     }
+    const tmCount = Tenants.checks.email_count( item.emails );
     return new TM.TypedMessage({
         level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
         message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
-    */
 };
 
 // cross check an email row
-//  we want either both label+email, or none of them
+//  we want both label+email - and refuse empty lines
 //  we also make sure the count of email addresses is correct relatively to configured min and max
 Tenants.checks.email_row = async function( data, opts ){
     _assert_data_content( 'Tenants.checks.email_row()', data );
@@ -183,23 +185,22 @@ Tenants.checks.email_row = async function( data, opts ){
     }
     const row = item.emails[index];
     const tmCount = Tenants.checks.email_count( item.emails );
-    //logger.debug( 'item', item, 'index', index, 'row', row );
-    if(( row.label && row.email ) || ( !row.label && !row.email )){
+    if( tmCount ){
         return tmCount;
     }
-    if( row.label && !row.email ){
+    if( row.label && row.email ){
+        return null;
+    }
+    if( row.label ){
         return new TM.TypedMessage({
             level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
             message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
         });
     }
-    if( !row.label && row.email ){
-        return new TM.TypedMessage({
-            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
-            message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
-        });
-    }
-    return null;
+    return new TM.TypedMessage({
+        level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
+        message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
+    });
 };
 
 // general terms o fuse page url
@@ -395,15 +396,14 @@ Tenants.checks.url_label = async function( value, data, opts ){
     if( opts.update !== false ){
         item.urls[index].label = value;
     }
-    return null;
-    //return value ? null : new TM.TypedMessage({
-    //    level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-    //    message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
-    //});
+    return value ? null : new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+    });
 };
 
 // cross check an url row
-//  we want either both label+email, or none of them
+//  we want both label+email, or refuse - do not want an empty line
 Tenants.checks.url_row = async function( data, opts ){
     _assert_data_content( 'Tenants.checks.url_row()', data );
     let item = data.entity.get().DYN.records[data.index].get();
@@ -413,22 +413,19 @@ Tenants.checks.url_row = async function( data, opts ){
         return null;
     }
     const row = item.urls[index];
-    if(( row.label && row.url ) || ( !row.label && !row.url )){
+    if( row.label && row.url ){
         return null;
     }
-    if( row.label && !row.url ){
+    if( row.label ){
         return new TM.TypedMessage({
             level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
             message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
         });
     }
-    if( !row.label && row.url ){
-        return new TM.TypedMessage({
-            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
-        });
-    }
-    return null;
+    return new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+    });
 };
 
 // an url among others
@@ -451,6 +448,11 @@ Tenants.checks.url_url = async function( value, data, opts ){
                 message: pwixI18n.label( I18N, 'records.check.urls_url_invalid' )
             });
         }
+    } else {
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
+        });
     }
     return null;
 };

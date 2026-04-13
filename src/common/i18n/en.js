@@ -59,7 +59,7 @@ TenantsManager.i18n = {
                     contact_url_invalid: 'The contact page URL is invalid',
                     emails_email_invalid: 'The provided email address is invalid',
                     emails_email_missing: 'The email address is missing',
-                    emails_label_missing: 'The label is missing',
+                    emails_label_missing: 'The email label is missing',
                     emails_max: 'The configured maximum count requires at most %s email addresses',
                     emails_min: 'The configured minimum count requires at least %s email addresses',
                     gtu_url_invalid: 'The General Terms of Use page URL is invalid',
@@ -73,7 +73,7 @@ TenantsManager.i18n = {
                     pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
                     support_email_invalid: 'The support email address is invalid',
                     support_url_invalid: 'The support page URL is invalid',
-                    urls_label_missing: 'The label is missing',
+                    urls_label_missing: 'The URL label is missing',
                     urls_url_invalid: 'The provided URL is invalid',
                     urls_url_missing: 'The URL is missing'
                 },

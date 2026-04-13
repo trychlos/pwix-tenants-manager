@@ -15,7 +15,6 @@
  */
 
 import _ from 'lodash';
-import { strict as assert } from 'node:assert';
 
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
@@ -43,6 +42,8 @@ Template.tm_email_row.onCreated( function(){
         },
         // the Form.Checker instance for this panel
         checker: new ReactiveVar( null ),
+        // a status indicator for the whole row
+        statusIndicator: new ReactiveVar( Forms.C.ShowStatus.TRANSPARENT ),
 
         // count set rows
         countSet( dataContext ){
@@ -150,6 +151,14 @@ Template.tm_email_row.onRendered( function(){
             comp.stop();
         }
     });
+
+    // we have a dedicated status indicator for the whole row
+    self.autorun(() => {
+        const checker = self.TM.checker.get();
+        if( checker ){
+            self.TM.statusIndicator.set( checker.statusByFields([ 'emails.$.label', 'emails.$.email' ]));
+        }
+    });
 });
 
 Template.tm_email_row.helpers({
@@ -168,6 +177,13 @@ Template.tm_email_row.helpers({
         const min = TenantsManager.configure().minGeneralizedEmails;
         const count = Template.instance().TM.countSet( this );
         return count > min ? '' : 'disabled';
+    },
+
+    // parameters for row StatusIndicator
+    parmsStatusIndicator(){
+        return {
+            statusRv: Template.instance().TM.statusIndicator
+        };
     }
 });
 

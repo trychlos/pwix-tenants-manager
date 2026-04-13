@@ -4,6 +4,7 @@
         <td><input class="form-control js-label" type="text" {{ readonly }} placeholder="{{ i18n key="records.properties.emails_label_ph" }}" /></td>
         <td></td>
         <td><input class="form-control js-email" type="email" {{ readonly }} placeholder="{{ i18n key="records.properties.emails_email_ph" }}" /></td>
+        <td>{{> FormsStatusIndicator (parmsStatusIndicator) }}</td>
         <td>
             {{#if editing }}
                 <button class="btn btn-sm btn-outline-primary ui-ml025 js-minus" title="{{ i18n key="records.properties.emails_remove_title" }}" {{ minusEnabled }} >

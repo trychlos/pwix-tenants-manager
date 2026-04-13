@@ -58,7 +58,7 @@ TenantsManager.i18n = {
                     contact_url_invalid: 'L\'URL de la page de contact est invalide',
                     emails_email_invalid: 'L\'adresse de messagerie spécifiée est invalide',
                     emails_email_missing: 'Une adresse de messagerie doit être spécifiée',
-                    emails_label_missing: 'Un label doit être spécifié',
+                    emails_label_missing: 'Un label doit être spécifié pour l\'adresse de messagerie',
                     emails_max: 'Le nombre maximum configuré requiert au plus %s adresses de messagerie',
                     emails_min: 'Le nombre minimum configuré requiert au moins %s adresses de messagerie',
                     gtu_url_invalid: 'L\'URL de la page des Conditions Générales d\'Utilisation est invalide',
@@ -72,7 +72,7 @@ TenantsManager.i18n = {
                     pdmp_url_invalid: 'L\'URL de la page de description de la Politique de Protection des Données Personnelles est invalide',
                     support_email_invalid: 'L\'adresse de support est invalide',
                     support_url_invalid: 'L\'URL de la page de support est invalide',
-                    urls_label_missing: 'Un label doit être spécifié',
+                    urls_label_missing: 'Un label doit être spécifié pour l\'URL',
                     urls_url_invalid: 'L\'URL spécifiée est invalide',
                     urls_url_missing: 'Une URL doit être spécifiée'
                 },

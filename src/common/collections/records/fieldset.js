@@ -134,7 +134,8 @@ const _defaultFieldSet = function( conf ){
             optional: true,
             dt_data: 'any',
             form_check: Tenants.checks.url_label,
-            form_type: Forms.FieldType.C.OPTIONAL
+            form_type: Forms.FieldType.C.OPTIONAL,
+            form_status: Forms.C.ShowStatus.NONE
         },
         {
             name: 'urls.$.url',
@@ -142,7 +143,8 @@ const _defaultFieldSet = function( conf ){
             optional: true,
             dt_data: 'any',
             form_check: Tenants.checks.url_url,
-            form_type: Forms.FieldType.C.OPTIONAL
+            form_type: Forms.FieldType.C.OPTIONAL,
+            form_status: Forms.C.ShowStatus.NONE
         },
         // as many email addresses as you want
         {
@@ -169,7 +171,8 @@ const _defaultFieldSet = function( conf ){
             optional: true,
             dt_data: 'any',
             form_check: Tenants.checks.email_label,
-            form_type: Forms.FieldType.C.OPTIONAL
+            form_type: Forms.FieldType.C.OPTIONAL,
+            form_status: Forms.C.ShowStatus.NONE
         },
         {
             name: 'emails.$.email',
@@ -177,7 +180,8 @@ const _defaultFieldSet = function( conf ){
             optional: true,
             dt_data: 'any',
             form_check: Tenants.checks.email_email,
-            form_type: Forms.FieldType.C.OPTIONAL
+            form_type: Forms.FieldType.C.OPTIONAL,
+            form_status: Forms.C.ShowStatus.NONE
         },
         Notes.fieldDef()
     ];

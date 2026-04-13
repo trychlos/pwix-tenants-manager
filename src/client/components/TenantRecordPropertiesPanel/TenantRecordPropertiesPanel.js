@@ -203,7 +203,7 @@ Template.TenantRecordPropertiesPanel.helpers({
         return 'record_properties_'+label+'_'+this.index;
     },
 
-    // parms for tm_emails_table
+    // parms for tm_emails_thead
     parmsEmails(){
         const recordsArray = this.entity.get().DYN.records;
         if( this.index < recordsArray.length ){
@@ -223,11 +223,14 @@ Template.TenantRecordPropertiesPanel.helpers({
         return null;
     },
 
-    // parms for tm_urls_tr
+    // parms for tm_urls_thead
     parmsUrls(){
         const recordsArray = this.entity.get().DYN.records;
         if( this.index < recordsArray.length ){
-            return this;
+            return {
+                ...this,
+                haveOne: false
+            };
         }
         return null;
     },
