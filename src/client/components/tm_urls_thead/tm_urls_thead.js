@@ -93,6 +93,7 @@ Template.tm_urls_thead.onRendered( function(){
             running = true;
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
+                //logger.debug( 'checker', checker.iSeq());
                 checker.init({
                     name: 'tm_urls_thead',
                     parentChecker: parentChecker,

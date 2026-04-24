@@ -156,6 +156,7 @@ Template.TenantEditPanel.onRendered( function(){
                     }
                 };
                 checker = new Forms.Checker( self );
+                //logger.debug( 'checker', checker.iSeq());
                 checker.init({
                     name: 'TenantEditPanel',
                     messager: self.TM.messager,

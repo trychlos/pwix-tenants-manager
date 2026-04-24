@@ -103,6 +103,7 @@ Template.tm_email_row.onRendered( function(){
             running = true;
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
+                //logger.debug( 'checker', checker.iSeq());
                 let p = null;
                 if( displaying ){
                     p = checker.init({
@@ -113,8 +114,7 @@ Template.tm_email_row.onRendered( function(){
                         },
                         rowId: dataContext.it._id
                     });
-                }
-                if( editing ){
+                } else if( editing ){
                     p = checker.init({
                         parentChecker: parentChecker,
                         name: 'tm_email_row',
@@ -130,10 +130,14 @@ Template.tm_email_row.onRendered( function(){
                         crossCheckRegisterFn: Tenants.checks.email_row
                     });
                 }
-                p.then(() => {
-                        self.TM.checker.set( checker );
-                        comp.stop();
-                    });
+                if( p ){
+                    p.then(() => {
+                            self.TM.checker.set( checker );
+                            comp.stop();
+                        });
+                } else {
+                    logger.warning( 'neither editing nor displaying' );
+                }
             });
         }
     });

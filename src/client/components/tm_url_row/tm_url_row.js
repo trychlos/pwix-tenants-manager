@@ -102,8 +102,7 @@ Template.tm_url_row.onRendered( function(){
                         },
                         rowId: dataContext.it._id
                     });
-                }
-                if( editing ){
+                } else if( editing ){
                     p = checker.init({
                         parentChecker: parentChecker,
                         name: 'tm_url_row',
@@ -119,10 +118,14 @@ Template.tm_url_row.onRendered( function(){
                         crossCheckRegisterFn: Tenants.checks.url_row
                     });
                 }
-                p.then(() => {
-                        self.TM.checker.set( checker );
-                        comp.stop();
-                    });
+                if( p ){
+                    p.then(() => {
+                            self.TM.checker.set( checker );
+                            comp.stop();
+                        });
+                } else {
+                    logger.warning( 'neither editing nor displaying' );
+                }
             });
         }
     });

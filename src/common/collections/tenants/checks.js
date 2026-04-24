@@ -62,6 +62,7 @@ Tenants.checks.contactEmail = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.contactEmail = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validator.validate( value )){
@@ -81,6 +82,7 @@ Tenants.checks.contactUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.contactUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -94,7 +96,7 @@ Tenants.checks.contactUrl = async function( value, data, opts ){
 };
 
 // check that the count of email addresses is correct relatively to configured min and max
-// this is neither a field check nor a cross check which explain the different prototype
+// this is neither a field check nor a cross check (but called from cross check) which explains the different prototype
 // we count the rows, which may or may not be valid but all are counted
 // returns null or a TypedMessage
 Tenants.checks.email_count = async function( emails ){
@@ -129,22 +131,21 @@ Tenants.checks.email_email = async function( value, data, opts ){
     }
     if( opts.update !== false ){
         item.emails[index].email = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
-    const tmCount = Tenants.checks.email_count( item.emails );
     if( value ){
-        if( !validator.validate( value )){
-            return new TM.TypedMessage({
-                level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
-                message: pwixI18n.label( I18N, 'records.check.emails_email_invalid' )
-            });
+        if( validator.validate( value )){
+            return null;
         }
-    } else {
         return new TM.TypedMessage({
-            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
-            message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
+            level: TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_email_invalid' )
         });
     }
-    return null;
+    return new TM.TypedMessage({
+        level: TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
+    });
 };
 
 // an email among others
@@ -160,13 +161,13 @@ Tenants.checks.email_label = async function( value, data, opts ){
     }
     if( opts.update !== false ){
         item.emails[index].label = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         return null;
     }
-    const tmCount = Tenants.checks.email_count( item.emails );
     return new TM.TypedMessage({
-        level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
+        level: TM.MessageLevel.C.ERROR,
         message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
 };
@@ -184,7 +185,8 @@ Tenants.checks.email_row = async function( data, opts ){
         return null;
     }
     const row = item.emails[index];
-    const tmCount = Tenants.checks.email_count( item.emails );
+    //logger.debug( 'row', row, 'index', index );
+    const tmCount = await Tenants.checks.email_count( item.emails );
     if( tmCount ){
         return tmCount;
     }
@@ -210,6 +212,7 @@ Tenants.checks.gtuUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.gtuUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -229,6 +232,7 @@ Tenants.checks.homeUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.homeUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -292,6 +296,7 @@ Tenants.checks.legalsUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.legalsUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -332,6 +337,7 @@ Tenants.checks.pdmpUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.pdmpUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -351,6 +357,7 @@ Tenants.checks.supportEmail = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.supportEmail = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validator.validate( value )){
@@ -370,6 +377,7 @@ Tenants.checks.supportUrl = async function( value, data, opts ){
     let item = data.entity.get().DYN.records[data.index].get();
     if( opts.update !== false ){
         item.supportUrl = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
         if( !validUrl.isWebUri( value )){
@@ -395,6 +403,7 @@ Tenants.checks.url_label = async function( value, data, opts ){
     }
     if( opts.update !== false ){
         item.urls[index].label = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     return value ? null : new TM.TypedMessage({
         level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
@@ -440,19 +449,19 @@ Tenants.checks.url_url = async function( value, data, opts ){
     }
     if( opts.update !== false ){
         item.urls[index].url = value;
+        data.entity.get().DYN.records[data.index].set( item );
     }
     if( value ){
-        if( !validUrl.isWebUri( value )){
-            return new TM.TypedMessage({
-                level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-                message: pwixI18n.label( I18N, 'records.check.urls_url_invalid' )
-            });
+        if( validUrl.isWebUri( value )){
+            return null;
         }
-    } else {
         return new TM.TypedMessage({
             level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
+            message: pwixI18n.label( I18N, 'records.check.urls_url_invalid' )
         });
     }
-    return null;
+    return new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
+    });
 };
