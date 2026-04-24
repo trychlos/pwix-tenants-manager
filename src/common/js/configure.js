@@ -16,7 +16,6 @@ TenantsManager._defaults = {
     allowFn: null,
     // user interface
     classes: '',
-    hideDisabled: true,
     modifiedOnUpdate: false,
     showEmptyGeneralizedEmails: false,
     showEmptyGeneralizedUrls: false,

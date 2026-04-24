@@ -30,6 +30,7 @@
     - Review async code from Records.s.upsert() using await instead of Promises
     - Prevent too many autorun's when calling setForm()
     - Generalized URLs and emails have a single validity status per row
+    - Remove unsused 'hideDisabled' configuration option
 
 ### 1.5.0
 

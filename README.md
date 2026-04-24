@@ -203,12 +203,6 @@ Known configuration options are:
     - `notes`: common notes
     - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
-- `hideDisabled`
-
-    Whether to hide disabled actions instead of displaying the disabled state.
-
-    Defaults to `true`: disabled actions are hidden.
-
 - `listHasContactEmail`
 
     Whether to display the Contact email address in the tabular display.
