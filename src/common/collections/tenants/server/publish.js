@@ -225,7 +225,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
  * These are the fields from the closest record, plus the entity_notes from the entity,
  *  and with effectStart and effectEnd being from the first and last records.
  */
-Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tableName, ids, fields ){
+Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName, ids, fields ){
     const self = this;
     const collectionName = Records.collectionName;
     let initializing = true;
@@ -241,7 +241,7 @@ Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tab
     const entitiesObserver = Entities.collection.find().observeAsync({
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', entities[newItem._id], opts, self.userId );
+                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, entities[newItem._id], opts, self.userId );
                 self.changed( collectionName, entities[newItem._id]._id, transformed );
             }
         }
@@ -249,13 +249,13 @@ Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tab
 
     const recordsObserver = Records.collection.find({ _id: { $in: ids }}).observeAsync({
         added: async function( item ){
-            const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', item, opts, self.userId );
+            const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, item, opts, self.userId );
             entities[item.entity] = transformed;
             self.added( collectionName, item._id, transformed );
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', newItem, opts, self.userId );
+                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, newItem, opts, self.userId );
                 entities[newItem.entity] = transformed;
                 self.changed( collectionName, newItem._id, transformed );
             }

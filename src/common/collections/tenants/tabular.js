@@ -49,7 +49,7 @@ Tracker.autorun(() => {
             name: 'Tenants',
             collection: Records.collection,
             columns: Tenants.fieldSet.get().toTabular(),
-            pub: 'pwix.TenantsManager.p.Tenants.tabularLast',
+            pub: TenantsManager.C.pub.tabular.publish,
             pwix: {
                 // have a badge which displays the count of validity records if greater than 1
                 // let this array be extended by the calling application

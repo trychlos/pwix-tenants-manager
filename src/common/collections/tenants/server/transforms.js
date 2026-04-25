@@ -150,7 +150,7 @@ for( const pub of [ TenantsManager.C.pub.tenantsAll.publish ]){
 
 // tabular display needs its own transformations because publication is driven from the closest record rather than by entity
 // only the tabular publication is interested in undefined fields
-for( const pub of [ 'pwix.TenantsManager.p.Tenants.tabularLast' ]){
+for( const pub of [ TenantsManager.C.pub.tabular.publish ]){
     Tenants.Transforms._publish[pub] = [];
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addDyn );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularEntity );
