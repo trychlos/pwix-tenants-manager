@@ -10,7 +10,7 @@ import './publish.js';
 import './transforms.js';
 
 Tracker.autorun(( comp ) => {
-    if( TenantsManager.Entities?.collectionReady.get() && TenantsManager.Records?.collectionReady.get()){
+    if( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready()){
         TenantsManager.Tenants.ready( true );
         comp.stop();
     }

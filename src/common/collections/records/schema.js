@@ -13,7 +13,7 @@ const logger = Logger.get();
 
 Tracker.autorun(() => {
     const fieldSet = Records.fieldSet?.get();
-    if( Records.collectionReady.get() && fieldSet ){
+    if( Records.ready() && fieldSet ){
         if( Records.collection.attachSchema ){
             logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, '[INFO] attaching schema to Records.collection' );
             Records.collection.attachSchema( new SimpleSchema( fieldSet.toSchema()), { replace: true });

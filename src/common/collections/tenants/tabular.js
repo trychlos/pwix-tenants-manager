@@ -31,7 +31,7 @@ const _record_label = function( it ){
 };
 
 Tracker.autorun(() => {
-    if( Entities.collectionReady.get() && Records.collectionReady.get()){
+    if( Tenants.ready()){
 
         // build the defined columns indexed by name
         let columns = {};

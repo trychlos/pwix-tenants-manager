@@ -33,6 +33,7 @@
     - Remove unsused 'hideDisabled' configuration option
     - Define explicit transformations API
     - Redefine Tenants.ready() as a reactive data source and explicit the ordering (todo #10)
+    - Entities/Records.collectionReady are redefined as ready() reactive data source (todo #9)
 
 ### 1.5.0
 

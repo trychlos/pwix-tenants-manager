@@ -11,7 +11,7 @@ import { Records } from '../index.js';
 // see also https://docs.meteor.com/api/accounts.html#Meteor-users
 
 Tracker.autorun(() => {
-    if( Records.collectionReady.get()){
+    if( Records.ready()){
         Records.collection.deny({
             insert(){ return true; },
             update(){ return true; },

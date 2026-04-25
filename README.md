@@ -127,11 +127,15 @@ Following events are sent:
 
 These are the two main managed collections. Both provides:
 
-- `collectionReady`: a ReactiveVar, true when the collection is ready
+- `collectionName`: the actual configured name of the collection
 
 - `fieldSet`: a ReactiveVar which contains the current `Field.Set` of the entities (resp. the records).
 
+    The fieldsets are automatically reset to their defaults each time the package is configured. If the caller wishes extend the fieldsets, then he/she must do that after the package configuration.
+    
     Each update of these fieldsets automatically redefines all dependants, and notably the tabular displays, the Mongo schemas, and so on.
+
+- `ready`: a reactive data source, true when the collection is ready
 
 ### `TenantsManager.Tenants`
 

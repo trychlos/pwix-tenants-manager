@@ -24,7 +24,7 @@ import './tabular.js';
 
 if( Meteor.isClient ){
     Tracker.autorun(( comp ) => {
-        if( TenantsManager.Entities?.collectionReady.get() && TenantsManager.Records?.collectionReady.get()){
+        if( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready()){
             Tenants.ready( true );
             comp.stop();
         }

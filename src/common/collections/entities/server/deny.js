@@ -11,7 +11,7 @@ import { Entities } from '../index.js';
 // see also https://docs.meteor.com/api/accounts.html#Meteor-users
 
 Tracker.autorun(() => {
-    if( Entities.collectionReady.get()){
+    if( Entities.ready()){
         Entities.collection.deny({
             insert(){ return true; },
             update(){ return true; },
