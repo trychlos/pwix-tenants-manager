@@ -25,7 +25,6 @@
 |    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
 |      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
 |    9 | 2026- 4-24 | Entities/Records collectionReady reactive var should become a ready() reactive data source |
-|   10 | 2026- 4-25 | Tenants ready reactive var should become a ready() reactive data source |
 |   11 | 2026- 4-25 | Tenants should not have its own fieldset but should use those of the records |
 |   12 | 2026- 4-25 | Use TenantsManager.C.pub.tabular.collection instead of Records.collectionName |
 |   13 |  |  |
@@ -43,6 +42,8 @@
 |      | 2024- 9-30 | done |
 |    6 | 2024-11-16 | have tenant manager |
 |      | 2024-11-16 | done |
+|   10 | 2026- 4-25 | Tenants ready reactive var should become a ready() reactive data source |
+|      | 2026- 4-25 | done |
 
 ---
 P. Wieser

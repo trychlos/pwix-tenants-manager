@@ -12,11 +12,21 @@
  * The fieldset used in that case if those of the record
  */
 
+import { Tracker } from 'meteor/tracker';
+
 export { Tenants } from './collection.js';
 
 import './checks.js';
 import './fieldset.js';
 import './functions.js';
-import './tabular.js';
-//
 import './ready.js';
+import './tabular.js';
+
+if( Meteor.isClient ){
+    Tracker.autorun(( comp ) => {
+        if( TenantsManager.Entities?.collectionReady.get() && TenantsManager.Records?.collectionReady.get()){
+            Tenants.ready( true );
+            comp.stop();
+        }
+    });
+}

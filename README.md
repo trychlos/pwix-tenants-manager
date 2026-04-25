@@ -313,6 +313,10 @@ Known configuration options are:
 
         Trace the schemas attachement operations
 
+    - `TenantsManager.C.Verbose.READY`
+
+        Trace the readyness status changes
+
     Defaults to `TenantsManager.C.Verbose.CONFIGURE`.
 
 - `withDedicatedEmails`
@@ -499,26 +503,6 @@ Known configuration options are:
     Whether we should show a '...' disabled button in the tabular display when there is no URL to be displayed.
 
     Defaults to `false`.
-
-- `xx serverAllExtend`
-
-    A server-side function which comes to extend the content of the 'tenantsAll' publication.
-
-    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
-
-    TO BE REPLACED WITH A READ TRANSFORMATION
-
-    Defaults to `null`.
-
-- `xx serverTabularExtend`
-
-    A server-side function which comes to extend the content of the dataset published for the tabular display.
-
-    The function get the current entity item as its unique argument and returns a Promise when finished with its job.
-
-    TO BE REPLACED WITH AN AD-HOC PUBLISH TRANSFORMATION
-
-    Defaults to `null`.
 
 - `xx tenantButtons`
 

@@ -33,7 +33,8 @@ TenantsManager.C = {
         NONE: 0,
         CONFIGURE:      0x01 <<  0,
         FUNCTIONS:      0x01 <<  1,
-        ATTACHSCHEMA:   0x01 <<  2
+        ATTACHSCHEMA:   0x01 <<  2,
+        READY:          0x01 <<  3
     }
 };
 

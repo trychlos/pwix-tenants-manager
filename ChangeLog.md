@@ -32,6 +32,7 @@
     - Generalized URLs and emails have a single validity status per row
     - Remove unsused 'hideDisabled' configuration option
     - Define explicit transformations API
+    - Redefine Tenants.ready() as a reactive data source and explicit the ordering (todo #10)
 
 ### 1.5.0
 
