@@ -8,7 +8,7 @@ const self = TenantsManager.list;
 let _byIds = {};
 
 // initialization of both the array and the dictionary
-Tenants.s.getRichEntities().then(( fetched ) => {
+Tenants.s.getTransformedEntities().then(( fetched ) => {
     fetched.map(( it ) => { _byIds[it._id] = it; })
     self._array.set( fetched );
 });

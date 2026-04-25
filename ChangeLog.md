@@ -31,6 +31,7 @@
     - Prevent too many autorun's when calling setForm()
     - Generalized URLs and emails have a single validity status per row
     - Remove unsused 'hideDisabled' configuration option
+    - Define explicit transformations API
 
 ### 1.5.0
 

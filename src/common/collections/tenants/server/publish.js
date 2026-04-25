@@ -15,12 +15,12 @@ const logger = Logger.get();
 /*
  * returns a cursor of all tenants as a full tenants list, published here as a 'tenants_all' pseudo collection
  *  where each item is a tenant entity, and contains a DYN sub-object with:
- *  - managers: the list of ids of users which are allowed to managed this tenant using a scoped role
+ *  - managers: the list of ids of users which are allowed to managed this tenant using the configured scoped role
  *  - records: the list of validity records for this entity
  *  - closest: the closest record
  * Only publishes the tenants the user is allowed to
  */
-Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
+Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={} ){
     const self = this;
     const userId = this.userId;
     if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.list', userId )){
@@ -32,15 +32,17 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
             if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, item._id )){
-                self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, await Tenants.s.transformEntity( item ));
-                TenantsManager.s.eventEmitter.emit( 'added', item._id, await Tenants.s.transformEntity( item ));
+                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, item, opts, userId );
+                self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, transformed );
+                TenantsManager.s.eventEmitter.emit( 'added', item._id, transformed );
             }
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
                 if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, newItem._id )){
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, await Tenants.s.transformEntity( newItem ));
-                    TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, await Tenants.s.transformEntity( newItem ));
+                    const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, newItem, opts, userId );
+                    self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, transformed );
+                    TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, transformed );
                 }
             }
         },
@@ -55,13 +57,14 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
             if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, item.entity )){
                 Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
                     if( entity ){
+                        const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
                         try {
-                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
+                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
+                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, transformed );
                         } catch( e ){
                             // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
-                            self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                            TenantsManager.s.eventEmitter.emit( 'added', entity._id, await Tenants.s.transformEntity( entity ));
+                            self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
+                            TenantsManager.s.eventEmitter.emit( 'added', entity._id, transformed );
                             //logger.debug( e, 'ignored' );
                         }
                     } else {
@@ -75,8 +78,9 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
                 if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, newItem.entity )){
                     Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
                         if( entity ){
-                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, await Tenants.s.transformEntity( entity ));
-                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, await Tenants.s.transformEntity( entity ));
+                            const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
+                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
+                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, transformed );
                         } else {
                             logger.warn( 'changed: entity not found', newItem.entity );
                         }
@@ -88,8 +92,9 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function(){
         removed: async function( oldItem ){
             Entities.collection.findOneAsync({ _id: oldItem.entity }).then( async ( entity ) => {
                 if( entity ){
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, await Tenants.s.transformEntity( entity ));
-                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, await Tenants.s.transformEntity( entity ));
+                    const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
+                    self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, transformed );
+                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, transformed );
                 }
             });
         }
@@ -225,59 +230,18 @@ Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tab
     const collectionName = Records.collectionName;
     let initializing = true;
 
+    // arguments for applyPublishTransforms()
+    const opts = {
+        tableName, ids, fields 
+    };
+
     // for each entity, the (closest) record sent after transformation
     let entities = {};
-
-    // for tabular display we have to provide:
-    // - entity_notes
-    // - the list of the managers
-    // - a DYN object which contains:
-    //   > analyze: the result of the analyze, i.e. the list of fields which are different among this tenant records
-    //   > entity: the entity document
-    //   > records: an array of the record documents
-    // - start and end effect dates are modified with the englobing period of the entity
-    // @param {Object} item the Record item
-    // @returns {Object} item the closest record for this entity
-    const f_transform = async function( item ){
-        let promises = [];
-        item.DYN = {};
-        // enriched the item from the entity
-        promises.push( f_transformFromEntity( item ));
-        // get all the records
-        promises.push( Records.collection.find({ entity: item.entity }).fetchAsync().then(( fetched ) => {
-            item.DYN.analyze = Validity.analyzeByRecords( fetched );
-            item.DYN.records = fetched;
-            const res = Validity.englobingPeriodByRecords( fetched );
-            item.DYN.effectStart = res.start;
-            item.DYN.effectEnd = res.end;
-            //logger.debug( 'pwix.TenantsManager.p.Tenants.tabularLast, res', res );
-            return true;
-        }));
-        await Promise.allSettled( promises );
-        // extend on option
-        const fn = TenantsManager.configure().serverTabularExtend;
-        if( fn ){
-            await fn( item );
-        }
-        Tenants.s.addUndef( item );
-        return item;
-    };
-
-    // item is the closest record for the entity, to be enriched with our DYN data and - here - the entity notes
-    const f_transformFromEntity = async function( item, entity ){
-        if( !entity ){
-            entity = await Entities.collection.findOneAsync({ _id: item.entity });
-        }
-        if( entity ){
-            item.DYN.entity = entity;
-        }
-        item.DYN.managers = await Tenants.s.getManagers( entity._id );
-    };
 
     const entitiesObserver = Entities.collection.find().observeAsync({
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await f_transform( entities[newItem._id], newItem );
+                const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', entities[newItem._id], opts, self.userId );
                 self.changed( collectionName, entities[newItem._id]._id, transformed );
             }
         }
@@ -285,13 +249,13 @@ Meteor.publish( 'pwix.TenantsManager.p.Tenants.tabularLast', async function( tab
 
     const recordsObserver = Records.collection.find({ _id: { $in: ids }}).observeAsync({
         added: async function( item ){
-            const transformed = await f_transform( item );
+            const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', item, opts, self.userId );
             entities[item.entity] = transformed;
             self.added( collectionName, item._id, transformed );
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await f_transform( newItem );
+                const transformed = await Tenants.s.applyPublishTransforms( 'pwix.TenantsManager.p.Tenants.tabularLast', newItem, opts, self.userId );
                 entities[newItem.entity] = transformed;
                 self.changed( collectionName, newItem._id, transformed );
             }

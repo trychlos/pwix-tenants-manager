@@ -22,7 +22,11 @@
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
 |    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
-|    8 |  |  |
+|    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
+|      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
+|    9 | 2026- 4-24 | Entities/Records collectionReady reactive var should become a ready() reactive data source |
+|   10 |  |  |
+|   11 |  |  |
 
 ---
 ## Done

@@ -14,6 +14,18 @@ TenantsManager._conf = new ReactiveVar( _conf );
 
 TenantsManager._defaults = {
     allowFn: null,
+    scopedManagerRole: 'SCOPED_TENANT_MANAGER',
+    tenantsCollection: 'tenants',
+    verbosity: TenantsManager.C.Verbose.CONFIGURE,
+    withDedicatedEmails: true,
+    withDedicatedUrls: true,
+    withGeneralizedEmails: false,
+    withGeneralizedUrls: false,
+    withValidities: true
+};
+/*
+TenantsManager._defaults = {
+    allowFn: null,
     // user interface
     classes: '',
     modifiedOnUpdate: false,
@@ -44,6 +56,7 @@ TenantsManager._defaults = {
     verbosity: TenantsManager.C.Verbose.CONFIGURE,
     withValidities: true
 };
+*/
 
 /**
  * @summary Get/set the package configuration

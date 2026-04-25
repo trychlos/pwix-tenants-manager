@@ -6,7 +6,9 @@ A try to mutualize and factorize the most common part of a multi-tenants managem
 
 - defines a basic schema and provides client and server check functions
 
-- provides components to list and edit tenants.
+- provides components to list and edit tenants
+
+- provides client-side and server-side hooks to let the application easily extend the features.
 
 Our tenants are defined in the common acceptance of the term as distinct organizations which are managed in a same software space. They can have validity periods. A tenant administrator can be defined as a scoped role.
 
@@ -19,13 +21,23 @@ This Meteor package is installable with the usual command:
     meteor npm install email-validator lodash valid-url --save
 ```
 
-### Storage considerations
+## Storage considerations
 
 When an application makes use of this package to manage several tenants, two `tenants_e` and `tenants_r` collections are created which gathers defined tenants. That's all, and, in particular, this doesn't create for the application any assumption about the way the application tenants data will be themselves stored (in distinct databases, in distinct collections, or so).
 
-- the `tenants_e` collection contains datas which are common to all validity periods, which default to only be a label
+- the `tenants_e` collection contains datas which are common to all validity periods, which default to only be an identifier
 
 - the `tenants_r` collection contains datas which are tied to a particular validity period.
+
+## Edition considerations
+
+This tenant manager defaults to edit a tenant in an edition modal, with all its validity periods at once.
+
+This can become rapidly a moment of big data consumption as the data of each period is multiplied by the count of validity periods.
+
+When the count of validity periods becomes too large, it could be useful and more easy to only edit validity periods one at a time. The edition button of the tabular display is modified so that it proposes a dropdown menu which includes each existing validity period in addition of a 'all' item.
+
+Note that there is no such thing as deleting a period. Periods can be merged together, or a new period can be defined inside of a free space, and merged back later. Editing the validity start and end of a period can be done when inside a single period edition modal. But merging periods requires to have the full validity periods edition modal.
 
 ## Provides
 
@@ -37,7 +49,11 @@ The exported `TenantsManager` global object provides following items:
 
 ##### `TenantsManager.configure( o<Object> )`
 
-See [below](#configuration)
+See [below](#configuration).
+
+The package configuration only determines the global behavior of the package.
+
+For more precise details and options, the caller could take advantage of the various `setupXxxxxx()` functions (see below).
 
 ##### `TenantsManager.getScopes()`
 
@@ -45,7 +61,7 @@ An async function which returns an array of known tenants identifier, and their 
 
 This function is not reactive.
 
-If reactivity is desired, the caller should prefer the `pwix.TenantsManager.m.Tenants.getScopes` publication.
+If reactivity is desired, the caller should prefer to subscribe to the `pwix.TenantsManager.p.Tenants.getScopes` publication.
 
 ##### `TenantsManager.i18n.namespace()`
 
@@ -53,15 +69,46 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
+##### `TenantsManager.setupEditor()`
+
+Define the runtime options for editing the tenants.
+
+Available both on the client and the server, but only used in the client (server-side is just a no-op).
+
+##### `TenantsManager.setupHooks()`
+
+Define optional server-side hooks:
+
+    - `async preCreateFn( userDoc<Object>, userId<String> ): <void>`
+    - `async postCreateFn( userDoc<Object>, userId<String> ): <void>`
+
+    - `async preDeleteFn( userDoc<Object>, userId<String> ): <void>`
+    - `async postDeleteFn( userDoc<Object>, userId<String> ): <void>`
+
+    - `async preUpdateFn( userDoc<Object>, userId<String>, opts<Object> ): <void>`
+    - `async postUpdateFn( userDoc<Object>, userId<String>, opts<Object> ): <void>`
+
+        These functions can modify in place the `userDoc` document.
+
+The `pre`-functions should throw an error if they want cancel the operation.
+
+Available on the server only.
+
+##### `TenantsManager.setupTabular()`
+
+Define the runtime options for displaying the list of the available tenants.
+
+Must be called in the same terms both on the client and the server.
+
 #### Events emitter
 
 On server side, `TenantsManager` is an event emitter through the `TenantsManager.s.eventEmitter` object.
 
 Following events are sent:
 
-- `added`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+- `added`, from the `tenantsAll` publication, with arguments as `id<String>, tenantDoc<Object>`
 
-- `changed`, from the `tenantsAll` publication, with arguments as `id<String>, object<Object>`
+- `changed`, from the `tenantsAll` publication, with arguments as `id<String>, tenantDoc<Object>`
 
 - `removed`, from the `tenantsAll` publication, with arguments as `id<String>`
 
@@ -74,6 +121,73 @@ Following events are sent:
 
     - `id`: the entity identifier
     - `result`: the results of the operation in Entities and Records collections.
+
+### `TenantsManager.Entities`
+### `TenantsManager.Records`
+
+These are the two main managed collections. Both provides:
+
+- `collectionReady`: a ReactiveVar, true when the collection is ready
+
+- `fieldSet`: a ReactiveVar which contains the current `Field.Set` of the entities (resp. the records).
+
+    Each update of these fieldsets automatically redefines all dependants, and notably the tabular displays, the Mongo schemas, and so on.
+
+### `TenantsManager.Tenants`
+
+A pseudo-collection which provides the publications, the read and update accesses and the transformations.
+
+- `transformsPublish( publication<String> ): <Array>`
+
+Returns the current transformation functions array for the named publication, and let the caller examines it, reset it or update it.
+
+Prototype of the transformation functions is `async fn( tenantDoc<Object>, options<Object>, userId<String> ): tenantDoc<Object>`, where:
+
+- `options` is the options passed to the publication function with added keys:
+
+    - `type`: 'publish'
+    - `source`: the publication name,
+    - `index`: the index of the transformation function, counted from zero
+
+- `userId` is the identifier of the user who has subscribed to the publication.
+
+Default transformation on publications is to add the `preferredLabel()` result inside of a `DYN` sub-object.
+
+Available on the server only.
+
+- `transformsRead(): <Array>`
+
+Returns the current transformation functions array for read accesses, and let the caller examines it, reset it or update it.
+
+Prototype of the transformation functions is `async fn( tenantDoc<Object>, options<Object> ): tenantDoc<Object>`, where:
+
+- `options` is the options passed to the read function - usually Mongo qualifiers - with added keys:
+
+    - `type`: 'read'
+    - `source`: the read function name,
+    - `index`: the index of the transformation function, counted from zero.
+
+Default transformation on read accesses is to add the `preferredLabel()` result inside of a `DYN` sub-object.
+
+Available both on the client and the server.
+
+- `transformsUpdate()`
+
+Returns the current transformation functions array for update accesses, and let the caller examines it, reset it or update it.
+
+Prototype of the transformation functions is `async fn( tenantDoc<Object>, options<Object> ): tenantDoc<Object>`, where:
+
+- `options` is the options passed to the update function - maybe `orig` and Meteor qualifiers - with added keys:
+
+    - `type`: 'update'
+    - `source`: the update function name,
+    - `index`: the index of the transformation function, counted from zero.
+
+Note that writers of transformation functions for update accesses should wonder if they want modify the document itself, or clone the document before mmodifying it.
+
+Default transformation on update accesses is to remove the `DYN` sub-object. The function returns a modified clone of the initial document.
+
+Available on the server only.
 
 ### Blaze components
 
@@ -167,13 +281,87 @@ Known configuration options are:
 
     `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
 
-- `classes`
+- `scopedManagerRole`
+
+    The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
+
+- `tenantsCollection`
+
+    The radical of the names of the tenants Mongo collections.
+
+    Defaults to `tenants`.
+
+    The actual collection names will be this radical plus `_e` for entities and `_r` for records, e.g. `tenants_e` and `tenants_r`.
+
+- `verbosity`
+
+    The verbosity level as:
+
+    - `TenantsManager.C.Verbose.NONE`
+
+    or an OR-ed value of integer constants:
+
+    - `TenantsManager.C.Verbose.CONFIGURE`
+
+        Trace configuration operations
+
+    - `TenantsManager.C.Verbose.FUNCTIONS`
+
+        Trace all function calls
+
+    - `TenantsManager.C.Verbose.ATTACHSCHEMA`
+
+        Trace the schemas attachement operations
+
+    Defaults to `TenantsManager.C.Verbose.CONFIGURE`.
+
+- `withDedicatedEmails`
+
+    Whether you are enough with the predefined dedicated email:
+
+    - `contactEmail`
+
+    Each tenants **requires** at least one contact email address. If you prefer our generalized email system and do not use the predefined dedicated email, then the used contact email address will be the first address whose label insensitively matches the 'contact' string, defaulting to the first email address. `withDedicatedEmails` and `withGeneralizedEmails` cannot both be `false`.
+
+    Defaults to `true`.
+
+- `withDedicatedUrls`
+
+    Whether you are enough with the predefined dedicated URL:
+
+    - `homeUrl`
+
+    No URL is required, but a warning will be emitted if both `withDedicatedUrls` and `withGeneralizedUrls` are `false`.
+
+    Defaults to `true`.
+
+- `withGeneralizedEmails`
+
+    Whether you are willing to use our generalized email system.
+
+    The generalized email system we propose is just an array of label+email address. You can so set any number of email addresses of your choice.
+
+    Defaults to `false`.
+
+- `withGeneralizedUrls`
+
+    Whether you are willing to use our generalized URL system.
+
+    The generalized URL system we propose is just an array of label+URL. You can so set any number of URLs of your choice.
+
+    Defaults to `false`.
+
+- `withValidities`
+
+    Whether we want manage validity periods for the tenants, defaulting to `true`.
+
+- `xx classes`
 
     Let the application provides some classes to add to the display.
 
     Defauts to nothing.
 
-- `entityFields`
+- `xx entityFields`
 
     Let the application extends the Entities default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
 
@@ -203,41 +391,41 @@ Known configuration options are:
     - `notes`: common notes
     - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
-- `listHasContactEmail`
+- `xx listHasContactEmail`
 
     Whether to display the Contact email address in the tabular display.
 
     Defaults to `true`.
 
-- `listHasContactUrl`
+- `xx listHasContactUrl`
 
     Whether to display the Contact page URL in the tabular display.
 
     Defaults to `true`.
 
-- `listHasGeneralizedEmails`
+- `xx listHasGeneralizedEmails`
 
     Whether to display the first email address of the generalized list, with an 'see more' button, in the tabular display.
 
     Defaults to `false`.
 
-- `listHasHomeUrl`
+- `xx listHasHomeUrl`
 
     Whether to display the Home page URL in the tabular display.
 
     Defaults to `true`.
 
-- `listHasGeneralizedUrls`
+- `xx listHasGeneralizedUrls`
 
     Whether to display the first URL of the generalized list, with an 'see more' button, in the tabular display.
 
     Defaults to `false`.
 
-- `maxGeneralizedEmails`: when using the generalized emails structure, the maximum count of required emails, defaulting to -1 which means unlimited.
+- `xx maxGeneralizedEmails`: when using the generalized emails structure, the maximum count of required emails, defaulting to -1 which means unlimited.
 
     Take care that setting this max to zero will actually prevent any email address to be entered.
 
-- `minGeneralizedEmails`: when using the generalized emails structure, the minimum count of required emails, defaulting to 1.
+- `xx minGeneralizedEmails`: when using the generalized emails structure, the minimum count of required emails, defaulting to 1.
 
 - `modifiedOnUpdate`:
 
@@ -247,11 +435,11 @@ Known configuration options are:
 
     Defauls to `false`.
 
-- `propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`.
+- `xx propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`.
 
-- `propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
+- `xx propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
 
-- `recordFields`
+- `xx recordFields`
 
     Let the application extends the Records default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
 
@@ -291,7 +479,7 @@ Known configuration options are:
     - `logoImage`: logo image
     - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
-- `roles`
+- `xx roles`
 
     Let the application provides the permissions required to perform CRUD operations on the Tenants collection. This is an object with following keys:
 
@@ -300,39 +488,39 @@ Known configuration options are:
     - `edit`: defaulting to `null` (allowed to all)
     - `delete`: defaulting to `null` (allowed to all)
 
-- `showEmptyGeneralizedEmails`
+- `xx showEmptyGeneralizedEmails`
 
     Whether we should show a '...' disabled button in the tabular display when there is no email to be displayed.
 
     Defaults to `false`.
 
-- `showEmptyGeneralizedUrls`
+- `xxx showEmptyGeneralizedUrls`
 
     Whether we should show a '...' disabled button in the tabular display when there is no URL to be displayed.
 
     Defaults to `false`.
 
-- `scopedManagerRole`
-
-    The name of the role which holds the scoped management for a tenant, defaulting to `SCOPED_TENANT_MANAGER`.
-
-- `serverAllExtend`
+- `xx serverAllExtend`
 
     A server-side function which comes to extend the content of the 'tenantsAll' publication.
 
     The function get the current entity item as its unique argument and returns a Promise when finished with its job.
 
+    TO BE REPLACED WITH A READ TRANSFORMATION
+
     Defaults to `null`.
 
-- `serverTabularExtend`
+- `xx serverTabularExtend`
 
     A server-side function which comes to extend the content of the dataset published for the tabular display.
 
     The function get the current entity item as its unique argument and returns a Promise when finished with its job.
 
+    TO BE REPLACED WITH AN AD-HOC PUBLISH TRANSFORMATION
+
     Defaults to `null`.
 
-- `tenantButtons`
+- `xx tenantButtons`
 
     Let the application extends the Tenants default tabular display by providing additional buttons as an array of template names, or as a function which returns such an array.
 
@@ -355,7 +543,7 @@ Known configuration options are:
     });
 ```
 
-- `tenantFields`
+- `xx tenantFields`
 
     Let the application extends the Tenants default tabular display by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
 
@@ -380,38 +568,6 @@ Known configuration options are:
         ]
     });
 ```
-
-- `tenantsCollection`
-
-    The radical of the names of the tenants Mongo collections.
-
-    Defaults to `tenants`.
-
-- `verbosity`
-
-    The verbosity level as:
-
-    - `TenantsManager.C.Verbose.NONE`
-
-    or an OR-ed value of integer constants:
-
-    - `TenantsManager.C.Verbose.CONFIGURE`
-
-        Trace configuration operations
-
-    - `TenantsManager.C.Verbose.FUNCTIONS`
-
-        Trace all function calls
-
-    - `TenantsManager.C.Verbose.ATTACHSCHEMA`
-
-        Trace the schemas attachement operations
-
-    Defaults to `TenantsManager.C.Verbose.CONFIGURE`.
-
-- `withValidities`
-
-    Whether we want manage validity periods for the tenants, defaulting to `true`.
 
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.
 
