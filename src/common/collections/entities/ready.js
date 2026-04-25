@@ -11,7 +11,7 @@
 import { Logger } from 'meteor/pwix:logger';
 import { Tracker } from 'meteor/tracker';
 
-import { Tenants } from './index.js';
+import { Entities } from './index.js';
 
 const logger = Logger.get();
 
@@ -22,12 +22,12 @@ _ready = {
 
 /**
  * @locus Anywhere
- * @summary Set/Get the readyness status of the 'Tenants' pseudo-collection
+ * @summary Set/Get the readyness status of the 'Entities' collection
  * @param {Boolean|none} b a status to be set when acting as a setter
  * @returns {Boolean} the current readyness status
  *  A reactive data source.
  */
-Tenants.ready = function( b ){
+Entities.ready = function( b ){
     if( b !== undefined ){
         _ready.value = b;
         _ready.dep.changed();
@@ -37,5 +37,5 @@ Tenants.ready = function( b ){
 }
 
 Tracker.autorun(() => {
-    logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.READY }, 'Tenants.ready()', Tenants.ready());
+    logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.READY }, 'Entities.ready()', Entities.ready());
 });
