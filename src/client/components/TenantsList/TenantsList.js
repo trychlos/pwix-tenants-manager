@@ -9,6 +9,7 @@ import { Logger } from 'meteor/pwix:logger';
 import { Modal } from 'meteor/pwix:modal';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Tabular } from 'meteor/pwix:tabular';
 import { Tolert } from 'meteor/pwix:tolert';
 
 import '../TenantEditPanel/TenantEditPanel.js';
@@ -56,11 +57,17 @@ Template.TenantsList.helpers({
         const selector = { _id: {}};
         selector._id.$in = Template.instance().TM.closests.get();
         return selector;
-},
+    },
 
     // tabular identifier
     tabularId(){
         return TABULAR_ID;
+    },
+
+    // tabular identifier
+    tabularInstance(){
+        const table = Tabular.byName( TenantsManager.C.pub.tabular.name );
+        return table;
     }
 });
 

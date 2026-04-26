@@ -119,7 +119,7 @@ Tenants.Transforms = {
     async addUndefined( itemDoc, options={} ){
         check( itemDoc, Object );
         check( options, Object );
-        for( const name of Tenants.fieldSet.get().names()){
+        for( const name of Records.fieldSet.get().names()){
             if( name.indexOf( '.' ) === -1 && !Object.keys( itemDoc ).includes( name )){
                 itemDoc[name] = undefined;
             }

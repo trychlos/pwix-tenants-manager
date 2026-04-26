@@ -19,7 +19,7 @@ TenantsManager.C = {
             publish: 'pwix.TenantsManager.p.Tenants.selecting'
         },
         tabular: {
-            collection: 'pwix_tenants_manager_tenants_tabular_last',
+            name: 'TenantsList',
             publish: 'pwix.TenantsManager.p.Tenants.TabularLast'
         },
         tenantsAll: {

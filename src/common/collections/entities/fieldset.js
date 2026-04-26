@@ -6,15 +6,17 @@
  * - when rendering the edition templates
  * - chen cheking the fields in the edition panels
  *
- * Note: in this multi-validities domain, the main tabular display is Tenants-driven.
- * We do not define here the tabular display. See Tenants/fieldset for that.
+ * Note: in this multi-validities domain, the main tabular display is record-driven.
+ * We do not define here the tabular display. See Records/fieldset for that.
  */
 
 import { Field } from 'meteor/pwix:field';
 import { Logger } from 'meteor/pwix:logger';
 import { Notes } from 'meteor/pwix:notes';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 import { Timestampable } from 'meteor/pwix:collection-timestampable';
 import { Tracker } from 'meteor/tracker';
+import { Validity } from 'meteor/pwix:validity';
 
 import { Entities } from './index.js';
 
@@ -33,13 +35,24 @@ const _defaultFieldSet = function( conf ){
 };
 
 Tracker.autorun(() => {
+    // fieldset has changed or is to be initialized
     const conf = TenantsManager.configure();
-    let columns = _defaultFieldSet( conf );
-    let fieldset = new Field.Set( columns );
-    // add application-configured fieldset if any
-    if( conf.entityFields ){
-        fieldset.extend( conf.entityFields );
+    let fieldset = Entities.fieldSet.get();
+    if( !fieldset ){
+        const columns = _defaultFieldSet( conf );
+        fieldset = new Field.Set( columns );
     }
+    // define dependants
+    if( Entities.collection?.attachSchema ){
+        logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'attaching Entities schema' );
+        Entities.collection.attachSchema( new SimpleSchema( fieldset.toSchema()), { replace: true });
+        Entities.collection.attachBehaviour( 'timestampable', { replace: true });
+    } else if( !Entities.collection ){
+        logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'Entities.collection is not (yet ?) defined' );
+    } else {
+        logger.warning( 'Entities.collection.attachSchema is not a function' );
+    }
+    // set the reactive var
     Entities.fieldSet.set( fieldset );
 });
 

@@ -8,11 +8,10 @@ export { Records } from './collection.js';
 
 import './fieldset.js';
 import './ready.js';
-import './schema.js';
 
 if( Meteor.isClient ){
     Tracker.autorun(( comp ) => {
-        Records.ready( true );
+        TenantsManager.Records.ready( true );
         comp.stop();
     });
 }

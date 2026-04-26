@@ -81,7 +81,7 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
     };
     // and checks...
     await _fnRecordCheck( 'label', tenant.record.label );
-    const generalizedEmails = TenantsManager.configure().propertiesHaveGeneralizedEmails;
+    const generalizedEmails = TenantsManager.configure().withGeneralizedEmails;
     if( generalizedEmails ){
         const emails = tenant.record.emails || [];
         for( const email of emails ){
@@ -89,11 +89,13 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
             await _fnRowCheck( 'email_email', email.email, email );
             await _fnRowCheck( 'email_row', email );
         }
-    } else  {
-        await _fnRecordCheck( 'contactEmail', tenant.record.contactEmail );
-        await _fnRecordCheck( 'supportEmail', tenant.record.supportEmail );
     }
-    const generalizedUrls = TenantsManager.configure().propertiesHaveGeneralizedUrls;
+    const dedicatedEmails = TenantsManager.configure().withDedicatedEmails;
+    if( dedicatedEmails ){
+        await _fnRecordCheck( 'contactEmail', tenant.record.contactEmail );
+        //await _fnRecordCheck( 'supportEmail', tenant.record.supportEmail );
+    }
+    const generalizedUrls = TenantsManager.configure().withGeneralizedUrls;
     if( generalizedUrls ){
         const urls = tenant.record.urls || [];
         for( const url of urls ){
@@ -101,15 +103,17 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
             await _fnRowCheck( 'url_url', url.url, url );
             await _fnRowCheck( 'url_row', url );
         }
-    } else  {
-        await _fnRecordCheck( 'contactUrl', tenant.record.contactUrl );
-        await _fnRecordCheck( 'gtuUrl', tenant.record.gtuUrl );
-        await _fnRecordCheck( 'homeUrl', tenant.record.homeUrl );
-        await _fnRecordCheck( 'legalsUrl', tenant.record.legalsUrl );
-        await _fnRecordCheck( 'logoUrl', tenant.record.logoUrl );
-        await _fnRecordCheck( 'pdmpUrl', tenant.record.pdmpUrl );
-        await _fnRecordCheck( 'supportUrl', tenant.record.supportUrl );
     }
+    const dedicatedUrls = TenantsManager.configure().withDedicatedUrls;
+    if( dedicatedUrls ){
+        //await _fnRecordCheck( 'contactUrl', tenant.record.contactUrl );
+        //await _fnRecordCheck( 'gtuUrl', tenant.record.gtuUrl );
+        await _fnRecordCheck( 'homeUrl', tenant.record.homeUrl );
+        //await _fnRecordCheck( 'legalsUrl', tenant.record.legalsUrl );
+        //await _fnRecordCheck( 'pdmpUrl', tenant.record.pdmpUrl );
+        //await _fnRecordCheck( 'supportUrl', tenant.record.supportUrl );
+    }
+    await _fnRecordCheck( 'logoUrl', tenant.record.logoUrl );
     return result;
 };
 
@@ -156,4 +160,19 @@ TenantsManager.isAllowed = async function( action, userId=null ){
         allowed = await fn( newAction, ...newArgs );
     }
     return allowed;
+}
+
+/**
+ * @summary Setup the tabular display
+ * @param {Object} opts an optional options object with following keys:
+ * @param {Function} buttonsHookFn an optional function to be added to the buttons hooks array
+ */
+TenantsManager.setupTabular = function( opts={}, buttonsHookFn=null ){
+    // install buttons hook if any
+    if( buttonsHookFn ){
+        TenantsManager.Tabular._buttonsHooks.push( buttonsHookFn );
+    }
+    // merge options with default and instanciates the Tabular.Table
+    const options = _.merge( {}, TenantsManager.Tabular._defaultOptions(), opts );
+    TenantsManager.Tabular.init( options );
 }

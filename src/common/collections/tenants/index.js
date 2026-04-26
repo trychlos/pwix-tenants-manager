@@ -17,7 +17,6 @@ import { Tracker } from 'meteor/tracker';
 export { Tenants } from './collection.js';
 
 import './checks.js';
-import './fieldset.js';
 import './functions.js';
 import './ready.js';
 import './tabular.js';

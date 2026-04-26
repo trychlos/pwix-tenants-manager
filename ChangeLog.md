@@ -34,6 +34,7 @@
     - Define explicit transformations API
     - Redefine Tenants.ready() as a reactive data source and explicit the ordering (todo #10)
     - Entities/Records.collectionReady are redefined as ready() reactive data source (todo #9)
+    - Remove Tenants.fieldSet, using instead Records.fieldSet, updating TenantsManager.Tabular accordingly (todo #11)
 
 ### 1.5.0
 

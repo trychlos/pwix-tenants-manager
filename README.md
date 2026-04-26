@@ -94,9 +94,27 @@ The `pre`-functions should throw an error if they want cancel the operation.
 
 Available on the server only.
 
-##### `TenantsManager.setupTabular()`
+##### `TenantsManager.setupTabular( options<Object> )`
 
-Define the runtime options for displaying the list of the available tenants.
+Define the runtime options for displaying the list of the available tenants, where options is an optional arguments object with following keys:
+
+- ``
+
+- ``
+
+- ``
+
+- ``
+
+- ``
+
+- ``
+
+- ``
+
+- ``
+
+- ``
 
 Must be called in the same terms both on the client and the server.
 
@@ -127,12 +145,14 @@ Following events are sent:
 
 These are the two main managed collections. Both provides:
 
+- `collection`: the actual Mongo collection
+
 - `collectionName`: the actual configured name of the collection
 
 - `fieldSet`: a ReactiveVar which contains the current `Field.Set` of the entities (resp. the records).
 
     The fieldsets are automatically reset to their defaults each time the package is configured. If the caller wishes extend the fieldsets, then he/she must do that after the package configuration.
-    
+
     Each update of these fieldsets automatically redefines all dependants, and notably the tabular displays, the Mongo schemas, and so on.
 
 - `ready`: a reactive data source, true when the collection is ready
@@ -325,7 +345,7 @@ Known configuration options are:
 
 - `withDedicatedEmails`
 
-    Whether you are enough with the predefined dedicated email:
+    Whether you are enough and happy with the predefined dedicated email:
 
     - `contactEmail`
 
@@ -335,7 +355,7 @@ Known configuration options are:
 
 - `withDedicatedUrls`
 
-    Whether you are enough with the predefined dedicated URL:
+    Whether you are enough and happy with the predefined dedicated URL:
 
     - `homeUrl`
 

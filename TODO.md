@@ -24,9 +24,10 @@
 |    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
 |    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
 |      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
-|   11 | 2026- 4-25 | Tenants should not have its own fieldset but should use those of the records |
-|   12 | 2026- 4-25 | Use TenantsManager.C.pub.tabular.collection instead of Records.collectionName |
-|   13 |  |  |
+|   13 | 2026- 4-25 | have setupEditor() |
+|   14 | 2026- 4-25 | have setupHooks() |
+|   15 |  |  |
+|   16 |  |  |
 
 ---
 ## Done
@@ -44,6 +45,10 @@
 |    9 | 2026- 4-24 | Entities/Records collectionReady reactive var should become a ready() reactive data source |
 |      | 2026- 4-25 | done |
 |   10 | 2026- 4-25 | Tenants ready reactive var should become a ready() reactive data source |
+|      | 2026- 4-25 | done |
+|   11 | 2026- 4-25 | Tenants should not have its own fieldset but should use those of the records |
+|      | 2026- 4-26 | done |
+|   12 | 2026- 4-25 | Use TenantsManager.C.pub.tabular.collection instead of Records.collectionName |
 |      | 2026- 4-25 | done |
 
 ---
