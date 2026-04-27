@@ -49,13 +49,13 @@ Template.tm_record_tabbed.onCreated( function(){
         // the Checker instance
         checker: new ReactiveVar( null ),
         // the tabs for this record
-        parmsRecord: new ReactiveVar( null ),
+        parmsRecord: new ReactiveVar( {} ),
         // the ValidityFieldset parameters
-        parmsValidity: new ReactiveVar( null ),
+        parmsValidity: new ReactiveVar( {} ),
         prevTabs: null,
 
         // whether the new computed list of tabs is the same than the previous one ?
-        //  comparison must be deepn, but WITHOUT the data context
+        //  comparison must be deep, but WITHOUT the data context
         tabsEqual( tabs ){
             let cmptabs = [];
             tabs.forEach(( it ) => {
@@ -71,92 +71,65 @@ Template.tm_record_tabbed.onCreated( function(){
 
     // prepare the record tabbed parms
     // MUST prevent a tabs redefinition when the data context changes
-    self.autorun(() => {
-        const dataContext = Template.currentData();
-        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+    self.autorun( async () => {
+        const dc = Template.currentData();
+        if( dc.index < dc.entity.get().DYN.records.length ){
             const fieldSet = Records.fieldSet.get();
-            const paneData = {
-                entity: dataContext.entity,
-                index: dataContext.index,
-                checker: dataContext.checker
-            };
-            let tabs = [];
-            // tabs before the standard
-            if( dataContext.recordTabsBefore ){
-                if( _.isArray( dataContext.recordTabsBefore )){
-                    dataContext.recordTabsBefore.forEach(( tab ) => {
-                        tab.paneData = paneData;
-                        tabs.push({ ...tab });
-                    });
-                } else {
-                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabsBefore );
+            let tabs = [
+                {
+                    name: 'tenant_record_properties_tab',
+                    navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
+                    paneTemplate: 'tm_record_properties_tab',
+                    paneData: {
+                        entity: dc.entity,
+                        index: dc.index,
+                        checker: dc.checker
+                    }
+                }, {
+                    name: 'tenant_record_notes_tab',
+                    navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
+                    paneTemplate: 'tm_record_notes_tab',
+                    paneData: {
+                        item: dc.entity.get().DYN.records[dc.index],
+                        checker: dc.checker
+                    }
                 }
+            ];
+            const opts = TenantsManager._editorOptions.get();
+            if( opts.recordsTabsFn ){
+                tabs = await opts.recordsTabsFn( tabs, {
+                    entity: dc.entity,
+                    index: dc.index,
+                    checker: dc.checker
+                });
             }
-            // the standard has one 'propeties' tab
-            tabs.push({
-                name: 'tenant_record_properties_tab',
-                navLabel: pwixI18n.label( I18N, 'records.panel.properties_tab' ),
-                paneTemplate: 'tm_record_properties_tab',
-                paneData: paneData
-            });
-            // tabs before 'notes'
-            if( dataContext.recordTabs ){
-                if( _.isArray( dataContext.recordTabs )){
-                    dataContext.recordTabs.forEach(( tab ) => {
-                        tab.paneData = paneData;
-                        tabs.push({ ...tab });
-                    });
-                } else {
-                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabs );
-                }
-            }
-            // standard 'notes'
-            tabs.push({
-                name: 'tenant_record_notes_tab',
-                navLabel: pwixI18n.label( I18N, 'panel.notes_tab' ),
-                paneTemplate: 'tm_record_notes_tab',
-                paneData: {
-                    item: dataContext.entity.get().DYN.records[dataContext.index],
-                    checker: dataContext.checker
-                }
-            });
-            // tabs at the end
-            if( dataContext.recordTabsAfter ){
-                if( _.isArray( dataContext.recordTabsAfter )){
-                    dataContext.recordTabsAfter.forEach(( tab ) => {
-                        tab.paneData = paneData;
-                        tabs.push({ ...tab });
-                    });
-                } else {
-                    logger.warn( 'expect tabs be an array, got', dataContext.recordTabsAfter );
-                }
-            }
+            // prevent useless rebuild if tabs are the same
             if( !self.TM.tabsEqual( tabs )){
                 self.TM.parmsRecord.set({
-                    name: 'tenants_manager_tm_record_tabbed_'+dataContext.index,
+                    name: 'tenants_manager_tm_record_tabbed_'+dc.index,
                     tabs: tabs
                 });
             }
         } else {
-            logger.info( 'unexpected index', dataContext.index );
+            logger.info( 'unexpected index', dc.index );
             self.TM.parmsRecord.set( null );
         }
     });
 
     // prepare the validity fieldset parms
     self.autorun(() => {
-        const dataContext = Template.currentData();
-        if( dataContext.index < dataContext.entity.get().DYN.records.length ){
+        const dc = Template.currentData();
+        if( dc.index < dc.entity.get().DYN.records.length ){
             const parms = {
-                // this is a debug facility not needed in any case just to be able to display the curernt index in the component
-                index: dataContext.index,
-                startDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectStart,
-                endDate: dataContext.entity.get().DYN.records[dataContext.index].get().effectEnd
+                // this is a debug facility not needed in any case just to be able to display the current index in the component
+                index: dc.index,
+                startDate: dc.entity.get().DYN.records[dc.index].get().effectStart,
+                endDate: dc.entity.get().DYN.records[dc.index].get().effectEnd
             };
-            //logger.debug( 'index', dataContext.index, 'parmsValidity', parms );
+            //logger.debug( 'index', dc.index, 'parmsValidity', parms );
             self.TM.parmsValidity.set( parms );
         } else {
-            logger.info( 'unexpected index', dataContext.index );
+            logger.info( 'unexpected index', dc.index );
             self.TM.parmsValidity.set( null );
         }
     });

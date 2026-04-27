@@ -163,14 +163,29 @@ TenantsManager.isAllowed = async function( action, userId=null ){
 
 /**
  * @summary Configure the edition dialog
- * @param {Object} opts an optional options object with following keys:
- *  - closeAfterNew
- *  - identTopTemplate
- *  - tabsFn
+ * @param {Object} opts an optional options object with keys as in '_editorDefaults'
  * @returns {Boolean} true if successful
  */
+TenantsManager._editorDefaults = {
+    entitiesTabsFn: null,
+    recordsTabsFn: null,
+    withCloseButtonWhileNotModified: false
+};
+TenantsManager._editorOptions = new ReactiveVar( null );
+
 TenantsManager.setupEditor = function( opts={} ){
     check( opts, Object );
+    const _args = {};
+    const allowedKeys = Object.keys( TenantsManager._editorDefaults );
+    for( const key of Object.keys( opts )){
+        if( allowedKeys.includes( key )){
+            _args[key] = opts[key];
+        } else {
+            logger.warning( 'setupEditor() unknown key \''+key+'\'' );
+        }
+    }
+    const _conf = _.merge( {}, TenantsManager._editorDefaults, _args );
+    TenantsManager._editorOptions.set( _conf );
 };
 
 /**

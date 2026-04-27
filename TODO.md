@@ -21,15 +21,12 @@
 |      |            |   at packages/pwix:tenants-manager/src/common/collections/tenants/server/publish.js:81:30
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
-|    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
-|      | 2026- 4-23 | introduced with 'modifiedOnUpdate' configuration parameter |
 |    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
 |      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
-|   13 | 2026- 4-25 | have setupEditor() |
-|      | 2026- 4-27 | this is the right place to move the 'modifiedOnUpdate' parameter to |
 |   14 | 2026- 4-25 | have setupHooks() |
-|   15 |  |  |
-|   16 |  |  |
+|   15 | 2026- 4-27 | honor editFn configuration parameter |
+|   16 | 2026- 4-27 | honor newFn configuration parameter |
+|   17 |  |  |
 
 ---
 ## Done
@@ -44,6 +41,10 @@
 |      | 2024- 9-30 | done |
 |    6 | 2024-11-16 | have tenant manager |
 |      | 2024-11-16 | done |
+|    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
+|      | 2026- 4-23 | introduced with 'modifiedOnUpdate' configuration parameter |
+|      | 2026- 4-27 | which becomes 'withCloseButtonWhileNotModified' setupEditor() option |
+|      | 2026- 4-27 | done |
 |    9 | 2026- 4-24 | Entities/Records collectionReady reactive var should become a ready() reactive data source |
 |      | 2026- 4-25 | done |
 |   10 | 2026- 4-25 | Tenants ready reactive var should become a ready() reactive data source |
@@ -52,6 +53,10 @@
 |      | 2026- 4-26 | done |
 |   12 | 2026- 4-25 | Use TenantsManager.C.pub.tabular.collection instead of Records.collectionName |
 |      | 2026- 4-25 | done |
+|   13 | 2026- 4-25 | have setupEditor() |
+|      | 2026- 4-27 | this is the right place to move the 'modifiedOnUpdate' parameter to |
+|      | 2026- 4-27 | which becomes withCloseButtonWhileNotModified |
+|      | 2026- 4-27 | done |
 
 ---
 P. Wieser

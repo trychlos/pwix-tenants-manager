@@ -14,6 +14,8 @@ TenantsManager._conf = new ReactiveVar( _conf );
 
 TenantsManager._defaults = {
     allowFn: null,
+    editFn: null,
+    newFn: null,
     scopedManagerRole: 'SCOPED_TENANT_MANAGER',
     tenantsCollection: 'tenants',
     verbosity: TenantsManager.C.Verbose.CONFIGURE,

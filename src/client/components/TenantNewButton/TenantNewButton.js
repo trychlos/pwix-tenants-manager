@@ -4,7 +4,7 @@
  * Let the accounts manager create a new account.
  *
  * Parms:
- *  - none, though all PlusButton parameters will be passed through
+ *  - none specific, though all PlusButton parameters will be passed through
  */
 
 import _ from 'lodash';

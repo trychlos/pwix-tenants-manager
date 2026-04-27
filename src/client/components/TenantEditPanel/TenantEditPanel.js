@@ -44,7 +44,7 @@
  * - item: the to-be-edited entity item, null when new
  *      including DYN.managers and DYN.records arrays
  *      this item will be left unchanged until panel submission
- * - checker: a ReactiveVar which holds the parent Checker, may be null of none
+ * - checker: a ReactiveVar which holds the parent Checker, may be null if none
  */
 
 import _ from 'lodash';
@@ -94,7 +94,9 @@ Template.TenantEditPanel.onCreated( function(){
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
         // whether we have some changes in the dialog
-        hasChanges: false
+        hasChanges: false,
+        // the tabs, maybe modified by the application
+        entityTabs: new ReactiveVar( null )
     };
 
     // provided item = entity+records
@@ -112,7 +114,7 @@ Template.TenantEditPanel.onCreated( function(){
         });
         dup.DYN.records = records;
         self.TM.item.set( dup );
-        // setup the kept original item as a comparable copy
+        // keep the original item as a comparable copy
         self.TM.orig = Tenants.comparable( item );
         //logger.debug( 'orig', self.TM.orig );
     });
@@ -120,6 +122,53 @@ Template.TenantEditPanel.onCreated( function(){
     // track the edited item
     self.autorun(() => {
         //logger.debug( 'effectEnd', self.TM.item.get().DYN.records[0].get().effectEnd );
+    });
+
+    // compute the tabs to be displayed
+    self.autorun( async () => {
+        const dc = Template.currentData();
+        // the standard validities tab
+        let tabs = [
+            {
+                name: 'tenant_entity_validities_tab',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
+                paneTemplate: 'tm_entity_validities_tab',
+                paneData: {
+                    ...dc,
+                    entity: self.TM.item,
+                    checker: self.TM.checker,
+                    template: 'tm_record_tabbed',
+                    withValidities: TenantsManager.configure().withValidities
+                }
+            }, {
+                name: 'tenant_entity_scoped_tab',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_scoped_title' ),
+                paneTemplate: 'tm_entity_scoped_tab',
+                paneData: {
+                    ...dc,
+                    entity: self.TM.item,
+                    checker: self.TM.checker
+                }
+            }, {
+                name: 'tenant_entity_notes_tab',
+                navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
+                paneTemplate: 'tm_entity_notes_tab',
+                paneData: {
+                    ...dc,
+                    item: self.TM.item,
+                    isNew: self.TM.isNew.get(),
+                    checker: self.TM.checker
+                }
+            }
+        ];
+        const opts = TenantsManager._editorOptions.get();
+        if( opts.entitiesTabsFn ){
+            tabs = await opts.entitiesTabsFn( tabs, {
+                entity: self.TM.item,
+                checker: self.TM.checker
+            });
+        }
+        self.TM.entityTabs.set( tabs );
     });
 });
 
@@ -232,86 +281,10 @@ Template.TenantEditPanel.helpers({
 
     // parms to tm_entity_properties_tab component
     parmsTabbed(){
-        TM = Template.instance().TM;
-        const paneData = {
-            ...this,
-            item: TM.item,
-            isNew: TM.isNew.get(),
-            checker: TM.checker
-        };
-        // prevent infinite recursion
-        delete paneData.entityTabs;
-        delete paneData.entityTabsAfter;
-        delete paneData.entityTabsBefore;
-        delete paneData.recordTabs;
-        delete paneData.recordTabsAfter;
-        delete paneData.recordTabsBefore;
-        let tabs = [];
-        // tabs before the standard
-        if( this.entityTabsBefore ){
-            if( _.isArray( this.entityTabsBefore ) && this.entityTabsBefore.length ){
-                this.entityTabsBefore.forEach(( tab ) => {
-                    tab.paneData = paneData;
-                    tabs.push({ ...tab });
-                });
-            } else {
-                logger.warn( 'expect tabs be an array, got', this.entityTabsBefore );
-            }
-        }
-        // the standard validities tab
-        tabs.push({
-            name: 'tenant_entity_validities_tab',
-            navLabel: pwixI18n.label( I18N, 'tabs.entity_validities_title' ),
-            paneTemplate: 'tm_entity_validities_tab',
-            paneData: {
-                ...this,
-                entity: TM.item,
-                checker: TM.checker,
-                template: 'tm_record_tabbed',
-                withValidities: TenantsManager.configure().withValidities
-            }
-        }, {
-            name: 'tenant_entity_scoped_tab',
-            navLabel: pwixI18n.label( I18N, 'tabs.entity_scoped_title' ),
-            paneTemplate: 'tm_entity_scoped_tab',
-            paneData: {
-                ...this,
-                entity: TM.item,
-                checker: TM.checker
-            }
-        });
-        // tabs to be inserted before 'notes'
-        if( this.entityTabs ){
-            if( _.isArray( this.entityTabs )){
-                this.entityTabs.forEach(( tab ) => {
-                    tab.paneData = paneData;
-                    tabs.push({ ...tab });
-                });
-            } else {
-                logger.warn( 'expect tabs be an array, got', this.entityTabs );
-            }
-        }
-        tabs.push({
-            name: 'tenant_entity_notes_tab',
-            navLabel: pwixI18n.label( I18N, 'tabs.entity_notes_title' ),
-            paneTemplate: 'tm_entity_notes_tab',
-            paneData: paneData,
-        });
-        // and tabs to be added at the end
-        if( this.entityTabsAfter ){
-            if( _.isArray( this.entityTabsAfter )){
-                this.entityTabsAfter.forEach(( tab ) => {
-                    tab.paneData = paneData;
-                    tabs.push({ ...tab });
-                });
-            } else {
-                logger.warn( 'expect tabs be an array, got', this.entityTabsAfter );
-            }
-        }
         return {
             name: 'tenants_manager_EditPanel',
-            tabs: tabs,
-            activateTab: paneData.isNew ? 0 : undefined
+            tabs: Template.instance().TM.entityTabs.get(),
+            activateTab: Template.instance().TM.isNew.get() ? 0 : undefined
         };
     }
 });

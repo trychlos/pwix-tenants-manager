@@ -73,7 +73,37 @@ Available both on the client and the server.
 
 Define the runtime options for editing the tenants, where options is an optional arguments object with following keys:
 
-- `modifiedOnUpdate`: true,
+- `entitiesTabsFn`
+
+    A `async fn( tabs<Array>, dataContect<Object> ): <Array` function which will receive the default list of editing entity tabs, and must return the new list of editing entity tabs.
+
+    Default is none.
+
+    Provided data context is an object with:
+
+    - `entity`: a ReactiveVar which contains the entity to be edited
+
+    - `checker`: a ReactiveVar which contains the parent Checker, or undefined if there is none.
+
+- `recordsTabsFn`
+
+    A `async fn( tabs<Array>, dataContect<Object> ): <Array` function which will receive the default list of editing record tabs, and must return the new list of editing record tabs.
+
+    Default is none.
+
+    Provided data context is an object with:
+
+    - `entity`: a ReactiveVar which contains the entity to be edited
+
+    - `index`: the index of the currently edited record
+
+    - `checker`: a ReactiveVar which contains the parent Checker, or undefined if there is none.
+
+- `withCloseButtonWhileNotModified`
+
+    Whether the modal dialog should propose only a `Close` button while the Tenant is not modified, defaulting to `false`.
+
+    Default is to always propose both `Cancel` and `OK` buttons.
 
 Available both on the client and the server, but only used in the client (server-side is just a no-op).
 
@@ -98,9 +128,11 @@ Available on the server only.
 
 ##### `TenantsManager.setupTabular( options<Object>, buttonsHookFn<Function> )`
 
-Define the runtime options for displaying the list of the available tenants, where options is an optional arguments object with following keys:
+Instanciates the Tabular.Table, and define the runtime options for displaying the list of the available tenants, where:
 
-- ``
+- `options` is an optional arguments object; they will be provided as-is both to `pwix:tabular` and to `aldeed:tabular` packages.
+
+- `buttonsHookFn` is an optional `async fn( table<Tabular.Table>, buttons<Array> ): <Array>` function which receives the list of template names to be installed as buttons, can modify it, and must return the new list of template names.
 
 Must be called in the same terms both on the client and the server.
 
@@ -228,17 +260,9 @@ The `TenantEditPanel` component accepts a data context as:
 
 - `item`: the item to be edited, or null (or unset)
 
-- `entityTabsBefore`: a list of tabs to be inserted at the very start of the tabs of the entity
+- `checker`: a ReactiveVar which holds the parent Checker, may be null if none.
 
-- `entityTabs`: a list of tabs to be inserted before the 'notes' tabs of the entity
-
-- `entityTabsAfter`: a list of tabs to be inserted after the 'notes' tabs of the entity, i.e. at the end
-
-- `recordTabsBefore`: a list of tabs to be inserted at the very start tabs of the record
-
-- `recordTabs`: a list of tabs to be inserted before the 'notes' tabs of the record
-
-- `recordTabsAfter`: a list of tabs to be inserted after the 'notes' tabs of the record, i.e. at the end
+The `TenantEditPanel` component honors `entitiesTabsFn` and `recordsTabsFn` editor options (see [`setupEditor()`](#tenantsmanager-setupeditor)).
 
 #### `TenantNewButton`
 
@@ -268,11 +292,7 @@ It accepts a data context as:
 
 - `checker`: the Forms.Checker which manages the parent component
 
-- `enableChecks`: whether the checks should be enabled at startup, defaulting to true
-
-- `withGeneralizedEmails`: whether we want edit the generalized email addresses, defaulting to the configured `propertiesHaveGeneralizedEmails` value
-
-- `withGeneralizedUrls`: whether we want edit the generalized URLs, defaulting to the configured `propertiesHaveGeneralizedUrls` value.
+- `enableChecks`: whether the checks should be enabled at startup, defaulting to true.
 
 ## Permissions management
 
@@ -303,6 +323,22 @@ Known configuration options are:
     If the function is not provided, then the default is to deny all actions.
 
     `allowFn` prototype is: `async allowFn( action<String> [, ...<Any> ] ): Boolean`
+
+- `editFn`
+
+    The function to be used to edit an existing Tenant.
+
+    The provided function must have prototype as ``, and takes itself care of serializing the done modifications.
+
+    Default is to run `TenantEditPanel` inside a modal dialog.
+
+- `newFn`
+
+    The function to be used to create a new Tenant.
+
+    The provided function must have prototype as ``, and takes itself care of serializing the creation.
+
+    Default is to run `TenantEditPanel` inside a modal dialog.
 
 - `scopedManagerRole`
 

@@ -89,7 +89,7 @@ Template.TenantsList.events({
     //  the buttons from tabular provide the entity document
     'tabular-edit-event .TenantsList'( event, instance, data ){
         const tenant = TenantsManager.list.byEntity( data.item.DYN.entity._id );
-        const buttons = TenantsManager.configure().modifiedOnUpdate ? [ Modal.C.Button.CLOSE ] : [ Modal.C.Button.CANCEL, Modal.C.Button.OK ];
+        const buttons = TenantsManager._editorOptions.get().withCloseButtonWhileNotModified ? [ Modal.C.Button.CLOSE ] : [ Modal.C.Button.CANCEL, Modal.C.Button.OK ];
         Modal.run({
             ...this,
             mdBody: 'TenantEditPanel',
