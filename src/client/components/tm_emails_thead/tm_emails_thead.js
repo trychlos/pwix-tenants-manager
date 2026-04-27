@@ -153,8 +153,7 @@ Template.tm_emails_thead.helpers({
         const valid = checker ? checker.validity() : false;
         const emptyCount = Template.instance().TM.countEmpty( this );
         const setCount = Template.instance().TM.countSet( this );
-        const max = TenantsManager.configure().maxGeneralizedEmails;
-        return ( valid && emptyCount === 0 ) || ( setCount < max || max === -1 ) ? '' : 'disabled';
+        return ( valid && emptyCount === 0 ) ? '' : 'disabled';
     }
 });
 

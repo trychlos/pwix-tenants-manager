@@ -57,6 +57,7 @@ TenantsManager.i18n = {
                     emails_email_invalid: 'L\'adresse de messagerie spécifiée est invalide',
                     emails_email_missing: 'Une adresse de messagerie doit être spécifiée',
                     emails_label_missing: 'Un label doit être spécifié pour l\'adresse de messagerie',
+                    emails_neither_dedicated_generalized: 'Erreur de configuration: les adresses de messagerie dédiées ne sont pas configurées, non plus que les adresses généralisées',
                     emails_wants_one: 'Au moins une adresse de messagerie est requise',
                     home_url_invalid: 'L\'URL de la page d\'accueil est invalide',
                     label_exists: 'L\'intitulé est déjà utilisé par un autre tenant',

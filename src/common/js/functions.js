@@ -81,37 +81,36 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
     };
     // and checks...
     await _fnRecordCheck( 'label', tenant.record.label );
+    // dedicated emails
+    const dedicatedEmails = TenantsManager.configure().withDedicatedEmails;
+    if( dedicatedEmails ){
+        await _fnRecordCheck( 'contactEmail', tenant.record.contactEmail );
+        //await _fnRecordCheck( 'supportEmail', tenant.record.supportEmail );
+    }
+    // dedicated urls
+    const dedicatedUrls = TenantsManager.configure().withDedicatedUrls;
+    if( dedicatedUrls ){
+        await _fnRecordCheck( 'homeUrl', tenant.record.homeUrl );
+    }
+    // generalized emails
     const generalizedEmails = TenantsManager.configure().withGeneralizedEmails;
     if( generalizedEmails ){
         const emails = tenant.record.emails || [];
         for( const email of emails ){
             await _fnRowCheck( 'email_label', email.label, email );
             await _fnRowCheck( 'email_email', email.email, email );
-            await _fnRowCheck( 'email_row', email );
+            await _fnRowCheck( 'crossCheck_EmailRow', email );
         }
     }
-    const dedicatedEmails = TenantsManager.configure().withDedicatedEmails;
-    if( dedicatedEmails ){
-        await _fnRecordCheck( 'contactEmail', tenant.record.contactEmail );
-        //await _fnRecordCheck( 'supportEmail', tenant.record.supportEmail );
-    }
+    // generalized urls
     const generalizedUrls = TenantsManager.configure().withGeneralizedUrls;
     if( generalizedUrls ){
         const urls = tenant.record.urls || [];
         for( const url of urls ){
             await _fnRowCheck( 'url_label', url.label, url );
             await _fnRowCheck( 'url_url', url.url, url );
-            await _fnRowCheck( 'url_row', url );
+            await _fnRowCheck( 'crossCheck_UrlRow', url );
         }
-    }
-    const dedicatedUrls = TenantsManager.configure().withDedicatedUrls;
-    if( dedicatedUrls ){
-        //await _fnRecordCheck( 'contactUrl', tenant.record.contactUrl );
-        //await _fnRecordCheck( 'gtuUrl', tenant.record.gtuUrl );
-        await _fnRecordCheck( 'homeUrl', tenant.record.homeUrl );
-        //await _fnRecordCheck( 'legalsUrl', tenant.record.legalsUrl );
-        //await _fnRecordCheck( 'pdmpUrl', tenant.record.pdmpUrl );
-        //await _fnRecordCheck( 'supportUrl', tenant.record.supportUrl );
     }
     await _fnRecordCheck( 'logoUrl', tenant.record.logoUrl );
     return result;

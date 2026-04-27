@@ -23,16 +23,6 @@ TenantsManager._defaults = {
     withGeneralizedUrls: false,
     withValidities: true
 };
-/*
-TenantsManager._defaults = {
-    // user interface
-    classes: '',
-    modifiedOnUpdate: false,
-    // properties
-    maxGeneralizedEmails: -1,
-    minGeneralizedEmails: 1,
-};
-*/
 
 /**
  * @summary Get/set the package configuration

@@ -54,30 +54,124 @@ const _id2index = function( array, id ){
     return -1;
 }
 
-// check that we have at least one email address
-Tenants.checks._crossCheckEmails = async function( data, opts ){
-    _assert_data_content( 'Tenants.checks.crossCheckProperties()', data );
-    // want make sure we have at least one email address
-    const item = data.entity.get().DYN.records[data.index].get();
-    if( TenantsManager.configure().withDedicatedEmails && item.contact_email ){
+// cross check an email row
+//  we want both label+email - and refuse empty lines
+Tenants.checks.crossCheck_EmailRow = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.email_row()', data );
+    //logger.debug( 'email_row()', arguments );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'email_row() negative index', data, opts );
         return null;
     }
-    if( TenantsManager.configure().withGeneralizedEmails && item.emails.length ){
+    const row = item.emails[index];
+    //logger.debug( 'row', row, 'index', index );
+    if( row.label && row.email ){
         return null;
+    }
+    if( row.label ){
+        return new TM.TypedMessage({
+            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
+            message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
+        });
     }
     return new TM.TypedMessage({
-        level: TM.MessageLevel.C.ERROR,
-        message: pwixI18n.label( I18N, 'records.check.emails_wants_one' )
+        level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
+        message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
+};
+
+// check that we have at least one email address
+Tenants.checks.crossCheck_Emails = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheck_Emails()', data );
+    // first is to check the configuration
+    const conf = TenantsManager.configure();
+    if( !conf.withDedicatedEmails && !conf.withGeneralizedEmails ){
+        return new TM.TypedMessage({
+            level: TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.emails_neither_dedicated_generalized' )
+        });
+    }
+    // want make sure we have at least one email address
+    const item = data.entity.get().DYN.records[data.index].get();
+    if( conf.withDedicatedEmails && item.contactEmail ){
+        return null;
+    }
+    if( conf.withGeneralizedEmails ){
+        if( item.emails?.length ){
+            for( const row of item.emails ){
+                opts.rowId = row._id;
+                const res = Tenants.checks.crossCheck_EmailRow( data, opts );
+                if( res ){
+                    return res;
+                }
+            }
+        } else {
+            return new TM.TypedMessage({
+                level: TM.MessageLevel.C.ERROR,
+                message: pwixI18n.label( I18N, 'records.check.emails_wants_one' )
+            });
+        }
+    }
 };
 
 // cross check the properties panel
 //  have label, emails, urls, logo
-Tenants.checks.crossCheckProperties = async function( data, opts ){
-    _assert_data_content( 'Tenants.checks.crossCheckProperties()', data );
+Tenants.checks.crossCheck_Properties = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheck_Properties()', data );
+    let res = null;
     // want make sure we have at least one email address
-    const res = await Tenants.checks._crossCheckEmails( data, opts );
+    if( !res ){
+        res = await Tenants.checks.crossCheck_Emails( data, opts );
+    }
+    // also cross checks the urls
+    if( !res ){
+        res = await Tenants.checks.crossCheck_Urls( data, opts );
+    }
     return res;
+};
+
+// cross check an url row
+//  we want both label+url, or refuse - do not want an empty line
+Tenants.checks.crossCheck_UrlRow = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheck_UrlRow()', data );
+    let item = data.entity.get().DYN.records[data.index].get();
+    let index = opts.rowId ? _id2index( item.urls, opts.rowId ) : -1;
+    if( index < 0 ){
+        logger.error( 'crossCheck_UrlRow() negative index', data, opts );
+        return null;
+    }
+    const row = item.urls[index];
+    if( row.label && row.url ){
+        return null;
+    }
+    if( row.label ){
+        return new TM.TypedMessage({
+            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
+        });
+    }
+    return new TM.TypedMessage({
+        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
+    });
+};
+
+// check ?
+Tenants.checks.crossCheck_Urls = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheck_Urls()', data );
+    const item = data.entity.get().DYN.records[data.index].get();
+    if( item.urls?.lengh ){
+        for( const row of item.urls ){
+            opts.rowId = row._id;
+            const res = Tenants.checks.crossCheck_UrlRow( data, opts );
+            if( res ){
+                return res;
+            }
+        }
+    }
+    return null;
 };
 
 // contact email
@@ -96,29 +190,6 @@ Tenants.checks.contactEmail = async function( value, data, opts ){
                 message: pwixI18n.label( I18N, 'records.check.contact_email_invalid' )
             });
         }
-    }
-    return null;
-};
-
-// check that the count of email addresses is correct relatively to configured min and max
-// this is neither a field check nor a cross check (but called from cross check) which explains the different prototype
-// we count the rows, which may or may not be valid but all are counted
-// returns null or a TypedMessage
-Tenants.checks.email_count = async function( emails ){
-    const min = TenantsManager.configure().minGeneralizedEmails;
-    const max = TenantsManager.configure().maxGeneralizedEmails;
-    const count = emails.length;
-    if( count < min ){
-        return new TM.TypedMessage({
-            level: TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'records.check.emails_min', min )
-        });
-    }
-    if( max !== -1 && max > count ){
-        return new TM.TypedMessage({
-            level: TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'records.check.emails_max', max )
-        });
     }
     return null;
 };
@@ -173,39 +244,6 @@ Tenants.checks.email_label = async function( value, data, opts ){
     }
     return new TM.TypedMessage({
         level: TM.MessageLevel.C.ERROR,
-        message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
-    });
-};
-
-// cross check an email row
-//  we want both label+email - and refuse empty lines
-//  we also make sure the count of email addresses is correct relatively to configured min and max
-Tenants.checks.email_row = async function( data, opts ){
-    _assert_data_content( 'Tenants.checks.email_row()', data );
-    //logger.debug( 'email_row()', arguments );
-    let item = data.entity.get().DYN.records[data.index].get();
-    let index = opts.rowId ? _id2index( item.emails, opts.rowId ) : -1;
-    if( index < 0 ){
-        logger.error( 'email_row() negative index', data, opts );
-        return null;
-    }
-    const row = item.emails[index];
-    //logger.debug( 'row', row, 'index', index );
-    const tmCount = await Tenants.checks.email_count( item.emails );
-    if( tmCount ){
-        return tmCount;
-    }
-    if( row.label && row.email ){
-        return null;
-    }
-    if( row.label ){
-        return new TM.TypedMessage({
-            level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
-            message: pwixI18n.label( I18N, 'records.check.emails_email_missing' )
-        });
-    }
-    return new TM.TypedMessage({
-        level: tmCount ? TM.MessageLevel.C.ERROR : TM.MessageLevel.C.WARNING,
         message: pwixI18n.label( I18N, 'records.check.emails_label_missing' )
     });
 };
@@ -311,32 +349,6 @@ Tenants.checks.url_label = async function( value, data, opts ){
         data.entity.get().DYN.records[data.index].set( item );
     }
     return value ? null : new TM.TypedMessage({
-        level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-        message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
-    });
-};
-
-// cross check an url row
-//  we want both label+email, or refuse - do not want an empty line
-Tenants.checks.url_row = async function( data, opts ){
-    _assert_data_content( 'Tenants.checks.url_row()', data );
-    let item = data.entity.get().DYN.records[data.index].get();
-    let index = opts.rowId ? _id2index( item.urls, opts.rowId ) : -1;
-    if( index < 0 ){
-        logger.error( 'url_row() negative index', data, opts );
-        return null;
-    }
-    const row = item.urls[index];
-    if( row.label && row.url ){
-        return null;
-    }
-    if( row.label ){
-        return new TM.TypedMessage({
-            level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
-            message: pwixI18n.label( I18N, 'records.check.urls_url_missing' )
-        });
-    }
-    return new TM.TypedMessage({
         level: index ? TM.MessageLevel.C.WARNING : TM.MessageLevel.C.ERROR,
         message: pwixI18n.label( I18N, 'records.check.urls_label_missing' )
     });

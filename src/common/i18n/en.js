@@ -58,6 +58,7 @@ TenantsManager.i18n = {
                     emails_email_invalid: 'The provided email address is invalid',
                     emails_email_missing: 'The email address is missing',
                     emails_label_missing: 'The email label is missing',
+                    emails_neither_dedicated_generalized: 'Configuration error: neither dedicated nor generalized emails are configured',
                     emails_wants_one: 'At least one email address is required',
                     home_url_invalid: 'The home page URL is invalid',
                     label_exists: 'The label is already used by another tenant',

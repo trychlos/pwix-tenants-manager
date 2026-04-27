@@ -92,7 +92,6 @@ Template.tm_url_row.onRendered( function(){
             running = true;
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
-                logger.debug( Records.fieldSet.get().names());
                 let p = null;
                 if( displaying ){
                     p = checker.init({
@@ -116,7 +115,7 @@ Template.tm_url_row.onRendered( function(){
                             index: dataContext.index
                         },
                         rowId: dataContext.it._id,
-                        crossCheckRegisterFn: Tenants.checks.url_row
+                        crossCheckRegisterFn: Tenants.checks.crossCheck_UrlRow
                     });
                 }
                 if( p ){

@@ -9,7 +9,6 @@
  * - index: the index of the edited record
  * - checker: the Forms.Checker which manages the parent component
  * - enableChecks: whether the checks should be enabled at startup, defaulting to true
- *
  */
 
 import _ from 'lodash';
@@ -66,12 +65,12 @@ Template.TenantRecordPropertiesPanel.onCreated( function(){
                 js: '.js-contact-email'
             }
         },
-        // datacontext whose default value is configured
+        // depends of the configuration
         hasDedicatedEmails: new ReactiveVar( false ),
         hasDedicatedUrls: new ReactiveVar( false ),
         hasGeneralizedEmails: new ReactiveVar( false ),
         hasGeneralizedUrls: new ReactiveVar( false ),
-        // all edited fields depending of the data context
+        // all edited fields depending of the configuration
         fields: new ReactiveVar( null ),
         // the Checker instance
         checker: new ReactiveVar( null ),
@@ -136,7 +135,7 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
                             index: dataContext.index
                         },
                         enabled: dataContext.enableChecks !== false,
-                        crossCheckRegisterFn: Tenants.checks.crossCheckProperties
+                        crossCheckRegisterFn: Tenants.checks.crossCheck_Properties
                     }).then(() => {
                         self.TM.checker.set( checker );
                     })

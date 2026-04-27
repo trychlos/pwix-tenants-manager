@@ -127,7 +127,7 @@ Template.tm_email_row.onRendered( function(){
                             index: dataContext.index
                         },
                         rowId: dataContext.it._id,
-                        crossCheckRegisterFn: Tenants.checks.email_row
+                        crossCheckRegisterFn: Tenants.checks.crossCheck_EmailRow
                     });
                 }
                 if( p ){
@@ -177,9 +177,11 @@ Template.tm_email_row.helpers({
     },
 
     // but we accept to remove all rows until the minimum count is reached
+    //  which itself depends of whether we also have dedicated emails
     minusEnabled(){
-        const min = TenantsManager.configure().minGeneralizedEmails;
+        const haveDedicated = TenantsManager.configure().withDedicatedEmails;
         const count = Template.instance().TM.countSet( this );
+        const min = haveDedicated ? 0 : 1;
         return count > min ? '' : 'disabled';
     },
 

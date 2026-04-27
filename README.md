@@ -382,78 +382,6 @@ Known configuration options are:
 
     Whether we want manage validity periods for the tenants, defaulting to `true`.
 
-- `xx classes`
-
-    Let the application provides some classes to add to the display.
-
-    Defauts to nothing.
-
-- `xx entityFields`
-
-    Let the application extends the Entities default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
-
-    Defauts to nothing.
-
-    Example:
-
-```js
-    TenantsManager.configure({
-        entityFields: [
-            {
-                before: 'notes',
-                fields: [
-                    {
-                        name: 'label',
-                        type: String,
-                        optional: true
-                    }
-                ]
-            }
-        ]
-    });
-```
-
-    Default Entities fields are:
-
-    - `notes`: common notes
-    - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
-
-- `xx listHasContactEmail`
-
-    Whether to display the Contact email address in the tabular display.
-
-    Defaults to `true`.
-
-- `xx listHasContactUrl`
-
-    Whether to display the Contact page URL in the tabular display.
-
-    Defaults to `true`.
-
-- `xx listHasGeneralizedEmails`
-
-    Whether to display the first email address of the generalized list, with an 'see more' button, in the tabular display.
-
-    Defaults to `false`.
-
-- `xx listHasHomeUrl`
-
-    Whether to display the Home page URL in the tabular display.
-
-    Defaults to `true`.
-
-- `xx listHasGeneralizedUrls`
-
-    Whether to display the first URL of the generalized list, with an 'see more' button, in the tabular display.
-
-    Defaults to `false`.
-
-- `xx maxGeneralizedEmails`: when using the generalized emails structure, the maximum count of required emails, defaulting to -1 which means unlimited.
-
-    Take care that setting this max to zero will actually prevent any email address to be entered.
-
-- `xx minGeneralizedEmails`: when using the generalized emails structure, the minimum count of required emails, defaulting to 1.
-
 - `modifiedOnUpdate`:
 
     Whether the user interface begins with only a 'Close' button, only proposing 'Cancel' and 'OK' buttons when the tenant has been detected as modified.
@@ -461,44 +389,6 @@ Known configuration options are:
     If the application has extended the Tenant properties, then it has too to detect itself whether its own properties have been modified.
 
     Defauls to `false`.
-
-- `xx propertiesHaveGeneralizedUrls`: whether we want the properties editition has the generalized URLs, defaulting to `false`.
-
-- `xx propertiesHaveGeneralizedEmails`: whether we want properties editition has the generalized email addresses, defaulting `false`.
-
-- `xx recordFields`
-
-    Let the application extends the Records default schema by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
-
-    Defauts to nothing.
-
-    Example:
-
-```js
-    TenantsManager.configure({
-        recordFields: [
-            {
-                before: 'label',
-                fields: [
-                    {
-                        name: 'secondaryLabel',
-                        type: String,
-                        optional: true
-                    }
-                ]
-            }
-        ]
-    });
-```
-
-- `xx roles`
-
-    Let the application provides the permissions required to perform CRUD operations on the Tenants collection. This is an object with following keys:
-
-    - `list`: defaulting to `null` (allowed to all)
-    - `create`: defaulting to `null` (allowed to all)
-    - `edit`: defaulting to `null` (allowed to all)
-    - `delete`: defaulting to `null` (allowed to all)
 
 - `xx showEmptyGeneralizedEmails`
 
@@ -511,55 +401,6 @@ Known configuration options are:
     Whether we should show a '...' disabled button in the tabular display when there is no URL to be displayed.
 
     Defaults to `false`.
-
-- `xx tenantButtons`
-
-    Let the application extends the Tenants default tabular display by providing additional buttons as an array of template names, or as a function which returns such an array.
-
-    The template will be called with the current row item as its data context.
-
-    Defauts to nothing.
-
-    Example:
-
-```js
-    TenantsManager.configure({
-        tenantButtons: [
-            {
-                where: Tabular.C.Where.AFTER,
-                buttons: [
-                    'my_template'
-                ]
-            }
-        ]
-    });
-```
-
-- `xx tenantFields`
-
-    Let the application extends the Tenants default tabular display by providing additional fields as an array of `Field.Set.extend()`-valid definitions, or as a function which returns such an array of `Field.Set.extend()`-valid definitions.
-
-    Defauts to nothing.
-
-    Example:
-
-```js
-    TenantsManager.configure({
-        tenantFields: [
-            {
-                before: 'label',
-                fields: [
-                    {
-                        name: 'column',
-                        schema: false,
-                        dt_title: 'My title',
-                        dt_className: 'dt-center'
-                    }
-                ]
-            }
-        ]
-    });
-```
 
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.
 
