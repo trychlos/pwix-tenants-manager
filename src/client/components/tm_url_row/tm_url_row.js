@@ -92,6 +92,7 @@ Template.tm_url_row.onRendered( function(){
             running = true;
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self );
+                logger.debug( Records.fieldSet.get().names());
                 let p = null;
                 if( displaying ){
                     p = checker.init({

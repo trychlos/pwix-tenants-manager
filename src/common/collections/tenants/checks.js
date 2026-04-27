@@ -54,6 +54,32 @@ const _id2index = function( array, id ){
     return -1;
 }
 
+// check that we have at least one email address
+Tenants.checks._crossCheckEmails = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheckProperties()', data );
+    // want make sure we have at least one email address
+    const item = data.entity.get().DYN.records[data.index].get();
+    if( TenantsManager.configure().withDedicatedEmails && item.contact_email ){
+        return null;
+    }
+    if( TenantsManager.configure().withGeneralizedEmails && item.emails.length ){
+        return null;
+    }
+    return new TM.TypedMessage({
+        level: TM.MessageLevel.C.ERROR,
+        message: pwixI18n.label( I18N, 'records.check.emails_wants_one' )
+    });
+};
+
+// cross check the properties panel
+//  have label, emails, urls, logo
+Tenants.checks.crossCheckProperties = async function( data, opts ){
+    _assert_data_content( 'Tenants.checks.crossCheckProperties()', data );
+    // want make sure we have at least one email address
+    const res = await Tenants.checks._crossCheckEmails( data, opts );
+    return res;
+};
+
 // contact email
 //  must be valid if set
 Tenants.checks.contactEmail = async function( value, data, opts ){

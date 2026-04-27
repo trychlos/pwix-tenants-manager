@@ -2,14 +2,13 @@
  * /imports/client/components/TenantRecordPropertiesPanel/TenantRecordPropertiesPanel.js
  *
  * Tenant properties pane.
+ * Edit here the label, the emails, the URLs, the logo
  *
  * Parms:
  * - entity: the currently edited entity as a ReactiveVar
  * - index: the index of the edited record
  * - checker: the Forms.Checker which manages the parent component
  * - enableChecks: whether the checks should be enabled at startup, defaulting to true
- * - withGeneralizedEmails: whether we want edit the generalized email addresses, defaulting to the configured value
- * - withGeneralizedUrls: whether we want edit the generalized URLs, defaulting to the configured value
  *
  */
 
@@ -21,6 +20,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Tracker } from 'meteor/tracker';
 
+import { Tenants } from '../../../common/collections/tenants/index.js';
 import { Records } from '../../../common/collections/records/index.js';
 
 import '../tm_emails_thead/tm_emails_thead.js';
@@ -52,39 +52,23 @@ Template.TenantRecordPropertiesPanel.onCreated( function(){
                 type: 'INFO'
             },
             */
-        },
-        def_url_fields: {
-            pdmpUrl: {
-                js: '.js-pdmp'
-            },
-            gtuUrl: {
-                js: '.js-gtu'
-            },
-            legalsUrl: {
-                js: '.js-legals'
-            },
-            homeUrl: {
-                js: '.js-home'
-            },
             logoUrl: {
                 js: '.js-logo'
-            },
-            supportUrl: {
-                js: '.js-support-url'
-            },
-            contactUrl: {
-                js: '.js-contact-url'
             }
         },
-        def_email_fields: {
-            supportEmail: {
-                js: '.js-support-email'
-            },
+        dedicated_url_fields: {
+            homeUrl: {
+                js: '.js-home'
+            }
+        },
+        dedicated_email_fields: {
             contactEmail: {
                 js: '.js-contact-email'
             }
         },
         // datacontext whose default value is configured
+        hasDedicatedEmails: new ReactiveVar( false ),
+        hasDedicatedUrls: new ReactiveVar( false ),
         hasGeneralizedEmails: new ReactiveVar( false ),
         hasGeneralizedUrls: new ReactiveVar( false ),
         // all edited fields depending of the data context
@@ -100,27 +84,27 @@ Template.TenantRecordPropertiesPanel.onCreated( function(){
         }
     };
 
-    // get values whose default is configured
+    // build the needed values from the package configuration
     self.autorun(() => {
-        const dataContext = Template.currentData();
+        const conf = TenantsManager.configure();
         let fields = self.TM.min_fields;
-        // has generalized emails ?
-        let value = Boolean( TenantsManager.configure().propertiesHaveGeneralizedEmails );
-        if( Object.keys( dataContext ).includes( 'withGeneralizedEmails' )){
-            value = Boolean( dataContext.withGeneralizedEmails );
+        // has dedicated emails ?
+        if( conf.withDedicatedEmails ){
+            self.TM.hasDedicatedEmails.set( true );
+            fields = _.merge( fields, self.TM.dedicated_email_fields );
         }
-        self.TM.hasGeneralizedEmails.set( value );
-        if( !value ){
-            fields = _.merge( fields, self.TM.def_email_fields );
+        // has dedicated urls ?
+        if( conf.withDedicatedUrls ){
+            self.TM.hasDedicatedUrls.set( true );
+            fields = _.merge( fields, self.TM.dedicated_url_fields );
+        }
+        // has generalized emails ?
+        if( conf.withGeneralizedEmails ){
+            self.TM.hasGeneralizedEmails.set( true );
         }
         // has generalized urls ?
-        value = Boolean( TenantsManager.configure().propertiesHaveGeneralizedUrls );
-        if( Object.keys( dataContext ).includes( 'withGeneralizedUrls' )){
-            value = Boolean( dataContext.withGeneralizedUrls );
-        }
-        self.TM.hasGeneralizedUrls.set( value );
-        if( !value ){
-            fields = _.merge( fields, self.TM.def_url_fields );
+        if( conf.withGeneralizedUrls ){
+            self.TM.hasGeneralizedUrls.set( true );
         }
         //logger.debug( 'fields', fields );
         self.TM.fields.set( fields );
@@ -151,7 +135,8 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
                             entity: dataContext.entity,
                             index: dataContext.index
                         },
-                        enabled: dataContext.enableChecks !== false
+                        enabled: dataContext.enableChecks !== false,
+                        crossCheckRegisterFn: Tenants.checks.crossCheckProperties
                     }).then(() => {
                         self.TM.checker.set( checker );
                     })
@@ -183,14 +168,32 @@ Template.TenantRecordPropertiesPanel.onRendered( function(){
 });
 
 Template.TenantRecordPropertiesPanel.helpers({
+    // whether we want use dedicated emails
+    haveDedicatedEmails(){
+        return Template.instance().TM.hasDedicatedEmails.get();
+    },
+
+    // whether we want use dedicated urls
+    haveDedicatedUrls(){
+        return Template.instance().TM.hasDedicatedUrls.get();
+    },
+
     // whether we want use generalized emails
     haveGeneralizedEmails(){
-        return Template.instance().TM.hasGeneralizedEmails.get();
+        const recordsArray = this.entity.get().DYN.records;
+        if( this.index < recordsArray.length ){
+            return Template.instance().TM.hasGeneralizedEmails.get();
+        }
+        return false;
     },
 
     // whether we want use generalized urls
     haveGeneralizedUrls(){
-        return Template.instance().TM.hasGeneralizedUrls.get();
+        const recordsArray = this.entity.get().DYN.records;
+        if( this.index < recordsArray.length ){
+            return Template.instance().TM.hasGeneralizedUrls.get();
+        }
+        return false;
     },
 
     // string translation
@@ -205,11 +208,11 @@ Template.TenantRecordPropertiesPanel.helpers({
 
     // parms for tm_emails_thead
     parmsEmails(){
-        const recordsArray = this.entity.get().DYN.records;
-        if( this.index < recordsArray.length ){
-            return this;
+        const haveOne = !Template.instance().TM.hasDedicatedEmails.get();
+        return {
+            ...this,
+            haveOne
         }
-        return null;
     },
 
     // parms for ImageIncluder
@@ -225,14 +228,11 @@ Template.TenantRecordPropertiesPanel.helpers({
 
     // parms for tm_urls_thead
     parmsUrls(){
-        const recordsArray = this.entity.get().DYN.records;
-        if( this.index < recordsArray.length ){
-            return {
-                ...this,
-                haveOne: false
-            };
+        const haveOne = false;
+        return {
+            ...this,
+            haveOne
         }
-        return null;
     },
 });
 

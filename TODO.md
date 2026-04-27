@@ -22,9 +22,11 @@
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
 |    7 | 2025- 7-22 | edit dialog: have a single close button while the tenant has not been modified |
+|      | 2026- 4-23 | introduced with 'modifiedOnUpdate' configuration parameter |
 |    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
 |      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
 |   13 | 2026- 4-25 | have setupEditor() |
+|      | 2026- 4-27 | this is the right place to move the 'modifiedOnUpdate' parameter to |
 |   14 | 2026- 4-25 | have setupHooks() |
 |   15 |  |  |
 |   16 |  |  |

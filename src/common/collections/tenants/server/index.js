@@ -9,9 +9,6 @@ import './methods.js';
 import './publish.js';
 import './transforms.js';
 
-Tracker.autorun(( comp ) => {
-    if( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready()){
-        TenantsManager.Tenants.ready( true );
-        comp.stop();
-    }
+Tracker.autorun(() => {
+    TenantsManager.Tenants.ready( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready());
 });

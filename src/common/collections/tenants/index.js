@@ -22,10 +22,7 @@ import './ready.js';
 import './tabular.js';
 
 if( Meteor.isClient ){
-    Tracker.autorun(( comp ) => {
-        if( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready()){
-            Tenants.ready( true );
-            comp.stop();
-        }
+    Tracker.autorun(() => {
+        TenantsManager.Tenants.ready( TenantsManager.Entities?.ready() && TenantsManager.Records?.ready());
     });
 }

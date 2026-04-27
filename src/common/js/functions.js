@@ -160,7 +160,19 @@ TenantsManager.isAllowed = async function( action, userId=null ){
         allowed = await fn( newAction, ...newArgs );
     }
     return allowed;
-}
+};
+
+/**
+ * @summary Configure the edition dialog
+ * @param {Object} opts an optional options object with following keys:
+ *  - closeAfterNew
+ *  - identTopTemplate
+ *  - tabsFn
+ * @returns {Boolean} true if successful
+ */
+TenantsManager.setupEditor = function( opts={} ){
+    check( opts, Object );
+};
 
 /**
  * @summary Setup the tabular display
@@ -175,4 +187,4 @@ TenantsManager.setupTabular = function( opts={}, buttonsHookFn=null ){
     // merge options with default and instanciates the Tabular.Table
     const options = _.merge( {}, TenantsManager.Tabular._defaultOptions(), opts );
     TenantsManager.Tabular.init( options );
-}
+};

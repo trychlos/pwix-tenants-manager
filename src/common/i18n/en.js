@@ -28,7 +28,6 @@ TenantsManager.i18n = {
             },
             list: {
                 contact_email_th: 'Contact email',
-                contact_page_th: 'Contact page',
                 effect_end_th: 'Last ending',
                 effect_start_th: 'First starting',
                 emails_more_title: 'Display all email addresses',
@@ -56,23 +55,16 @@ TenantsManager.i18n = {
             records: {
                 check: {
                     contact_email_invalid: 'The contact email address is invalid',
-                    contact_url_invalid: 'The contact page URL is invalid',
                     emails_email_invalid: 'The provided email address is invalid',
                     emails_email_missing: 'The email address is missing',
                     emails_label_missing: 'The email label is missing',
-                    emails_max: 'The configured maximum count requires at most %s email addresses',
-                    emails_min: 'The configured minimum count requires at least %s email addresses',
-                    gtu_url_invalid: 'The General Terms of Use page URL is invalid',
+                    emails_wants_one: 'At least one email address is required',
                     home_url_invalid: 'The home page URL is invalid',
                     label_exists: 'The label is already used by another tenant',
                     label_unset: 'The label is not set',
-                    legals_url_invalid: 'The Legals page URL is invalid',
                     logo_url_invalid: 'The logo URL is invalid',
                     name_done: 'Checking \'%s\' done',
                     name_item_done: 'Checking \'%s\' (%s) done',
-                    pdmp_url_invalid: 'The Personal Data Management Policy page URL is invalid',
-                    support_email_invalid: 'The support email address is invalid',
-                    support_url_invalid: 'The support page URL is invalid',
                     urls_label_missing: 'The URL label is missing',
                     urls_url_invalid: 'The provided URL is invalid',
                     urls_url_missing: 'The URL is missing'

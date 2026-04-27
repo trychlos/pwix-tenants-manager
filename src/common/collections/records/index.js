@@ -10,8 +10,10 @@ import './fieldset.js';
 import './ready.js';
 
 if( Meteor.isClient ){
-    Tracker.autorun(( comp ) => {
-        TenantsManager.Records.ready( true );
-        comp.stop();
+    Tracker.autorun(() => {
+        const haveCollection = TenantsManager.Records.status.get( 'haveCollection' );
+        const haveFieldset = TenantsManager.Records.status.get( 'haveFieldset' );
+        const haveSchema = TenantsManager.Records.status.get( 'haveSchema' );
+        TenantsManager.Records.ready( haveCollection && haveFieldset && haveSchema );
     });
 }

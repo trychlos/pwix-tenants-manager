@@ -25,36 +25,12 @@ TenantsManager._defaults = {
 };
 /*
 TenantsManager._defaults = {
-    allowFn: null,
     // user interface
     classes: '',
     modifiedOnUpdate: false,
-    showEmptyGeneralizedEmails: false,
-    showEmptyGeneralizedUrls: false,
-    // collections
-    entityFields: null,
-    recordFields: null,
-    // tabular list
-    listHasContactEmail: true,
-    listHasContactUrl: true,
-    listHasGeneralizedEmails: false,
-    listHasGeneralizedUrls: false,
-    listHasHomeUrl: true,
     // properties
     maxGeneralizedEmails: -1,
     minGeneralizedEmails: 1,
-    propertiesHaveGeneralizedEmails: false,
-    propertiesHaveGeneralizedUrls: false,
-    // server-side extensions
-    serverAllExtend: null,
-    serverTabularExtend: null,
-    tenantButtons: null,
-    tenantFields: null,
-    tenantsCollection: 'tenants',
-    scopedManagerRole: 'SCOPED_TENANT_MANAGER',
-    // runtime
-    verbosity: TenantsManager.C.Verbose.CONFIGURE,
-    withValidities: true
 };
 */
 

@@ -34,28 +34,31 @@ const _defaultFieldSet = function( conf ){
     return columns;
 };
 
+// configuration has changed -> fieldset must be recomputed
 Tracker.autorun(() => {
-    // fieldset has changed or is to be initialized
     const conf = TenantsManager.configure();
-    let fieldset = Entities.fieldSet.get();
-    if( !fieldset ){
-        const columns = _defaultFieldSet( conf );
-        fieldset = new Field.Set( columns );
-    }
-    // define dependants
-    if( Entities.collection?.attachSchema ){
-        logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'attaching Entities schema' );
-        Entities.collection.attachSchema( new SimpleSchema( fieldset.toSchema()), { replace: true });
-        Entities.collection.attachBehaviour( 'timestampable', { replace: true });
-    } else if( !Entities.collection ){
-        logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'Entities.collection is not (yet ?) defined' );
-    } else {
-        logger.warning( 'Entities.collection.attachSchema is not a function' );
-    }
-    // set the reactive var
+    const fieldset = new Field.Set( _defaultFieldSet( conf ));
     Entities.fieldSet.set( fieldset );
+    Entities.status.set( 'haveFieldset', true );
+    Entities.status.set( 'haveSchema', false );
+});
+
+// fieldset has changed -> dependants have to be reset
+Tracker.autorun(() => {
+    const fieldset = Entities.fieldSet.get();
+    const haveCollection = Entities.status.get( 'haveCollection' );
+    if( fieldset && haveCollection ){
+        if( Entities.collection.attachSchema ){
+            logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'attaching Entities schema' );
+            Entities.collection.attachSchema( new SimpleSchema( fieldset.toSchema()), { replace: true });
+            Entities.collection.attachBehaviour( 'timestampable', { replace: true });
+            Entities.status.set( 'haveSchema', true );
+        } else {
+            logger.warning( 'Entities.collection.attachSchema is not a function' );
+        }
+    }
 });
 
 Tracker.autorun(() => {
-    //logger.debug( 'Entities.fieldSet', Entities.fieldSet.get());
+    //logger.debug( 'Entities.fieldSet', Entities.fieldSet.get().names());
 });

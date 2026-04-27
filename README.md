@@ -69,9 +69,11 @@ Returns the i18n namespace used by the package. Used to add translations at runt
 
 Available both on the client and the server.
 
-##### `TenantsManager.setupEditor()`
+##### `TenantsManager.setupEditor( options<Object> )`
 
-Define the runtime options for editing the tenants.
+Define the runtime options for editing the tenants, where options is an optional arguments object with following keys:
+
+- `modifiedOnUpdate`: true,
 
 Available both on the client and the server, but only used in the client (server-side is just a no-op).
 
@@ -94,25 +96,9 @@ The `pre`-functions should throw an error if they want cancel the operation.
 
 Available on the server only.
 
-##### `TenantsManager.setupTabular( options<Object> )`
+##### `TenantsManager.setupTabular( options<Object>, buttonsHookFn<Function> )`
 
 Define the runtime options for displaying the list of the available tenants, where options is an optional arguments object with following keys:
-
-- ``
-
-- ``
-
-- ``
-
-- ``
-
-- ``
-
-- ``
-
-- ``
-
-- ``
 
 - ``
 
@@ -151,11 +137,24 @@ These are the two main managed collections. Both provides:
 
 - `fieldSet`: a ReactiveVar which contains the current `Field.Set` of the entities (resp. the records).
 
-    The fieldsets are automatically reset to their defaults each time the package is configured. If the caller wishes extend the fieldsets, then he/she must do that after the package configuration.
+    The fieldsets are automatically reset to their defaults each time the package is configured. If the caller wishes extend the fieldsets, then he/she must do that after each package (re)configuration.
 
     Each update of these fieldsets automatically redefines all dependants, and notably the tabular displays, the Mongo schemas, and so on.
 
 - `ready`: a reactive data source, true when the collection is ready
+
+Default Entities fields are:
+
+- `notes`: entity notes.
+
+Default Records fields are:
+
+- `label`: mandatory unique label
+- `homeUrl`: home page url
+- `contactEmail`: contact email address
+- `logoUrl`: logo url
+- `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour
+- `notes`: user notes.
 
 ### `TenantsManager.Tenants`
 
@@ -491,21 +490,6 @@ Known configuration options are:
         ]
     });
 ```
-
-    Default Records fields are:
-
-    - `label`: mandatory unique label
-    - `pdmpUrl`: personal data management policy page url
-    - `gtuUrl`: general terms of use page url
-    - `legalsUrl`: legal terms page url
-    - `homeUrl`: home page url
-    - `supportUrl`: support page url
-    - `contactUrl`: contact page url
-    - `supportEmail`: support email address
-    - `contactEmail`: contact email address
-    - `logoUrl`: logo url
-    - `logoImage`: logo image
-    - `createdAt`, `createdBy`, `updatedAt`, `updatedBy`: timestampable behaviour.
 
 - `xx roles`
 

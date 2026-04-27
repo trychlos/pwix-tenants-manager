@@ -11,7 +11,7 @@
                 </td>
                 <td class="ui-w20"></td>
             </tr>
-            {{#unless haveGeneralizedUrls }}
+            {{#if haveDedicatedUrls }}
                 <tr class="tr-home">
                     <td class="label"><label class="form-label" for="{{ itFor "home" }}">{{ i18n key="records.properties.home_label" }}</label></td>
                     <td class="ui-w80">
@@ -21,52 +21,16 @@
                     </td>
                     <td></td>
                 </tr>
-                <tr class="tr-pdmp">
-                    <td class="label"><label class="form-label" for="{{ itFor "pdmp" }}">{{ i18n key="records.properties.pdmp_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-pdmp">
-                            <input class="form-control" type="url" id="{{ itFor "pdmp" }}" placeholder="{{ i18n key="records.properties.pdmp_ph" }}" title="{{ i18n key="records.properties.pdmp_title" }}" />
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr class="tr-gtu">
-                    <td class="label"><label class="form-label" for="{{ itFor "gtu" }}">{{ i18n key="records.properties.gtu_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-gtu">
-                            <input class="form-control" type="url" id="{{ itFor "gtu" }}" placeholder="{{ i18n key="records.properties.gtu_ph" }}" title="{{ i18n key="records.properties.gtu_title" }}" />
-                        </div>
-                    </td>
-                    <td rowspan="5" class="td-logo" style="height: 1px;">
-                        {{> ImageIncluder (parmsImage) }}
-                    </td>
-                </tr>
-                <tr class="tr-legals">
-                    <td class="label"><label class="form-label" for="{{ itFor "legals" }}">{{ i18n key="records.properties.legals_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-legals">
-                            <input class="form-control" type="url" id="{{ itFor "legals" }}" placeholder="{{ i18n key="records.properties.legals_ph" }}" title="{{ i18n key="records.properties.legals_title" }}" />
-                        </div>
-                    </td>
-                </tr>
-                <tr class="tr-logo">
-                    <td class="label"><label class="form-label" for="{{ itFor "logo" }}">{{ i18n key="records.properties.logo_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-logo">
-                            <input class="form-control" type="url" id="{{ itFor "logo" }}" placeholder="{{ i18n key="records.properties.logo_ph" }}" title="{{ i18n key="records.properties.logo_title" }}" />
-                        </div>
-                    </td>
-                </tr>
-                <tr class="tr-contact-url">
-                    <td class="label"><label class="form-label" for="{{ itFor "contact_url" }}">{{ i18n key="records.properties.contact_url_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-contact-url">
-                            <input class="form-control" type="url" id="{{ itFor "contact_url" }}" placeholder="{{ i18n key="records.properties.contact_url_ph" }}" title="{{ i18n key="records.properties.contact_url_title" }}" />
-                        </div>
-                    </td>
-                </tr>
-            {{/unless}}
-            {{#unless haveGeneralizedEmails }}
+            {{/if}}
+            <tr class="tr-logo">
+                <td class="label"><label class="form-label" for="{{ itFor "logo" }}">{{ i18n key="records.properties.logo_label" }}</label></td>
+                <td class="ui-w80">
+                    <div class="ui-w100 js-logo">
+                        <input class="form-control" type="url" id="{{ itFor "logo" }}" placeholder="{{ i18n key="records.properties.logo_ph" }}" title="{{ i18n key="records.properties.logo_title" }}" />
+                    </div>
+                </td>
+            </tr>
+            {{#if haveDedicatedEmails }}
                 <tr class="tr-contact-email">
                     <td class="label"><label class="form-label" for="{{ itFor "contact_email" }}">{{ i18n key="records.properties.contact_email_label" }}</label></td>
                     <td class="ui-w80">
@@ -75,29 +39,7 @@
                         </div>
                     </td>
                 </tr>
-            {{/unless}}
-            {{#unless haveGeneralizedUrls }}
-                <tr class="tr-support-url">
-                    <td class="label"><label class="form-label" for="{{ itFor "support_url" }}">{{ i18n key="records.properties.support_url_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-support-url">
-                            <input class="form-control" type="url" id="{{ itFor "support_url" }}" placeholder="{{ i18n key="records.properties.support_url_ph" }}" title="{{ i18n key="records.properties.support_url_title" }}" />
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-            {{/unless}}
-            {{#unless haveGeneralizedEmails }}
-                <tr class="tr-support-email">
-                    <td class="label"><label class="form-label" for="{{ itFor "support_email" }}">{{ i18n key="records.properties.support_email_label" }}</label></td>
-                    <td class="ui-w80">
-                        <div class="ui-w100 js-support-email">
-                            <input class="form-control" type="email" id="{{ itFor "support_email" }}" placeholder="{{ i18n key="records.properties.support_email_ph" }}" title="{{ i18n key="records.properties.support_email_title" }}" />
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-            {{/unless}}
+            {{/if}}
 
             {{#if haveGeneralizedUrls }}
                 {{> tm_urls_thead (parmsUrls) }}

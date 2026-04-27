@@ -15,7 +15,7 @@ import { Entities } from './index.js';
 
 const logger = Logger.get();
 
-_ready = {
+const _ready = {
     value: false,
     dep: new Tracker.Dependency()
 };
@@ -29,7 +29,7 @@ _ready = {
  */
 Entities.ready = function( b ){
     if( b !== undefined ){
-        _ready.value = b;
+        _ready.value = Boolean( b );
         _ready.dep.changed();
     }
     _ready.dep.depend();
