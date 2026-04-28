@@ -10,9 +10,6 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    2 | 2024- 6-28 | have a scheduled job which deletes tenants_e entities which do not have any tenants_r records |
-|      |            | as a label - so a record - is supposed to be mandatory to save a tenant |
-|    3 | 2024- 6-28 | same than #2 for tenants_r which do not have any tenants_e |
 |    5 | 2024- 9-23 | Have an error on publish |
 |      |            | Error: Could not find element with id yW5sXgJv4Mt3o8BAh to change
 |      |            |   at SessionCollectionView.changed (packages/ddp-server/livedata_server.js:261:13)
@@ -22,11 +19,15 @@
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
 |    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
-|      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source |
+|      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source ? |
 |   14 | 2026- 4-25 | have setupHooks() |
 |   15 | 2026- 4-27 | honor editFn configuration parameter |
 |   16 | 2026- 4-27 | honor newFn configuration parameter |
-|   17 |  |  |
+|   17 | 2026- 4-27 | have a maintenance page for managing orphans entities, records, and roles |
+|      |            | - identify entities without any record, and allow the manager to delete them |
+|      |            | - identify records without any entity, and allow the manager to delete them |
+|      |            | - identify userid who have a scoped role but no more exist, and allow the manager to delete the role assignement |
+|   18 |  |  |
 
 ---
 ## Done
@@ -37,6 +38,11 @@
 |      |            | should be able to get this configuration back instead of using hard coded values |
 |      |            | (and do not ask to configure the same thing here a second time) |
 |      | 2024- 7-17 | done |
+|    2 | 2024- 6-28 | have a scheduled job which deletes tenants_e entities which do not have any tenants_r records |
+|      |            | as a label - so a record - is supposed to be mandatory to save a tenant |
+|      | 2026- 4-27 | superseded by #17 |
+|    3 | 2024- 6-28 | same than #2 for tenants_r which do not have any tenants_e |
+|      | 2026- 4-27 | superseded by #17 |
 |    4 | 2024- 7-16 | do not hardcode ORD_SCOPED_MANAGER in tenantsAll publication |
 |      | 2024- 9-30 | done |
 |    6 | 2024-11-16 | have tenant manager |

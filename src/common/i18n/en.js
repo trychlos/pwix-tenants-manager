@@ -64,7 +64,7 @@ TenantsManager.i18n = {
                     label_exists: 'The label is already used by another tenant',
                     label_unset: 'The label is not set',
                     logo_url_invalid: 'The logo URL is invalid',
-                    name_done: 'Checking \'%s\' done',
+                    name_done: 'Checking %s=%s: done',
                     name_item_done: 'Checking \'%s\' (%s) done',
                     urls_label_missing: 'The URL label is missing',
                     urls_url_invalid: 'The provided URL is invalid',

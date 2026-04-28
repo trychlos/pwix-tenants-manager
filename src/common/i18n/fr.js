@@ -63,7 +63,7 @@ TenantsManager.i18n = {
                     label_exists: 'L\'intitulé est déjà utilisé par un autre tenant',
                     label_unset: 'L\'intitulé n\'est pas renseigné',
                     logo_url_invalid: 'L\'URL du logo est invalide',
-                    name_done: 'Contrôle de \'%s\' OK',
+                    name_done: 'Contrôle %s=%s: OK',
                     name_item_done: 'Contrôle de \'%s\' (%s) OK',
                     urls_label_missing: 'Un label doit être spécifié pour l\'URL',
                     urls_url_invalid: 'L\'URL spécifiée est invalide',

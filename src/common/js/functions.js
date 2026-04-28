@@ -49,7 +49,7 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
                 result = result || [];
                 result.push( new TM.TypedMessage({
                     level: TM.MessageLevel.C.INFO,
-                    message: pwixI18n.label( I18N, 'records.check.name_done', name )
+                    message: pwixI18n.label( I18N, 'records.check.name_done', name, value ? `'${value}'` : '(undefined)' )
                 }));
             }
         // cross checks

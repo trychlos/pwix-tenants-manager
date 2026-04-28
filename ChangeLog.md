@@ -36,6 +36,7 @@
     - Entities/Records.collectionReady are redefined as ready() reactive data source (todo #9)
     - Remove Tenants.fieldSet, using instead Records.fieldSet, updating TenantsManager.Tabular accordingly (todo #11)
     - Have setupEditor() (todo #7)
+    - Improve operation checks labels
 
 ### 1.5.0
 
