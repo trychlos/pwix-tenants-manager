@@ -18,8 +18,6 @@
 |      |            |   at packages/pwix:tenants-manager/src/common/collections/tenants/server/publish.js:81:30
 |      |            |   at processTicksAndRejections (node:internal/process/task_queues:95:5) ignored
 |      |            |   Error: Could not find element with id MgveZWDh5C8Mbsgvr to change
-|    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
-|      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source ? |
 |   14 | 2026- 4-25 | have setupHooks() |
 |   15 | 2026- 4-27 | honor editFn configuration parameter |
 |   16 | 2026- 4-27 | honor newFn configuration parameter |
@@ -51,6 +49,10 @@
 |      | 2026- 4-23 | introduced with 'modifiedOnUpdate' configuration parameter |
 |      | 2026- 4-27 | which becomes 'withCloseButtonWhileNotModified' setupEditor() option |
 |      | 2026- 4-27 | done |
+|    8 | 2026- 4-24 | should TenantsManager.getScopes() become reactive ? |
+|      |            |  or leave it non reactive, and define a new TenantsManager.knownScopes() reactive data source ? |
+|      | 2026- 4-27 | actually TenantsManager.list is already a reactive list of allowed tenants - should just keep stick with that |
+|      | 2026- 4-28 | done |
 |    9 | 2026- 4-24 | Entities/Records collectionReady reactive var should become a ready() reactive data source |
 |      | 2026- 4-25 | done |
 |   10 | 2026- 4-25 | Tenants ready reactive var should become a ready() reactive data source |

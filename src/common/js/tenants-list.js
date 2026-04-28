@@ -38,6 +38,7 @@ TenantsManager.list = {
     },
 
     // returns the list content
+    // reactive data source
     get(){
         return TenantsManager.list._array.get();
     }

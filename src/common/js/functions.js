@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import { Logger } from 'meteor/pwix:logger';
 import { TM } from 'meteor/pwix:typed-message';
+import { Tracker } from 'meteor/tracker';
 
 import { Tenants } from '../collections/tenants/index.js';
 
@@ -114,18 +115,6 @@ TenantsManager.checkByTenant = async function( tenant, opts={} ){
     }
     await _fnRecordCheck( 'logoUrl', tenant.record.logoUrl );
     return result;
-};
-
-/**
- * @summary pwix:roles is responsible for managing the scoped roles of the application, as far as it knows which scopes are to be managed.
- * @returns {Array} list of scopes and their labels
- *  NB: the caller should prefer the corresponding (reactive) publication
-*/
-TenantsManager.getScopes = async function(){
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.get_scopes' )){
-        return [];
-    }
-    return await ( Meteor.isClient ? Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.getScopes' ) : TenantsManager.s.getScopes());
 };
 
 // as of v1.5.0, permissions are simplified

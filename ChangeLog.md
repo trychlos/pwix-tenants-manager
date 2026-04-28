@@ -38,6 +38,7 @@
     - Have setupEditor() (todo #7)
     - Improve operation checks labels
     - Provide a title for displayable columns
+    - Remove TenantsManager.getScopes() unused and same target that TenantManager.list.get() (todo #8)
 
 ### 1.5.0
 
