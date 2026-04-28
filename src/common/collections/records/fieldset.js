@@ -93,6 +93,7 @@ const _defaultFieldSet = function( conf ){
                 type: String,
                 optional: true,
                 dt_visible: false,
+                dt_title: pwixI18n.label( I18N, 'list.email_label_th' ),
                 form_check: Tenants.checks.email_label,
                 form_type: Forms.FieldType.C.OPTIONAL,
                 form_status: Forms.C.ShowStatus.NONE
@@ -102,6 +103,7 @@ const _defaultFieldSet = function( conf ){
                 type: String,
                 optional: true,
                 dt_visible: false,
+                dt_title: pwixI18n.label( I18N, 'list.email_email_th' ),
                 form_check: Tenants.checks.email_email,
                 form_type: Forms.FieldType.C.OPTIONAL,
                 form_status: Forms.C.ShowStatus.NONE
@@ -135,6 +137,7 @@ const _defaultFieldSet = function( conf ){
                 type: String,
                 optional: true,
                 dt_visible: false,
+                dt_title: pwixI18n.label( I18N, 'list.url_label_th' ),
                 form_check: Tenants.checks.url_label,
                 form_type: Forms.FieldType.C.OPTIONAL,
                 form_status: Forms.C.ShowStatus.NONE
@@ -144,6 +147,7 @@ const _defaultFieldSet = function( conf ){
                 type: String,
                 optional: true,
                 dt_visible: false,
+                dt_title: pwixI18n.label( I18N, 'list.url_url_th' ),
                 form_check: Tenants.checks.url_url,
                 form_type: Forms.FieldType.C.OPTIONAL,
                 form_status: Forms.C.ShowStatus.NONE
@@ -170,6 +174,7 @@ const _defaultFieldSet = function( conf ){
             name: 'logoUrl',
             type: String,
             optional: true,
+            dt_title: pwixI18n.label( I18N, 'list.logo_url_th' ),
             form_check: Tenants.checks.logoUrl,
             form_type: Forms.FieldType.C.OPTIONAL
         },

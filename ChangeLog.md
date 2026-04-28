@@ -37,6 +37,7 @@
     - Remove Tenants.fieldSet, using instead Records.fieldSet, updating TenantsManager.Tabular accordingly (todo #11)
     - Have setupEditor() (todo #7)
     - Improve operation checks labels
+    - Provide a title for displayable columns
 
 ### 1.5.0
 
