@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.6.0-rc.0
+### 1.6.0
 
-    Release date: 
+    Release date: 2026- 5- 2
 
     - configure() now warns for unmanaged keys
     - Update to new pwix:tabular naming convention
@@ -127,4 +127,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Feb. 10th
+- Last updated on 2026, May. 2nd
