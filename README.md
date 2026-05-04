@@ -55,14 +55,6 @@ The package configuration only determines the global behavior of the package.
 
 For more precise details and options, the caller could take advantage of the various `setupXxxxxx()` functions (see below).
 
-##### `TenantsManager.getScopes()`
-
-An async function which returns an array of known tenants identifier, and their closest label.
-
-This function is not reactive.
-
-If reactivity is desired, the caller should prefer to subscribe to the `pwix.TenantsManager.p.Tenants.getScopes` publication.
-
 ##### `TenantsManager.i18n.namespace()`
 
 Returns the i18n namespace used by the package. Used to add translations at runtime.
@@ -300,15 +292,23 @@ This package can take advantage of `pwix:permissions` package to manage the user
 
 It defines following tasks:
 
-- `pwix.tenants_manager.feat.create`: whether the user is allowed to create a new tenant,
+- `pwix.tenants_manager.feat.list`: whether the user is allowed to access the tabular list component.
 
-- `pwix.tenants_manager.feat.delete`, with args `item<Object>`: whether the user is allowed to delete the tenant
+    A client-side only permission.
 
-- `pwix.tenants_manager.feat.edit`, with args `item<Object>`: whether the user is allowed to edit the tenant
+- `pwix.tenants_manager.fn.create`: whether the user is allowed to create a new tenant.
 
-- `pwix.tenants_manager.feat.list`: whether the user is allowed to see a list of tenants (he is allowed to).
+- `pwix.tenants_manager.fn.delete`, with args `item<Object>`: whether the user is allowed to delete the tenant.
 
-- `pwix.tenants_manager.feat.read`, with args `itemId<String>`: whether the user is allowed to see the identfied tenant.
+- `pwix.tenants_manager.fn.edit`, with args `item<Object>`: whether the user is allowed to edit the tenant
+
+- `pwix.tenants_manager.fn.read`, with args `itemId<String>`: whether the user is allowed to access the given tenant.
+
+- `pwix.tenants_manager.pub.list`: whether the user is allowed to see the list of the tenants he/she is allowed to.
+
+    This should be `true` for all connected users.
+
+    A server-side only permission.
 
 ## Configuration
 

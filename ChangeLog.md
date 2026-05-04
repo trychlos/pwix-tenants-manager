@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Review permissions, distinguishing client-only, common and server-only ones, and no more dedicated entities/records
 
 ### 1.6.0
 

@@ -126,11 +126,11 @@ const _permissions = {
     'pwix.tenants_manager.fn.get_scopes': 'pwix.tenants_manager.feat.list',
     'pwix.tenants_manager.fn.set_managers': 'pwix.tenants_manager.feat.edit',
     'pwix.tenants_manager.fn.upsert': 'pwix.tenants_manager.feat.edit',
-    'pwix.tenants_manager.pub.list_all': 'pwix.tenants_manager.feat.list',
-    'pwix.tenants_manager.pub.list_one': 'pwix.tenants_manager.feat.list',
-    'pwix.tenants_manager.pub.closests': 'pwix.tenants_manager.feat.list',
-    'pwix.tenants_manager.pub.tabular': 'pwix.tenants_manager.feat.list',
-    'pwix.tenants_manager.pub.known_scopes': 'pwix.tenants_manager.feat.list'
+    'pwix.tenants_manager.pub.list_all': 'pwix.tenants_manager.pub.list',
+    'pwix.tenants_manager.pub.list_one': 'pwix.tenants_manager.pub.list',
+    'pwix.tenants_manager.pub.closests': 'pwix.tenants_manager.pub.list',
+    'pwix.tenants_manager.pub.tabular': 'pwix.tenants_manager.pub.list',
+    'pwix.tenants_manager.pub.known_scopes': 'pwix.tenants_manager.pub.list'
 };
 
 /**

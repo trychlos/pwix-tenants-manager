@@ -23,7 +23,7 @@ const logger = Logger.get();
 Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={} ){
     const self = this;
     const userId = this.userId;
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.list', userId )){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list', userId )){
         self.ready();
         return;
     }
@@ -31,7 +31,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
 
     const entitiesObserver = Entities.collection.find({}).observeAsync({
         added: async function( item ){
-            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, item._id )){
+            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, item._id )){
                 const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, item, opts, userId );
                 self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, transformed );
                 TenantsManager.s.eventEmitter.emit( 'added', item._id, transformed );
@@ -39,7 +39,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, newItem._id )){
+                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, newItem._id )){
                     const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, newItem, opts, userId );
                     self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, transformed );
                     TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, transformed );
@@ -54,7 +54,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
 
     const recordsObserver = Records.collection.find({}).observeAsync({
         added: async function( item ){
-            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, item.entity )){
+            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, item.entity )){
                 Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
                     if( entity ){
                         const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
@@ -75,7 +75,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, newItem.entity )){
+                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, newItem.entity )){
                     Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
                         if( entity ){
                             const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
@@ -116,7 +116,7 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
 Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
     const self = this;
     const userId = this.userId;
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.list', userId )){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list', userId )){
         self.ready();
         return;
     }
@@ -137,7 +137,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
 
     // records are changed, added or removed for a given entity: have to recompute the closest
     const f_closestChanged = async function( entity_id ){
-        if( await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.read', userId, entity_id )){
+        if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, entity_id )){
             Records.collection.find({ entity: entity_id }).fetchAsync().then(( fetched ) => {
                 const closest = Validity.closestByRecords( fetched ).record;
                 const prev_closest = entities[entity_id];
@@ -283,7 +283,7 @@ Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName,
 Meteor.publish( TenantsManager.C.pub.getScopes.publish, async function(){
     const self = this;
     const userId = this.userId;
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.list', userId )){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list', userId )){
         self.ready();
         return;
     }
@@ -350,7 +350,7 @@ Meteor.publish( TenantsManager.C.pub.getScopes.publish, async function(){
  * This publishes a list of the allowed scopes and validity periods to be used as a reference when selecting a tenant as a run context
  */
 Meteor.publish( TenantsManager.C.pub.selecting.publish, async function(){
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.selecting', this.userId )){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.pub.list', this.userId )){
         this.ready();
         return false;
     }

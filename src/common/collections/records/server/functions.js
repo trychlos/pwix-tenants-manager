@@ -43,7 +43,7 @@ Records.s.getBy = async function( selector, userId ){
 Records.s.upsert = async function( entity, userId ){
     check( entity, Object );
     check( userId, String );
-    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.records.fn.upsert', userId, entity )){
+    if( !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.edit', userId, entity )){
         return null;
     }
     //logger.debug( 'Records.s.upsert()', entity );

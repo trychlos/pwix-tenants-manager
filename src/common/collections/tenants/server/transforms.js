@@ -43,7 +43,7 @@ Tenants.Transforms = {
     async addManagersFromEntity( itemDoc, options={} ){
         check( itemDoc, Match.ObjectIncluding({ DYN: Object }));
         check( options, Object );
-        itemDoc.DYN.managers = await Tenants.s.getManagers( itemDoc._id );
+        itemDoc.DYN.managers = await Tenants.s._getManagers( itemDoc._id );
         return itemDoc;
     },
 
@@ -93,7 +93,7 @@ Tenants.Transforms = {
         check( itemDoc, Match.ObjectIncluding({ DYN: Object }));
         check( options, Object );
         itemDoc.DYN.entity = await Entities.collection.findOneAsync({ _id: itemDoc.entity });
-        itemDoc.DYN.managers = await Tenants.s.getManagers( itemDoc.entity );
+        itemDoc.DYN.managers = await Tenants.s._getManagers( itemDoc.entity );
         return itemDoc;
     },
 

@@ -36,7 +36,7 @@ TenantsManager.Tabular = _.merge( {}, TenantsManager.Tabular || {}, {
             pub: TenantsManager.C.pub.tabular.publish,
             pwix: {
                 async deleteButtonEnabled( it ){
-                    const res = await TenantsManager.isAllowed( 'pwix.tenants_manager.feat.delete', null, it.DYN.entity );
+                    const res = await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.delete', Meteor.isClient && Meteor.userId(), it.DYN.entity );
                     return res;
                 },
                 // display the tenant label instead of the identifier in the button title
