@@ -27,7 +27,7 @@ import { Records } from './index.js';
 
 const logger = Logger.get();
 
-const _defaultFieldSet = function( conf ){
+Records._defaultFieldSet = function( conf ){
     let columns = [
         // a mandatory label, identifies the tenant entity
         {
@@ -212,16 +212,6 @@ const _defaultFieldSet = function( conf ){
     columns = columns.concat( Timestampable.fieldDef());
     return columns;
 };
-
-// configuration has changed -> fieldset must be recomputed
-Tracker.autorun(() => {
-    const conf = TenantsManager.configure();
-    const fieldset = new Field.Set( _defaultFieldSet( conf ));
-    //logger.debug( 'conf fieldset with', conf.withDedicatedEmails, conf.withDedicatedUrls, conf.withGeneralizedEmails, conf.withGeneralizedUrls, fieldset.names());
-    Records.fieldSet.set( fieldset );
-    Records.status.set( 'haveFieldset', true );
-    Records.status.set( 'haveSchema', false );
-});
 
 // fieldset has changed -> dependants have to be reset
 Tracker.autorun(() => {

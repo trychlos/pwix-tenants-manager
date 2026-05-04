@@ -22,7 +22,7 @@ import { Entities } from './index.js';
 
 const logger = Logger.get();
 
-const _defaultFieldSet = function( conf ){
+Entities._defaultFieldSet = function( conf ){
     let columns = [
         // common notes
         Notes.fieldDef()
@@ -34,23 +34,17 @@ const _defaultFieldSet = function( conf ){
     return columns;
 };
 
-// configuration has changed -> fieldset must be recomputed
-Tracker.autorun(() => {
-    const conf = TenantsManager.configure();
-    const fieldset = new Field.Set( _defaultFieldSet( conf ));
-    Entities.fieldSet.set( fieldset );
-    Entities.status.set( 'haveFieldset', true );
-    Entities.status.set( 'haveSchema', false );
-});
-
 // fieldset has changed -> dependants have to be reset
+let countSchema = 0;
 Tracker.autorun(() => {
     const fieldset = Entities.fieldSet.get();
     const haveCollection = Entities.status.get( 'haveCollection' );
     if( fieldset && haveCollection ){
         if( Entities.collection.attachSchema ){
+            countSchema += 1;
             logger.verbose({ verbosity: TenantsManager.configure().verbosity, against: TenantsManager.C.Verbose.ATTACHSCHEMA }, 'attaching Entities schema' );
             Entities.collection.attachSchema( new SimpleSchema( fieldset.toSchema()), { replace: true });
+            //logger.debug( 'attaching new schema', countSchema, Entities.collection.simpleSchema());
             Entities.collection.attachBehaviour( 'timestampable', { replace: true });
             Entities.status.set( 'haveSchema', true );
         } else {

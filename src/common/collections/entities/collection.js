@@ -18,17 +18,4 @@ export const Entities = {
     status: new ReactiveDict()
 };
 
-// recompute the collection name each time the package is reconfigured
-Tracker.autorun(() => {
-    const collectionName = TenantsManager.configure().tenantsCollection+'_e';
-    check( collectionName, Match.NonEmptyString );
-    if( collectionName !== Entities.collectionName ){
-        Entities.collectionName = collectionName;
-        Entities.collection = new Mongo.Collection( collectionName );
-        Entities.status.set( 'haveCollection', true );
-        Entities.status.set( 'haveFieldset', false );
-        Entities.status.set( 'haveSchema', false );
-    }
-});
-
 TenantsManager.Entities = Entities;

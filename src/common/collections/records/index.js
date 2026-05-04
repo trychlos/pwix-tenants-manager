@@ -8,6 +8,7 @@ export { Records } from './collection.js';
 
 import './fieldset.js';
 import './ready.js';
+import './tracker.js';
 
 if( Meteor.isClient ){
     Tracker.autorun(() => {
