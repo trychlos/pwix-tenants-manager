@@ -93,11 +93,21 @@ Tenants.Transforms = {
         check( itemDoc, Match.ObjectIncluding({ DYN: Object }));
         check( options, Object );
         itemDoc.DYN.entity = await Entities.collection.findOneAsync({ _id: itemDoc.entity });
+        //itemDoc.DYN.managers = await Tenants.s._getManagers( itemDoc.entity );
+        return itemDoc;
+    },
+
+    // add the list of scoped managers accounts
+    // @param {Object} itemDoc a record document
+    //  publish transformation for tabular
+    async addTabularManagers( itemDoc, options={} ){
+        check( itemDoc, Match.ObjectIncluding({ DYN: Object }));
+        check( options, Object );
         itemDoc.DYN.managers = await Tenants.s._getManagers( itemDoc.entity );
         return itemDoc;
     },
 
-    // add the list of all validity records + the closest one
+    // add the list of all validity records to this closest one
     // @param {Object} itemDoc a record document
     //  publish transformation for tabular
     async addTabularRecords( itemDoc, options={} ){
@@ -155,6 +165,7 @@ for( const pub of [ TenantsManager.C.pub.tabular.publish ]){
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addDyn );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularEntity );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularRecords );
+    Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularManagers );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularAnalyze );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addTabularEnglobingPeriod );
     Tenants.Transforms._publish[pub].push( Tenants.Transforms.addUndefined );

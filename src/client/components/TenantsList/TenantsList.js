@@ -12,6 +12,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tolert } from 'meteor/pwix:tolert';
 
+import { Entities } from '../../../common/collections/entities/index.js';
+import { Records } from '../../../common/collections/records/index.js';
+
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';

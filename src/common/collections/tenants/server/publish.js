@@ -3,6 +3,7 @@
  */
 
 import { Logger } from 'meteor/pwix:logger';
+//import { publishComposite } from 'meteor/reywood:publish-composite';
 import { Validity } from 'meteor/pwix:validity';
 
 import { Tenants } from '../index.js';
@@ -224,6 +225,7 @@ Meteor.publish( TenantsManager.C.pub.closests.publish, async function(){
  * 
  * These are the fields from the closest record, plus the entity_notes from the entity,
  *  and with effectStart and effectEnd being from the first and last records.
+ * We try to be reactive one Entities and Roles without leaving with the async transformations (which leave publishComposite on the side)
  */
 Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName, ids, fields ){
     const self = this;
@@ -235,45 +237,188 @@ Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName,
         tableName, ids, fields 
     };
 
-    // for each entity, the (closest) record sent after transformation
-    let entities = {};
+    // entities management for this publication
+    const ents = {
+        // for each entity, an object with:
+        // - closest: the (closest) record sent after transformation
+        // - handles: an array of observers created for this entity
+        _entities: {},
 
-    const entitiesObserver = Entities.collection.find().observeAsync({
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, entities[newItem._id], opts, self.userId );
-                self.changed( collectionName, entities[newItem._id]._id, transformed );
+        // publish a (closest) record
+        //  it has to be transformed first, then installed into our _entities reference
+        async publish( item ){
+            const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, item, opts, self.userId );
+            if( ents._entities[transformed.entity] ){
+                ents._entities[transformed.entity].closest = transformed;
+                self.changed( collectionName, transformed._id, transformed );
+            } else {
+                ents._entities[transformed.entity] = {};
+                ents._entities[transformed.entity].closest = {};
+                ents._entities[transformed.entity].closest = transformed;
+                self.added( collectionName, transformed._id, transformed );
+                await ents.setupObservers( transformed );
+            }
+        },
+
+        // removing the record also remove all entity data
+        remove( id ){
+            ents.stopHandles( id );
+            delete ents._entities[id];
+            self.removed( collectionName, id );
+        },
+
+        // any change in one of the joined collections triggers a republication of the record
+        //  and so we reapply all transformations
+        async republish( id ){
+            if( ents._entities[id] ){
+                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, ents._entities[id].closest, opts, self.userId );
+                ents._entities[id].closest = transformed;
+                self.changed( collectionName, transformed._id, transformed );
+            }
+        },
+
+        // add or change the closest record
+        async setupObservers( transformed ){
+            // stop all existing observers
+            ents.stopHandles( transformed.entity );
+            // and redefine new observers
+            ents._entities[transformed.entity].handles = [];
+            // install an entity observer
+            //  only observe the changes as adds and deletes are also seen by the records
+            ents._entities[transformed.entity].handles.push(
+                Entities.collection.find({ _id: transformed.entity }).observeAsync({
+                    changed: async function( newItem, oldItem ){
+                        if( !initializing ){
+                            ents.republish( newItem._id );
+                        }
+                    }
+                })
+            );
+            // install an observer on roleAssignments
+            ents._entities[transformed.entity].handles.push(
+                Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: transformed.entity }).observeAsync({
+                    added: async function( item ){
+                        //  and on each new role an observer on Accounts
+                        ents._entities[transformed.entity].handles.push(
+                            Meteor.users.find({ _id: item.user._id }).observeAsync({
+                                added: async function( item ){
+                                    ents.republish( transformed.entity );
+                                },
+                                changed: async function( newItem, oldItem ){
+                                    if( !initializing ){
+                                        ents.republish( transformed.entity );
+                                    }
+                                },
+                                removed: async function( oldItem ){
+                                    ents.republish( transformed.entity );
+                                }
+                            })
+                        );
+                        ents.republish( transformed.entity );
+                    },
+                    changed: async function( newItem, oldItem ){
+                        if( !initializing ){
+                            ents.republish( transformed.entity );
+                        }
+                    },
+                    removed: async function( oldItem ){
+                        ents.republish( transformed.entity );
+                    }
+                })
+            );
+        },
+
+        // stop all handles
+        stopHandles( id ){
+            const handles = ents._entities[id].handles || [];
+            for( const h of handles ){
+                h.then(( handle ) => { handle.stop(); });
             }
         }
-    });
+    };
 
     const recordsObserver = Records.collection.find({ _id: { $in: ids }}).observeAsync({
         added: async function( item ){
-            const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, item, opts, self.userId );
-            entities[item.entity] = transformed;
-            self.added( collectionName, item._id, transformed );
+            await ents.publish( item );
         },
         changed: async function( newItem, oldItem ){
             if( !initializing ){
-                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, newItem, opts, self.userId );
-                entities[newItem.entity] = transformed;
-                self.changed( collectionName, newItem._id, transformed );
+                await ents.publish( newItem );
             }
         },
         removed: async function( oldItem ){
-            self.removed( collectionName, oldItem._id );
+            await ents.remove( oldItem.entity );
         }
     });
 
     initializing = false;
 
     self.onStop( function(){
-        entitiesObserver.then(( handle ) => { handle.stop(); });
         recordsObserver.then(( handle ) => { handle.stop(); });
+        for( const key of Object.keys( ents._entities )){
+            ents.remove( key );
+        }
     });
 
     self.ready();
 });
+
+/*
+    The only transformation allowed by publishComposite() is the 'transform' option proposed by find() function.
+    Unfortunately, this 'transform' option must be sync.
+    So doesn't suit our needs.
+
+publishComposite( TenantsManager.C.pub.tabular.publish, async function( tableName, ids, fields ){
+    const self = this;
+    const collectionName = Records.collectionName;
+
+    // arguments for applyPublishTransforms()
+    const opts = {
+        tableName, ids, fields 
+    };
+    logger.debug( 'opts', opts );
+
+    // for each entity, the (closest) record sent after transformation
+    let entities = {};
+
+    return {
+        collectionName: Records.collectionName,
+        find(){
+            return Records.collection.find(
+                { _id: { $in: ids }},
+                 // nope: transform must be sync
+                { async transform( record ){ return await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, record, opts, self.userId ) }}
+            );
+        },
+        children: [
+            {
+                find( record ){
+                    //logger.debug( 'record', record );
+                    return Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: record.entity });
+                },
+                children: [
+                    {
+                        find( role, record ){
+                            //logger.debug( 'role', role );
+                            //logger.debug( 'record', record );
+                            return Meteor.users.find(
+                                { _id: role.user._id },
+                                { transform( user ){
+                                    record.DYN = record.DYN || {};
+                                    record.DYN.managers = record.DYN.managers || [];
+                                    record.DYN.managers.push( user );
+                                    logger.debug( 'record', record );
+                                    return record;
+                                }}
+                            );
+                        }
+                    }
+                ]
+            }
+        ]
+    };
+});
+*/
 
 /*
  * This publishes a list of the known scopes to be used as a reference when editing scoped roles

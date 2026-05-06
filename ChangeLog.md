@@ -9,6 +9,7 @@
     - Review permissions, distinguishing client-only, common and server-only ones, and no more dedicated entities/records
     - Have a single autorun for each collection dependency on package configuration
     - Define 'globalManagerRole' new configuration parameter, thus bumping minor candidate version number
+    - Let the TenantsList tabular display be reactive on (scoped) managers changes
 
 ### 1.6.0
 
