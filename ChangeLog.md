@@ -2,12 +2,13 @@
 
 ## ChangeLog
 
-### 1.6.1-rc.0
+### 1.7.0-rc.0
 
     Release date: 
 
     - Review permissions, distinguishing client-only, common and server-only ones, and no more dedicated entities/records
     - Have a single autorun for each collection dependency on package configuration
+    - Define 'globalManagerRole' new configuration parameter, thus bumping minor candidate version number
 
 ### 1.6.0
 
