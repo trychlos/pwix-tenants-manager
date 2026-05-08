@@ -95,9 +95,14 @@ Template.tm_record_tabbed.onCreated( function(){
                     }
                 }
             ];
-            const opts = TenantsManager._editorOptions.get();
-            if( opts.recordsTabsFn ){
-                tabs = await opts.recordsTabsFn( tabs, {
+            let fn = dc.recordsTabsFn;
+            if( !fn ){
+                const opts = TenantsManager._editorOptions.get();
+                fn = opts.recordsTabsFn;
+            }
+            if( fn ){
+                check( fn, Function );
+                tabs = await fn( tabs, {
                     entity: dc.entity,
                     index: dc.index,
                     checker: dc.checker

@@ -161,9 +161,14 @@ Template.TenantEditPanel.onCreated( function(){
                 }
             }
         ];
-        const opts = TenantsManager._editorOptions.get();
-        if( opts.entitiesTabsFn ){
-            tabs = await opts.entitiesTabsFn( tabs, {
+        let fn = dc.entitiesTabsFn;
+        if( !fn ){
+            const opts = TenantsManager._editorOptions.get();
+            fn = opts.entitiesTabsFn;
+        }
+        if( fn ){
+            check( fn, Function );
+            tabs = await fn( tabs, {
                 entity: self.TM.item,
                 checker: self.TM.checker
             });

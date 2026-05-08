@@ -10,6 +10,7 @@
     - Have a single autorun for each collection dependency on package configuration
     - Define 'globalManagerRole' new configuration parameter, thus bumping minor candidate version number
     - Let the TenantsList tabular display be reactive on (scoped) managers changes
+    - Extend TenantEditPanel data context to accept entitiesTabsFn and recordsTabsFn
 
 ### 1.6.0
 

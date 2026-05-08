@@ -252,9 +252,11 @@ The `TenantEditPanel` component accepts a data context as:
 
 - `item`: the item to be edited, or null (or unset)
 
-- `checker`: a ReactiveVar which holds the parent Checker, may be null if none.
+- `checker`: a ReactiveVar which holds the parent Checker, may be null if none
 
-The `TenantEditPanel` component honors `entitiesTabsFn` and `recordsTabsFn` editor options (see [`setupEditor()`](#tenantsmanager-setupeditor)).
+- `entitiesTabsFn`: an optional async function which overrides the `setupEditor()` eponym, defaulting to the `entitiesTabsFn` editor option (see [`setupEditor()`](#tenantsmanager-setupeditor))
+
+- `recordsTabsFn`: an optional async function which overrides the `setupEditor()` eponym, defaulting to the `recordsTabsFn` editor option (see [`setupEditor()`](#tenantsmanager-setupeditor)).
 
 #### `TenantNewButton`
 
