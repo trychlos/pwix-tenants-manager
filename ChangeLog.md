@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.7.0-rc.0
+### 1.7.0
 
-    Release date: 
+    Release date: 2026- 5-10
 
     - Review permissions, distinguishing client-only, common and server-only ones, and no more dedicated entities/records
     - Have a single autorun for each collection dependency on package configuration
@@ -137,4 +137,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, May. 2nd
+- Last updated on 2026, May. 10th
