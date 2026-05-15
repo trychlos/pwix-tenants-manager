@@ -299,6 +299,8 @@ Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName,
                 Meteor.roleAssignment.find({ 'role._id': TenantsManager.configure().scopedManagerRole, scope: transformed.entity }).observeAsync({
                     added: async function( item ){
                         //  and on each new role an observer on Accounts
+                        ents._entities[transformed.entity] = ents._entities[transformed.entity] || {};
+                        ents._entities[transformed.entity].handles = ents._entities[transformed.entity].handles || [];
                         ents._entities[transformed.entity].handles.push(
                             Meteor.users.find({ _id: item.user._id }).observeAsync({
                                 added: async function( item ){

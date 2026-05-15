@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Tabular publication gets a guard against async race conditions
 
 ### 1.7.0
 
