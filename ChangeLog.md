@@ -8,6 +8,7 @@
 
     - Tabular publication gets a guard against async race conditions
     - Fix the display of first starting and last ending validity periods
+    - Fix missing closest in tabular publication
 
 ### 1.7.0
 

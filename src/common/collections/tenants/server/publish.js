@@ -269,11 +269,14 @@ Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName,
 
         // any change in one of the joined collections triggers a republication of the record
         //  and so we reapply all transformations
+        // may have sync issues on HMR...
         async republish( id ){
-            if( ents._entities[id] ){
+            if( ents._entities[id]?.closest ){
                 const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tabular.publish, ents._entities[id].closest, opts, self.userId );
-                ents._entities[id].closest = transformed;
-                self.changed( collectionName, transformed._id, transformed );
+                if( ents._entities[id] ){
+                    ents._entities[id].closest = transformed;
+                    self.changed( collectionName, transformed._id, transformed );
+                }
             }
         },
 

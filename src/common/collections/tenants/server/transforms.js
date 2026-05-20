@@ -115,6 +115,7 @@ Tenants.Transforms = {
         check( options, Object );
         const fetched = await Records.collection.find({ entity: itemDoc.entity }).fetchAsync();
         itemDoc.DYN.records = fetched;
+        itemDoc.DYN.closest = Validity.closestByRecords( fetched ).record;
         return itemDoc;
     },
 
