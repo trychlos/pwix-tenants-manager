@@ -12,6 +12,7 @@
 
 import _ from 'lodash';
 
+import { DateJs } from 'meteor/pwix:date';
 import { Field } from 'meteor/pwix:field';
 import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
@@ -188,6 +189,7 @@ Records._defaultFieldSet = function( conf ){
         },
         // record notes
         Notes.fieldDef(),
+        // let DYN document arrives until the tabular
         {
             name: 'DYN',
             schema: false,
@@ -196,16 +198,22 @@ Records._defaultFieldSet = function( conf ){
         // because we cannot modify the validity fields definitions, insert here some tabular data
         // (tabular) the first starting date / the last ending date
         {
-            name: 'first_starting',
+            name: 'DYN.effectStart',
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.effect_start_th' ),
-            dt_className: 'dt-center'
+            dt_className: 'dt-center',
+            dt_render( data, type, rowData ){
+                return DateJs.toString( rowData.DYN.effectStart );
+            }
         },
         {
-            name: 'last_ending',
+            name: 'DYN.effectEnd',
             schema: false,
             dt_title: pwixI18n.label( I18N, 'list.effect_end_th' ),
-            dt_className: 'dt-center'
+            dt_className: 'dt-center',
+            dt_render( data, type, rowData ){
+                return DateJs.toString( rowData.DYN.effectEnd );
+            }
         },
     ]);
     columns = columns.concat( Validity.recordsFieldDef());

@@ -7,6 +7,7 @@
     Release date: 
 
     - Tabular publication gets a guard against async race conditions
+    - Fix the display of first starting and last ending validity periods
 
 ### 1.7.0
 
