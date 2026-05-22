@@ -361,10 +361,10 @@ Template.TenantEditPanel.events({
         //logger.debug( event, instance );
         const item = instance.TM.item.get();
         const label = Validity.closest( item ).record.label || '';
-        //logger.debug( 'item', item );
         Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.upsert', item )
             .then(( res ) => {
                 //logger.debug( 'res', res );
+                // does nothing at the moment
                 return Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.setManagers', item )
             })
             .then(() => {

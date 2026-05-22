@@ -159,6 +159,7 @@ Tenants.s.deleteTenant = async function( entity, userId ){
     result.entities = await Entities.collection.removeAsync({ _id: entity });
     result.records = await Records.collection.removeAsync({ entity: entity });
     TenantsManager.s.eventEmitter.emit( 'tenant-delete', { id: entity, result: result });
+    logger.debug( 'result', result );
     return result;
 };
 
@@ -255,5 +256,6 @@ Tenants.s.upsert = async function( entity, userId ){
     entity = await Tenants.s.applyReadTransforms( 'Tenants.s.upsert()', entity );
     TenantsManager.s.eventEmitter.emit( 'tenant-upsert', { entity: entity, result: res });
 
+    //logger.debug( 'Tenants.s.upsert() res', res );
     return res;
 };

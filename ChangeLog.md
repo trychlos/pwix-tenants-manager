@@ -10,6 +10,7 @@
     - Fix the display of first starting and last ending validity periods
     - Fix missing closest in tabular publication
     - Define and honor modifiedOnUpdate configuration parameter
+    - Fix async remove
 
 ### 1.7.0
 

@@ -48,8 +48,12 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
             }
         },
         removed: async function( oldItem ){
-            self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
-            TenantsManager.s.eventEmitter.emit( 'removed', oldItem._id );
+            try {
+                self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
+                TenantsManager.s.eventEmitter.emit( 'removed', oldItem._id );
+            } catch( e ){
+                logger.log( 'tenantsAll', e.message );
+            }
         }
     });
 
@@ -352,7 +356,11 @@ Meteor.publish( TenantsManager.C.pub.tabular.publish, async function( tableName,
             }
         },
         removed: async function( oldItem ){
-            await ents.remove( oldItem.entity );
+            try {
+                await ents.remove( oldItem.entity );
+            } catch( e ){
+                logger.log( 'tabular', e.message );
+            }
         }
     });
 
