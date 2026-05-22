@@ -112,6 +112,7 @@ Template.tm_record_tabbed.onCreated( function(){
             if( !self.TM.tabsEqual( tabs )){
                 self.TM.parmsRecord.set({
                     name: 'tenants_manager_tm_record_tabbed_'+dc.index,
+                    tabbedClasses: 'tabbed-additive',
                     tabs: tabs
                 });
             }

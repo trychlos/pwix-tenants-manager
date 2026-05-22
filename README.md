@@ -252,7 +252,7 @@ The `TenantEditPanel` component accepts a data context as:
 
 - `item`: the item to be edited, or null (or unset)
 
-- `checker`: a ReactiveVar which holds the parent Checker, may be null if none
+- `checker`: a ReactiveVar which holds the parent Checker, or `false` if none
 
 - `entitiesTabsFn`: an optional async function which overrides the `setupEditor()` eponym, defaulting to the `entitiesTabsFn` editor option (see [`setupEditor()`](#tenantsmanager-setupeditor))
 
@@ -341,6 +341,24 @@ Known configuration options are:
     The provided function must have prototype as ``, and takes itself care of serializing the creation.
 
     Default is to run `TenantEditPanel` inside a modal dialog.
+
+- `modifiedOnUpdate`
+
+    Whether the buttons of the TenantEditPanel dialog must reflect the modification and validity status of the edited tenant.
+
+    When `true`, in a modal, buttons are `RESET` and `CLOSE` while there is no valid modifications, and become `CANCEL` and `OK` when the dialog has been modified and is valid.
+
+    In a page, a button `CREATE` or `SAVE` is displayed and disabled while the tenant is not upated and not valid.
+
+    When `false`, in a modal, buttons are always `CANCEL` and `OK`. The `OK` button is disabled while the tenant is not valid.
+
+    In a page, a button `CREATE` or `SAVE` is displayed and disabled while the tenant is not valid.
+
+    Defaults to `false`.
+
+- `globalManagerRole`
+
+    The name of the role which holds the global management for all tenants, defaulting to `TENANTS_MANAGER`.
 
 - `scopedManagerRole`
 

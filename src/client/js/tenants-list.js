@@ -23,8 +23,6 @@ let _tenantsHandle = Meteor.subscribe( TenantsManager.C.pub.tenantsAll.publish )
 
 Tracker.autorun(() => {
     if( _tenantsHandle.ready()){
-        const globalManagerRole = TenantsManager.configure().globalManagerRole;
-        const scopedManagerRole = TenantsManager.configure().scopedManagerRole;
         TenantsManager.collections.get( TenantsManager.C.pub.tenantsAll.collection ).find().fetchAsync().then(( fetched ) => {
             logger.debug( 'tenants', fetched );
             self._array.set( fetched );

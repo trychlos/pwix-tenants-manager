@@ -44,7 +44,7 @@
  * - item: the to-be-edited entity item, null when new
  *      including DYN.managers and DYN.records arrays
  *      this item will be left unchanged until panel submission
- * - checker: a ReactiveVar which holds the parent Checker, may be null if none
+ * - checker: a ReactiveVar which holds the parent Checker, may be false if none
  */
 
 import _ from 'lodash';
@@ -94,7 +94,7 @@ Template.TenantEditPanel.onCreated( function(){
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
         // whether we have some changes in the dialog
-        hasChanges: false,
+        hasChanges: new ReactiveVar( false ),
         // the tabs, maybe modified by the application
         entityTabs: new ReactiveVar( null )
     };
@@ -198,48 +198,75 @@ Template.TenantEditPanel.onRendered( function(){
     //  note that this is a topmost template only when we are running inside of a modal - else have to wait for a parent checker
     let running = false;
     self.autorun(( comp ) => {
+        const dc = Template.currentData();
+        const isModal = self.TM.isModal.get();
         let checker = self.TM.checker.get();
-        if( !checker && self.TM.isModal.get() && !running ){
+        if( !checker && ( isModal || dc.checker === false ) && !running ){
             running = true;
             Tracker.nonreactive(() => {
-                const modal = Modal.topmost();
-                const _setOKButton = function(){
-                    const $btn = modal.buttonFind( Modal.C.Button.OK );
-                    if( $btn && $btn.length ){
-                        modal.set({ buttons: { id: Modal.C.Button.OK, enabled: checker.validity() }});
-                    }
-                };
+                if( isModal ){
+                }
                 checker = new Forms.Checker( self );
                 //logger.debug( 'checker', checker.iSeq());
                 checker.init({
                     name: 'TenantEditPanel',
                     messager: self.TM.messager,
                     async onValidityChangeRegisterFn( valid ){
-                        _setOKButton();
+                        // if isModal
+                        //   enable/disable the OK button
+                        // else
+                        //   enable/disable the Save button
+                        if( isModal ){
+                            const modal = Modal.topmost();
+                            const $btn = modal.buttonFind( Modal.C.Button.OK );
+                            if( $btn && $btn.length ){
+                                modal.set({ buttons: { id: Modal.C.Button.OK, enabled: valid }});
+                            }
+                        } else {
+
+                        }
                     },
                     // update the modal buttons 'Close' while there is no modif, then 'Cancel' and 'OK'
                     // when evaluating diffs, only consider entity/records relative data
                     async onFieldUpdateRegisterFn( data, opts ){
+                        //  if isModal
+                        //    if modifiedOnUpdate
+                        //       if hasChanges and isValid
+                        //          set cancel/ok buttons
+                        //       else
+                        //          set reset/close buttons
+                        //    else
+                        //      does nothing (buttons are cancel/ok by default)
+                        //  else
+                        //    if modifiedOnUpdate
+                        //       if hasChanges and isValid
+                        //          enable save button
+                        //       else
+                        //          disable save button
+                        //    else
+                        //      disable save button
                         if( TenantsManager.configure().modifiedOnUpdate ){
-                            let hasChanges = false;
-                            let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
-                            const item = Tenants.comparable( self.TM.item.get());
-                            //logger.debug( 'item', item );
-                            if( !_.isEqual( item, self.TM.orig )){
-                                //Tenants.explainDifferences( self.TM.orig, item );
-                                hasChanges = true;
-                                buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CANCEL, Modal.C.Button.OK ];
-                            }
-                            if( hasChanges !== self.TM.hasChanges ){
-                                const modal = Modal.topmost();
-                                modal.set({
-                                    buttons: buttons
-                                });
-                                self.TM.hasChanges = hasChanges;
-                                await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
-                                // normally done by onValidityChangeRegisterFn() unless the two functions are triggered too closely 
-                                // (e.g. when we erase a mandatory field) and the button doesn't have time to appear before onValidityChangeRegisterFn() is triggered
-                                _setOKButton();
+                            if( isModal ){
+                                let hasChanges = false;
+                                let buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CLOSE ];
+                                const item = Tenants.comparable( self.TM.item.get());
+                                //logger.debug( 'item', item );
+                                if( !_.isEqual( item, self.TM.orig )){
+                                    //Tenants.explainDifferences( self.TM.orig, item );
+                                    hasChanges = true;
+                                    buttons = [ Modal.C.ButtonExt.RESET, Modal.C.Button.CANCEL, Modal.C.Button.OK ];
+                                }
+                                if( hasChanges !== self.TM.hasChanges.get()){
+                                    const modal = Modal.topmost();
+                                    modal.set({
+                                        buttons: buttons
+                                    });
+                                    self.TM.hasChanges.set( hasChanges );
+                                    await UIUtils.DOM.waitFor( '#'+modal.id()+' .modal-footer [data-md-btn-id="'+Modal.C.Button.OK+'"]' );
+                                    // normally done by onValidityChangeRegisterFn() unless the two functions are triggered too closely 
+                                    // (e.g. when we erase a mandatory field) and the button doesn't have time to appear before onValidityChangeRegisterFn() is triggered
+                                    _setOKButton();
+                                }
                             }
                         }
                     }
@@ -291,10 +318,35 @@ Template.TenantEditPanel.helpers({
             tabs: Template.instance().TM.entityTabs.get(),
             activateTab: Template.instance().TM.isNew.get() ? 0 : undefined
         };
+    },
+
+    // the styling of the Save button depends of whether we want manage up-to-time updates
+    //  i.e. if we want modified activated only when there is something to modify (which is a bit costly)
+    saveClass(){
+        return TenantsManager.configure().modifiedOnUpdate ? ( Template.instance().TM.hasChanges.get() ? 'btn-warning' : 'disabled btn-outline-warning' ) : 'btn-warning';
+    },
+
+    // when in a page, have a create of save button
+    saveLabel(){
+        return pwixI18n.label( I18N, Template.instance().TM.isNew.get() ? 'panel.create_btn' : 'panel.save_btn' );
     }
 });
 
 Template.TenantEditPanel.events({
+    // handle reset button when we are in a modal
+    'md-click .TenantEditPanel'( event, instance, data ){
+        //logger.debug( event, data );
+        if( data.button.id === Modal.C.Button.RESET ){
+            //instance.$( event.currentTarget ).trigger( 'iz-submit' );
+        }
+    },
+
+    // submit
+    //  event triggered in case of a page
+    '.js-save .TenantEditPanel'( event, instance, data ){
+        instance.$( event.currentTarget ).trigger( 'iz-submit' );
+    },
+
     // submit
     //  event triggered in case of a modal
     'md-click .TenantEditPanel'( event, instance, data ){

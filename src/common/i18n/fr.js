@@ -54,7 +54,8 @@ TenantsManager.i18n = {
             panel: {
                 create_btn: 'Nouveau',
                 notes_tab: 'Notes',
-                roles_preamble: 'Gérez ici les comptes utilisateur de l\'application qui ont un rôle sur le périmètre de ce tenant.'
+                roles_preamble: 'Gérez ici les comptes utilisateur de l\'application qui ont un rôle sur le périmètre de ce tenant.',
+                save_btn: 'Enregistrer'
             },
             records: {
                 check: {

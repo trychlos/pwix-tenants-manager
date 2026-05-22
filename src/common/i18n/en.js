@@ -55,7 +55,8 @@ TenantsManager.i18n = {
             panel: {
                 create_btn: 'Create',
                 notes_tab: 'Notes',
-                roles_preamble: 'Manage here the application user accounts which have a role dedicated to the current tenant.'
+                roles_preamble: 'Manage here the application user accounts which have a role dedicated to the current tenant.',
+                save_btn: 'Save'
             },
             records: {
                 check: {
