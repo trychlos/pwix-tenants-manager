@@ -60,6 +60,7 @@ TenantsManager.i18n = {
             records: {
                 check: {
                     contact_email_invalid: 'L\'adresse de contact est invalide',
+                    contact_email_unset: 'L\'adresse de contact n\'est pas renseignée',
                     emails_email_invalid: 'L\'adresse de messagerie spécifiée est invalide',
                     emails_email_missing: 'Une adresse de messagerie doit être spécifiée',
                     emails_label_missing: 'Un label doit être spécifié pour l\'adresse de messagerie',

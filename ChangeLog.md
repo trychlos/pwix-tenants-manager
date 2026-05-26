@@ -11,6 +11,7 @@
     - Fix missing closest in tabular publication
     - Define and honor modifiedOnUpdate configuration parameter
     - Fix async remove
+    - Let 'contactEmail' check honor the field definition
 
 ### 1.7.0
 

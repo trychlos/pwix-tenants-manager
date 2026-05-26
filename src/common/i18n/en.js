@@ -61,6 +61,7 @@ TenantsManager.i18n = {
             records: {
                 check: {
                     contact_email_invalid: 'The contact email address is invalid',
+                    contact_email_unset: 'The contact email address is not set',
                     emails_email_invalid: 'The provided email address is invalid',
                     emails_email_missing: 'The email address is missing',
                     emails_label_missing: 'The email label is missing',

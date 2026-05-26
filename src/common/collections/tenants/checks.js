@@ -9,6 +9,7 @@ const assert = require( 'assert' ).strict;
 import validator from 'email-validator';
 import validUrl from 'valid-url';
 
+import { Forms } from 'meteor/pwix:forms';
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -176,6 +177,7 @@ Tenants.checks.crossCheck_Urls = async function( data, opts ){
 
 // contact email
 //  must be valid if set
+//  to know if it is mandatory, we examine the field declaration
 Tenants.checks.contactEmail = async function( value, data, opts ){
     _assert_data_content( 'Tenants.checks.contactEmail()', data );
     let item = data.entity.get().DYN.records[data.index].get();
@@ -190,6 +192,23 @@ Tenants.checks.contactEmail = async function( value, data, opts ){
                 message: pwixI18n.label( I18N, 'records.check.contact_email_invalid' )
             });
         }
+    }
+    let mandatory = false; // which is the default
+    const fieldset = TenantsManager.Records.fieldSet.get();
+    if( fieldset ){
+        const field = fieldset.byName( 'contactEmail' );
+        if( field ){
+            const def = field.def();
+            if( def.form_type === Forms.FieldType.C.MANDATORY ){
+                mandatory = true;
+            }
+        }
+    }
+    if( mandatory && !value ){
+        return new TM.TypedMessage({
+            level: TM.MessageLevel.C.ERROR,
+            message: pwixI18n.label( I18N, 'records.check.contact_email_unset' )
+        });
     }
     return null;
 };
