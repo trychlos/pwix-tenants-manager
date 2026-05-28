@@ -39,6 +39,7 @@ Template.tm_entity_validities_tab.onRendered( function(){
             Tracker.nonreactive(() => {
                 checker = new Forms.Checker( self);
                 checker.init({
+                    name: 'tm_entity_validities_tab',
                     parentChecker: parentChecker,
                     data: {
                         item: dataContext.item

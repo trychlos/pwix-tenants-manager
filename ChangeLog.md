@@ -12,6 +12,7 @@
     - Define and honor modifiedOnUpdate configuration parameter
     - Fix async remove
     - Let 'contactEmail' check honor the field definition
+    - Improve some checkers naming
 
 ### 1.7.0
 

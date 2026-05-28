@@ -156,6 +156,7 @@ Template.tm_record_tabbed.onRendered( function(){
                 Tracker.nonreactive(() => {
                     checker = new Forms.Checker( self );
                     checker.init({
+                        name: 'tm_record_tabbed',
                         parentChecker: parentChecker,
                         panel: {
                             fields: self.TM.fields,
