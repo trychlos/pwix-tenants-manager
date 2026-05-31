@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.7.1-rc.0
+### 1.7.1
 
-    Release date: 
+    Release date: 2026- 5-31
 
     - Tabular publication gets a guard against async race conditions
     - Fix the display of first starting and last ending validity periods
@@ -149,4 +149,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, May. 10th
+- Last updated on 2026, May. 31st
