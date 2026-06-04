@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Add missing check imports
 
 ### 1.7.1
 

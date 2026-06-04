@@ -2,6 +2,7 @@
  * pwix:tenants-manager/src/common/collections/entities/tracker.js
  */
 
+import { check, Match } from 'meteor/check';
 import { Tracker } from 'meteor/tracker';
 
 import { Entities } from './index.js';
