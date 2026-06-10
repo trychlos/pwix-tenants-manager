@@ -9,6 +9,7 @@
     - Add missing check imports
     - Update emails ans urls translations to be simpler and clearer
     - Make sure 'modifiedOnUpdate' parameter is fully replaced with 'withCloseButtonWhileNotModified'
+    - Fix the save when edition is in a page
 
 ### 1.7.1
 

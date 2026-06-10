@@ -350,7 +350,7 @@ Template.TenantEditPanel.events({
 
     // submit
     //  event triggered in case of a page
-    '.js-save .TenantEditPanel'( event, instance, data ){
+    'click .js-save'( event, instance, data ){
         instance.$( event.currentTarget ).trigger( 'iz-submit' );
     },
 
