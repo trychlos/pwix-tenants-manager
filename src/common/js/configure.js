@@ -18,7 +18,6 @@ TenantsManager._defaults = {
     newFn: null,
     globalManagerRole: 'TENANTS_MANAGER',
     scopedManagerRole: 'SCOPED_TENANT_MANAGER',
-    modifiedOnUpdate: false,
     tenantsCollection: 'tenants',
     verbosity: TenantsManager.C.Verbose.CONFIGURE,
     withDedicatedEmails: true,

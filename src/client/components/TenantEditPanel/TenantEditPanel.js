@@ -94,7 +94,8 @@ Template.TenantEditPanel.onCreated( function(){
         // whether we are running inside of a Modal
         isModal: new ReactiveVar( false ),
         // whether we have some changes in the dialog
-        hasChanges: new ReactiveVar( false ),
+        //  historic behavior is to default to true, defaulting to false only if we want follow the item changes
+        hasChanges: new ReactiveVar( !TenantsManager._editorOptions.get().withCloseButtonWhileNotModified ),
         // the tabs, maybe modified by the application
         entityTabs: new ReactiveVar( null )
     };
@@ -323,10 +324,16 @@ Template.TenantEditPanel.helpers({
     // the styling of the Save button depends of whether we want manage up-to-time updates
     //  i.e. if we want modified activated only when there is something to modify (which is a bit costly)
     saveClass(){
-        return TenantsManager.configure().modifiedOnUpdate ? ( Template.instance().TM.hasChanges.get() ? 'btn-warning' : 'disabled btn-outline-warning' ) : 'btn-warning';
+        const followChanges = TenantsManager._editorOptions.get().withCloseButtonWhileNotModified;
+        return followChanges ? ( Template.instance().TM.hasChanges.get() ? 'btn-warning' : 'disabled btn-outline-warning' ) : 'btn-warning';
     },
 
-    // when in a page, have a create of save button
+    // when have a save button, whether to enable or disable it ?
+    saveDisabled(){
+        return '';
+    },
+
+    // when in a page, have a create or save button
     saveLabel(){
         return pwixI18n.label( I18N, Template.instance().TM.isNew.get() ? 'panel.create_btn' : 'panel.save_btn' );
     }

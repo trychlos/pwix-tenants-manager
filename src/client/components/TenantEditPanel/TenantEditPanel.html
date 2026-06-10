@@ -3,13 +3,14 @@
 
         {{> Tabbed (parmsTabbed) }}
 
-        {{> FormsMessager (parmsMessager) }}
-
-        {{#unless isModal }}
-            <div class="d-flex justify-content-end">
-                <button class="btn {{ saveClass }} js-save" type="button">{{ saveLabel }}</button>
-            </div>
-        {{/unless}}
+        <div class="d-flex flex-row justify-content-between">
+            {{> FormsMessager (parmsMessager) }}
+            {{#unless isModal }}
+                <div>
+                    <button class="btn {{ saveClass }} ui-mt025 {{ saveDisabled }} js-save" type="button">{{ saveLabel }}</button>
+                </div>
+            {{/unless}}
+        </div>
 
     </div>
 </template>

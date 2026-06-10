@@ -97,6 +97,8 @@ Define the runtime options for editing the tenants, where options is an optional
 
     Default is to always propose both `Cancel` and `OK` buttons.
 
+    When displayed on a page, a `Save` button is enabled/disabled depending of this same parameter.
+
 Available both on the client and the server, but only used in the client (server-side is just a no-op).
 
 ##### `TenantsManager.setupHooks()`
@@ -342,20 +344,6 @@ Known configuration options are:
 
     Default is to run `TenantEditPanel` inside a modal dialog.
 
-- `modifiedOnUpdate`
-
-    Whether the buttons of the TenantEditPanel dialog must reflect the modification and validity status of the edited tenant.
-
-    When `true`, in a modal, buttons are `RESET` and `CLOSE` while there is no valid modifications, and become `CANCEL` and `OK` when the dialog has been modified and is valid.
-
-    In a page, a button `CREATE` or `SAVE` is displayed and disabled while the tenant is not upated and not valid.
-
-    When `false`, in a modal, buttons are always `CANCEL` and `OK`. The `OK` button is disabled while the tenant is not valid.
-
-    In a page, a button `CREATE` or `SAVE` is displayed and disabled while the tenant is not valid.
-
-    Defaults to `false`.
-
 - `globalManagerRole`
 
     The name of the role which holds the global management for all tenants, defaulting to `TENANTS_MANAGER`.
@@ -437,26 +425,6 @@ Known configuration options are:
 - `withValidities`
 
     Whether we want manage validity periods for the tenants, defaulting to `true`.
-
-- `modifiedOnUpdate`:
-
-    Whether the user interface begins with only a 'Close' button, only proposing 'Cancel' and 'OK' buttons when the tenant has been detected as modified.
-
-    If the application has extended the Tenant properties, then it has too to detect itself whether its own properties have been modified.
-
-    Defauls to `false`.
-
-- `xx showEmptyGeneralizedEmails`
-
-    Whether we should show a '...' disabled button in the tabular display when there is no email to be displayed.
-
-    Defaults to `false`.
-
-- `xxx showEmptyGeneralizedUrls`
-
-    Whether we should show a '...' disabled button in the tabular display when there is no URL to be displayed.
-
-    Defaults to `false`.
 
 A function can be provided by the application for each of these parameters. The function will be called without argument and must return a suitable value.
 
