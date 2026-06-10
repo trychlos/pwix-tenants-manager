@@ -2,7 +2,7 @@
 
 ## ChangeLog
 
-### 1.7.2-rc.0
+### 1.8.0-rc.0
 
     Release date: 
 
@@ -10,6 +10,7 @@
     - Update emails ans urls translations to be simpler and clearer
     - Make sure 'modifiedOnUpdate' parameter is fully replaced with 'withCloseButtonWhileNotModified'
     - Fix the save when edition is in a page
+    - Define new 'pageSaveBtnClassesFn' setupEditor() parameter, thus bumping minor candidate version number
 
 ### 1.7.1
 

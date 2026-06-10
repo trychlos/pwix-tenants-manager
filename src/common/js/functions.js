@@ -158,7 +158,8 @@ TenantsManager.isAllowed = async function( action, userId=null ){
 TenantsManager._editorDefaults = {
     entitiesTabsFn: null,
     recordsTabsFn: null,
-    withCloseButtonWhileNotModified: false
+    withCloseButtonWhileNotModified: false,
+    pageSaveBtnClassesFn: null
 };
 TenantsManager._editorOptions = new ReactiveVar( null );
 

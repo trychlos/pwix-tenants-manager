@@ -97,7 +97,9 @@ Template.TenantEditPanel.onCreated( function(){
         //  historic behavior is to default to true, defaulting to false only if we want follow the item changes
         hasChanges: new ReactiveVar( !TenantsManager._editorOptions.get().withCloseButtonWhileNotModified ),
         // the tabs, maybe modified by the application
-        entityTabs: new ReactiveVar( null )
+        entityTabs: new ReactiveVar( null ),
+        // the classes to be added to the 'save' button on a page (if any)
+        pageSaveClasses: new ReactiveVar( '' )
     };
 
     // provided item = entity+records
@@ -286,6 +288,21 @@ Template.TenantEditPanel.onRendered( function(){
             //logger.debug( 'valid', checker.validity());
         }
     });
+
+    // compute the classes to be set on the 'save' button (if any)
+    self.autorun(() => {
+        const fn = TenantsManager._editorOptions.get().pageSaveBtnClassesFn;
+        const hasChanges = self.TM.hasChanges.get();
+        if( fn ){
+            fn( self.TM.checker.get(), self.TM.hasChanges.get()).then(( res ) => {
+                self.TM.pageSaveClasses.set( res );
+            });
+        } else {
+            const followChanges = TenantsManager._editorOptions.get().withCloseButtonWhileNotModified;
+            const classes = followChanges ? ( hasChanges ? 'btn-warning' : 'disabled btn-outline-warning' ) : 'btn-warning';
+            self.TM.pageSaveClasses.set( classes );
+        }
+    });
 });
 
 Template.TenantEditPanel.helpers({
@@ -324,13 +341,7 @@ Template.TenantEditPanel.helpers({
     // the styling of the Save button depends of whether we want manage up-to-time updates
     //  i.e. if we want modified activated only when there is something to modify (which is a bit costly)
     saveClass(){
-        const followChanges = TenantsManager._editorOptions.get().withCloseButtonWhileNotModified;
-        return followChanges ? ( Template.instance().TM.hasChanges.get() ? 'btn-warning' : 'disabled btn-outline-warning' ) : 'btn-warning';
-    },
-
-    // when have a save button, whether to enable or disable it ?
-    saveDisabled(){
-        return '';
+        return Template.instance().TM.pageSaveClasses.get();
     },
 
     // when in a page, have a create or save button

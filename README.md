@@ -99,6 +99,12 @@ Define the runtime options for editing the tenants, where options is an optional
 
     When displayed on a page, a `Save` button is enabled/disabled depending of this same parameter.
 
+- `pageSaveBtnClassesFn`
+
+    An optional function to provide classes to the `Save` button (if any) when displayed on a page.
+
+    Prototype is: 'async fn( checker<Forms.Checker>, hasChanges<Boolean> ): <String>'.
+
 Available both on the client and the server, but only used in the client (server-side is just a no-op).
 
 ##### `TenantsManager.setupHooks()`
