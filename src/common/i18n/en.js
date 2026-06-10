@@ -94,8 +94,7 @@ TenantsManager.i18n = {
                     emails_label_ph: 'Contact or Support or MyOwnTarget',
                     emails_label_th: 'Label',
                     emails_preamble: '<p class="title">Emails</p><p class="content">'
-                        +'Define as many email addresses as you want, as soon as you label each of one.<br />'
-                        +'For convenience of all, we want that you define at least one email address to be used as a contact.</p>',
+                        +'Define as many email addresses as you want, as soon as you label each of one.',
                     emails_remove_title: 'Remove this email address from the list',
                     gtu_label: 'General Terms of Use URL :',
                     gtu_ph: 'https://www.example.com/gtu',
@@ -128,8 +127,8 @@ TenantsManager.i18n = {
                     urls_url_th: 'URL',
                     urls_preamble: '<p class="title">URLs</p><p class="content">'
                         +'Define as many URLs as you want, as soon as you label each of one.<br />'
-                        +'These may be for example the home page of your organization, a contact page, an achievements page, or even a full list of pages of your websites.<br />'
-                        +'Really as many URLs as you want as we said!</p>',
+                        +'These may be for example the home page of your organization, a contact page, an achievements page, or even a full list of pages of your websites '
+                        +'Really as many URLs as you want as we said!',
                     urls_remove_title: 'Remove this URL from the list'
                 }
             },

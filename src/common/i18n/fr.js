@@ -93,8 +93,7 @@ TenantsManager.i18n = {
                     emails_label_ph: 'Contact ou Support ou MonAdresseAMoi',
                     emails_label_th: 'Label',
                     emails_preamble: '<p class="title">Adresses de messagerie</p><p class="content">'
-                        +'Définissez ci-dessous autant d\'adresses de messagerie que vous le souhaitez, tant que vous posez un label pour chacune d\'entre elles.<br />'
-                        +'Pour le confort de tous, nous avons besoin que vous définissiez au moins une adresse de messagerie qui sera utilisée comme adresse de contact.</p>',
+                        +'Définissez ci-dessous autant d\'adresses de messagerie que vous le souhaitez, tant que vous posez un label pour chacune d\'entre elles.',
                     emails_remove_title: 'Supprimer cette adresse de la liste',
                     gtu_label: 'URL de la page des Conditions Générales d\'Utilisation :',
                     gtu_ph: 'https://www.example.com/gtu',
@@ -128,8 +127,8 @@ TenantsManager.i18n = {
                     urls_preamble: '<p class="title">URLs</p><p class="content">'
                         +'Définissez ci-dessous autant d\'URLs que vous le souhaitez, tant que vous posez un label pour chacune d\'entre elles.<br />'
                         +'Il peut s\'agir par exemple de la page d\'accueil de votre organisation, d\'une page de contact, d\'une page où vous décrivez vos réalisations, '
-                        +'ou bien même d\'une liste complète de toutes les pages de tous vos sites Web.<br />'
-                        +'Vraiment autant d\'URLs que vous le souhaitez comme nous le disions !</p>',
+                        +'ou bien même d\'une liste complète de toutes les pages de tous vos sites Web. '
+                        +'Vraiment autant d\'URLs que vous le souhaitez comme nous le disions !',
                     urls_remove_title: 'Supprimer cette URL de la liste'
                 }
             },

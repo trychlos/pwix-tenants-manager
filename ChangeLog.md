@@ -7,6 +7,7 @@
     Release date: 
 
     - Add missing check imports
+    - Update emails ans urls translations to be simpler and clearer
 
 ### 1.7.1
 
