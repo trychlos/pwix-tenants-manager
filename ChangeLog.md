@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.8.0-rc.0
+### 1.8.0
 
-    Release date: 
+    Release date: 2026- 6-30
 
     - Add missing check imports
     - Update emails ans urls translations to be simpler and clearer
@@ -159,4 +159,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, May. 31st
+- Last updated on 2026, Jun. 30th
