@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Upgrade aldeed:collection2 to v5.0.0
 
 ### 1.8.0
 
