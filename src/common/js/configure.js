@@ -2,7 +2,7 @@
  * pwix:tenants-manager/src/common/js/configure.js
  */
 
-import _, { truncate } from 'lodash';
+import _ from 'lodash';
 
 import { Logger } from 'meteor/pwix:logger';
 import { ReactiveVar } from 'meteor/reactive-var';

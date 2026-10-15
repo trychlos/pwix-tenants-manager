@@ -7,6 +7,7 @@
     Release date: 
 
     - Upgrade aldeed:collection2 to v5.0.0
+    - Remove useless import from configure.js
 
 ### 1.8.0
 
