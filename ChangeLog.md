@@ -8,6 +8,7 @@
 
     - Upgrade aldeed:collection2 to v5.0.0
     - Remove useless import from configure.js
+    - Refactor publication functions in alpha order
 
 ### 1.8.0
 
