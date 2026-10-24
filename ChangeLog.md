@@ -2,6 +2,12 @@
 
 ## ChangeLog
 
+### 1.8.2-rc.0
+
+    Release date: 
+
+    - 
+
 ### 1.8.1
 
     Release date: 2026-10-24
