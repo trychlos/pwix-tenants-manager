@@ -2,11 +2,11 @@
 
 ## ChangeLog
 
-### 1.8.2-rc.0
+### 1.9.0-rc.0
 
     Release date: 
 
-    - 
+    - Bump version due to dataReady() new function having been published in v1.8.1
 
 ### 1.8.1
 
