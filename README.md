@@ -47,6 +47,20 @@ The exported `TenantsManager` global object provides following items:
 
 #### Functions
 
+##### `TenantsManager.dataReady(): <Boolean>`
+
+Returns a reactive status which is true when the Entities and Records collections are ready and the application-facing tenant list has completed its initial load. On the client, this includes the current login's tenant-list subscription and initial collection fetch. On the server, this includes the initial transformed-tenant fetch. Later reactive updates continue to refresh `TenantsManager.list`; `dataReady()` remains true while that list is refreshed.
+
+Use this when application code needs `TenantsManager.list` to be available. It does not report readiness of the separate publications used by the `TenantsList` tabular component. `TenantsManager.Tenants.ready()` continues to report collection and schema readiness only.
+
+##### `TenantsManager.list.get(): <Array>`
+
+Returns the reactive application-facing list of transformed tenant documents. This list is intended for application usage, such as resolving a tenant by entity identifier. The `TenantsList` tabular component uses its own publications and does not depend on this list for display, edit, or delete operations.
+
+##### `TenantsManager.list.byEntity( entity<String> ): <Object|null>`
+
+Returns a tenant from the application-facing list by entity identifier, or `null` when it is not present. The lookup is reactive through `TenantsManager.list.get()` and should be used only after `TenantsManager.dataReady()` returns true.
+
 ##### `TenantsManager.configure( o<Object> )`
 
 See [below](#configuration).

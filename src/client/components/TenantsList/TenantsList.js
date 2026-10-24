@@ -12,9 +12,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Tabular } from 'meteor/pwix:tabular';
 import { Tolert } from 'meteor/pwix:tolert';
 
-import { Entities } from '../../../common/collections/entities/index.js';
-import { Records } from '../../../common/collections/records/index.js';
-
 import '../TenantEditPanel/TenantEditPanel.js';
 
 import './TenantsList.html';
@@ -58,7 +55,7 @@ Template.TenantsList.helpers({
     // a display selector
     selector(){
         const selector = { _id: {}};
-        selector._id.$in = Template.instance().TM.closests.get();
+        selector._id.$in = Template.instance().TM.handle.ready() ? Template.instance().TM.closests.get() : [];
         return selector;
     },
 
@@ -77,6 +74,9 @@ Template.TenantsList.helpers({
 Template.TenantsList.events({
     // delete a tenant - this will delete all the validity records too
     'tabular-delete-event .TenantsList'( event, instance, data ){
+        if( !data.item?.DYN?.entity?._id ){
+            return false;
+        }
         const label = data.item.label;
         Meteor.callAsync( 'pwix.TenantsManager.m.Tenants.delete', data.item.DYN.entity._id )
             .then(( res ) => {
@@ -91,7 +91,11 @@ Template.TenantsList.events({
     // edit a tenant
     //  the buttons from tabular provide the entity document
     'tabular-edit-event .TenantsList'( event, instance, data ){
-        const tenant = TenantsManager.list.byEntity( data.item.DYN.entity._id );
+        const tenant = TenantsManager.Tabular._tenant( data.item );
+        if( !tenant ){
+            logger.error( 'tabular edit row does not contain the tenant data required by the editor', data.item );
+            return false;
+        }
         const buttons = TenantsManager._editorOptions.get().withCloseButtonWhileNotModified ? [ Modal.C.Button.CLOSE ] : [ Modal.C.Button.CANCEL, Modal.C.Button.OK ];
         Modal.run({
             ...this,

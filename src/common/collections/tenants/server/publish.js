@@ -489,86 +489,86 @@ Meteor.publish( TenantsManager.C.pub.tenantsAll.publish, async function( opts={}
         return;
     }
     let initializing = true;
+    let stopped = false;
+    const pendingTenantIds = new Set();
+    const publishedTenantIds = new Set();
+    const tenantVersions = new Map();
+    const nextTenantVersion = function( tenantId ){
+        const version = ( tenantVersions.get( tenantId ) || 0 ) + 1;
+        tenantVersions.set( tenantId, version );
+        return version;
+    };
+    const isCurrentTenantVersion = function( tenantId, version ){
+        return !stopped && ( tenantVersions.get( tenantId ) || 0 ) === version;
+    };
+    const publishTenant = function( tenantId, transformed ){
+        if( publishedTenantIds.has( tenantId )){
+            self.changed( TenantsManager.C.pub.tenantsAll.collection, tenantId, transformed );
+            TenantsManager.s.eventEmitter.emit( 'changed', tenantId, transformed );
+        } else {
+            self.added( TenantsManager.C.pub.tenantsAll.collection, tenantId, transformed );
+            publishedTenantIds.add( tenantId );
+            TenantsManager.s.eventEmitter.emit( 'added', tenantId, transformed );
+        }
+    };
+    const refreshTenant = async function( tenantId, version, entity=null ){
+        entity = entity || await Entities.collection.findOneAsync({ _id: tenantId });
+        if( !isCurrentTenantVersion( tenantId, version )){
+            return;
+        }
+        if( !entity || !await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, tenantId )){
+            if( publishedTenantIds.has( tenantId )){
+                self.removed( TenantsManager.C.pub.tenantsAll.collection, tenantId );
+                publishedTenantIds.delete( tenantId );
+                TenantsManager.s.eventEmitter.emit( 'removed', tenantId );
+            }
+            return;
+        }
+        const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
+        if( isCurrentTenantVersion( tenantId, version )){
+            publishTenant( tenantId, transformed );
+        }
+    };
+    const onTenantChange = function( tenantId ){
+        const version = nextTenantVersion( tenantId );
+        if( initializing ){
+            pendingTenantIds.add( tenantId );
+            return;
+        }
+        return refreshTenant( tenantId, version );
+    };
 
     const entitiesObserver = Entities.collection.find({}).observeAsync({
-        added: async function( item ){
-            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, item._id )){
-                const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, item, opts, userId );
-                self.added( TenantsManager.C.pub.tenantsAll.collection, item._id, transformed );
-                TenantsManager.s.eventEmitter.emit( 'added', item._id, transformed );
-            }
-        },
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, newItem._id )){
-                    const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, newItem, opts, userId );
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, newItem._id, transformed );
-                    TenantsManager.s.eventEmitter.emit( 'changed', newItem._id, transformed );
-                }
-            }
-        },
-        removed: async function( oldItem ){
-            try {
-                self.removed( TenantsManager.C.pub.tenantsAll.collection, oldItem._id );
-                TenantsManager.s.eventEmitter.emit( 'removed', oldItem._id );
-            } catch( e ){
-                logger.log( 'tenantsAll', e.message );
-            }
-        }
+        added: ( item ) => onTenantChange( item._id ),
+        changed: ( newItem ) => onTenantChange( newItem._id ),
+        removed: ( oldItem ) => onTenantChange( oldItem._id )
     });
-
     const recordsObserver = Records.collection.find({}).observeAsync({
-        added: async function( item ){
-            if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, item.entity )){
-                Entities.collection.findOneAsync({ _id: item.entity }).then( async ( entity ) => {
-                    if( entity ){
-                        const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
-                        try {
-                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
-                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, transformed );
-                        } catch( e ){
-                            // on HMR, happens that Error: Could not find element with id wx8rdvSdJfP6fCDTy to change
-                            self.added( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
-                            TenantsManager.s.eventEmitter.emit( 'added', entity._id, transformed );
-                            //logger.debug( e, 'ignored' );
-                        }
-                    } else {
-                        logger.warn( 'added: entity not found', item.entity );
-                    }
-                });
-            }
-        },
-        changed: async function( newItem, oldItem ){
-            if( !initializing ){
-                if( await TenantsManager.isAllowed( 'pwix.tenants_manager.fn.read', userId, newItem.entity )){
-                    Entities.collection.findOneAsync({ _id: newItem.entity }).then( async ( entity ) => {
-                        if( entity ){
-                            const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
-                            self.changed( TenantsManager.C.pub.tenantsAll.collection, entity._id, transformed );
-                            TenantsManager.s.eventEmitter.emit( 'changed', entity._id, transformed );
-                        } else {
-                            logger.warn( 'changed: entity not found', newItem.entity );
-                        }
-                    });
-                }
-            }
-        },
-        // remind that records are deleted after entity when deleting a tenant
-        removed: async function( oldItem ){
-            Entities.collection.findOneAsync({ _id: oldItem.entity }).then( async ( entity ) => {
-                if( entity ){
-                    const transformed = await Tenants.s.applyPublishTransforms( TenantsManager.C.pub.tenantsAll.publish, entity, opts, userId );
-                    self.changed( TenantsManager.C.pub.tenantsAll.collection, oldItem.entity, transformed );
-                    TenantsManager.s.eventEmitter.emit( 'changed', oldItem.entity, transformed );
-                }
-            });
-        }
+        added: ( item ) => onTenantChange( item.entity ),
+        changed: ( newItem ) => onTenantChange( newItem.entity ),
+        removed: ( oldItem ) => onTenantChange( oldItem.entity )
     });
 
-    initializing = false;
-    self.onStop( function(){
-        entitiesObserver.then(( handle ) => { handle.stop(); });
-        recordsObserver.then(( handle ) => { handle.stop(); });
+    self.onStop(function(){
+        stopped = true;
+        Promise.all([ entitiesObserver, recordsObserver ]).then(( handles ) => {
+            handles.forEach(( handle ) => handle.stop());
+        });
     });
-    self.ready();
+
+    await Promise.all([ entitiesObserver, recordsObserver ]);
+    const entities = await Entities.collection.find({}).fetchAsync();
+    for( const entity of entities ){
+        const version = tenantVersions.get( entity._id ) || 0;
+        await refreshTenant( entity._id, version, entity );
+    }
+    while( pendingTenantIds.size && !stopped ){
+        const tenantIds = Array.from( pendingTenantIds );
+        pendingTenantIds.clear();
+        await Promise.all( tenantIds.map(( tenantId ) => refreshTenant( tenantId, tenantVersions.get( tenantId ) || 0 )));
+    }
+    initializing = false;
+    if( !stopped ){
+        self.ready();
+    }
 });

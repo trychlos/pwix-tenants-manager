@@ -52,8 +52,8 @@ TenantsManager.Tabular = _.merge( {}, TenantsManager.Tabular || {}, {
                 async editButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.edit_title', TenantsManager.Tabular._record_label( it ));
                 },
-                async editItem( it ){
-                    return await TenantsManager.Tabular._entity( it );
+                editItem( it ){
+                    return TenantsManager.Tabular._tenant( it );
                 },
                 async infoButtonTitle( it ){
                     return pwixI18n.label( I18N, 'buttons.info_title', TenantsManager.Tabular._record_label( it ));
@@ -74,6 +74,23 @@ TenantsManager.Tabular = _.merge( {}, TenantsManager.Tabular || {}, {
     async _entity( data ){
         const entity = Meteor.isClient ? await Meteor.callAsync( 'pwix.TenantsManager.m.Entities.getBy', { _id: data.entity }) : await Entities.s.getBy({ _id: data.entity }, Meteor.userId());
         return entity[0];
+    },
+
+    // build the editor item from the data supplied by the tabular publication
+    _tenant( record ){
+        if( !record?.DYN?.entity?._id || !Array.isArray( record.DYN.records ) || !record.DYN.closest ){
+            return null;
+        }
+        const entity = record.DYN.entity;
+        return {
+            ...entity,
+            DYN: {
+                ...( entity.DYN || {}),
+                closest: record.DYN.closest,
+                managers: record.DYN.managers || [],
+                records: record.DYN.records
+            }
+        };
     },
 
     // returns the record label

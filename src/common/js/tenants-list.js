@@ -1,13 +1,14 @@
 /*
  * pwix:tenants-manager/src/common/js/tenants-list.js
  *
- * Maintain the list of the tenants as a ReactiveVar which contains:
+ * Maintain the application-facing list of tenants as a ReactiveVar which contains:
  * - an array of entities,
  * - each entity having its DYN sub-object with DYN.managers and DYN.records arrays (of ReactiveVar's on the client)
  * 
- * Client side maintains a tracker on a tenant_all publication, so both client and server sides have the tools to update this central registration.
+ * This list is intended for application code which needs transformed tenant documents.
+ * It is maintained independently from the publications used by the TenantsList tabular component.
  * 
- * NB: 'central' here doesn't mean that the same instance is shared between client and server sides! That means that both instances are maintained equal.
+ * Client and server each maintain their own list instance.
  */
 
 import { Logger } from 'meteor/pwix:logger';
@@ -22,6 +23,9 @@ TenantsManager.list = {
     // returns the entity document and its DYN arrays
     byEntity( entity ){
         //logger.debug( 'byEntity', entity );
+        if( !TenantsManager.dataReady()){
+            return null;
+        }
         const list = TenantsManager.list.get();
         let found = null;
         list.every(( it ) => {

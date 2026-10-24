@@ -9,6 +9,12 @@
     - Upgrade aldeed:collection2 to v5.0.0
     - Remove useless import from configure.js
     - Refactor publication functions in alpha order
+    - Add reactive TenantsManager.dataReady() status
+    - Guard tenant-list initialization and client fetches against stale results
+    - Ignore stale asynchronous tenant publication transforms
+    - Publish the initial tenant snapshot before signaling subscription readiness
+    - Build tenant editor data from the tabular publication instead of the application tenant list
+    - Clarify that list readiness applies to application-facing tenant data only
 
 ### 1.8.0
 

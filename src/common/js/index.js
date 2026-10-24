@@ -8,6 +8,7 @@ import './configure.js';
 import './i18n.js';
 //
 import './collections-get.js';
+import './data-ready.js';
 import './event-emitter.js';
 import './functions.js';
 import './tenants-list.js';
