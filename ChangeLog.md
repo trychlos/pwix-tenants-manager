@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.9.0-rc.0
+### 1.9.0
 
-    Release date: 
+    Release date: 2026-10-24
 
     - Bump version due to dataReady() new function having been published in v1.8.1
 
