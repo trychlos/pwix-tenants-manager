@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.8.1-rc.0
+### 1.8.1
 
-    Release date: 
+    Release date: 2026-10-24
 
     - Upgrade aldeed:collection2 to v5.0.0
     - Remove useless import from configure.js
@@ -173,4 +173,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Jun. 30th
+- Last updated on 2026, Oct. 24th
